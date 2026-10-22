@@ -1,0 +1,42 @@
+{
+  "name": "moyeo",
+  "version": "0.8.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:single": "vite build --mode single",
+    "build:toss": "vite build --mode toss",
+    "build:ait": "vite build --mode toss && ait build",
+    "deploy:toss": "ait deploy",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "compare": "npm run build:single && playwright test -c tools/compare",
+    "compare:approve": "npm run build:single && playwright test -c tools/compare --update-snapshots",
+    "spec:check": "openspec validate --all --strict",
+    "emulators": "node tools/copy-shared.mjs && firebase emulators:start",
+    "deploy:web": "vite build && firebase deploy --only hosting:app",
+    "dev:admin": "vite --port 5180 --strictPort --open /admin.html",
+    "build:admin": "vite build --mode admin",
+    "deploy:admin": "vite build --mode admin && firebase deploy --only hosting:admin",
+    "deploy:server": "node tools/copy-shared.mjs && firebase deploy --only firestore,storage,functions",
+    "store:images": "node tools/store-images/make-store-images.mjs"
+  },
+  "dependencies": {
+    "@apps-in-toss/web-framework": "3.8.0",
+    "firebase": "12.19.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@fission-ai/openspec": "1.13.2",
+    "@playwright/test": "1.63.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "firebase-tools": "15.31.0",
+    "jsdom": "30.1.1",
+    "vite": "8.3.1",
+    "vite-plugin-singlefile": "2.3.3",
+    "vitest": "5.0.2"
+  }
+}

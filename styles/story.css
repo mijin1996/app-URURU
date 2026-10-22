@@ -1,0 +1,120 @@
+/* 스토리 보기 화면 */
+.story
+{
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.story .bar
+{
+  height: 3px;
+  margin: 12px 12px 0;
+  background: rgba(255,255,255,.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.story .bar i
+{
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #fff;
+  animation: prog 5s linear forwards;
+}
+@keyframes prog
+{
+  to
+  {
+    width: 100%;
+  }
+}
+.story .sh
+{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+.story .sh .who
+{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: #fff;
+  text-align: left;
+}
+.story .sh .who small
+{
+  display: block;
+  font-size: var(--fs-small);
+  opacity: .75;
+  font-weight: 500;
+}
+.story .foot
+{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 76px;
+  padding: 10px 16px 18px;
+}
+.story .likers
+{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs);
+  font-weight: 700;
+  min-width: 0;
+}
+.story .likers span
+{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.likebtn
+{
+  margin-left: auto;
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+.likebtn.on
+{
+  color: #ff2d55;
+  animation: heartpop .35s ease;
+}
+.storytext
+{
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: #000 center/cover;
+  word-break: break-word;
+}
+/* 글자 한 덩어리: 폰트 배경 상자가 줄마다 이어지게 (인스타 폰트 배경처럼) */
+.stext
+{
+  display: inline;
+  font-weight: 900;
+  line-height: 1.55;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

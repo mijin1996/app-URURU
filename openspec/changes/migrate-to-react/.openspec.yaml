@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-10-13
+goal: 화면과 동작은 그대로 두고 화면 그리는 방법만 React로 바꾸기
+skip_specs: true

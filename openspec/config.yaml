@@ -1,0 +1,45 @@
+schema: spec-driven
+
+# 모든 변경(proposal · specs · design · tasks)을 만들 때 AI가 먼저 읽는 프로젝트 요약
+context: |
+  Language: Korean
+  All artifacts must be written in Korean.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+
+  프로젝트: 우르르(옛 이름 모여) — 가까운 친구와 가볍게 모이는 위치 기반 채팅 앱 (참고: Yubo, Snapchat, Instagram)
+  대상: PC 브라우저 · Android · iOS 세 곳에서 같은 화면, 같은 동작
+  읽는 사람: 초보 개발자. 전문 용어를 줄이고 쉬운 한국어(해요체)로 짧게 쓴다.
+
+  꼭 읽을 문서:
+  - docs/mission.md      왜 만드나, 하지 않는 것
+  - docs/tech-stack.md   쓰는 기술(버전 고정), 금지 기술, 폴더 구조, 의존 방향
+  - docs/coding-rules.md 코드 작성 지침 (KISS, YAGNI, DRY, SOLID, Result 패턴, K&R)
+  - docs/code-structure-and-patterns.md 파일마다 하는 일과 쓴 패턴
+  - docs/file-tree.md    프로젝트 전체 파일 트리 (문서·OpenSpec·코드)
+  - docs/roadmap.md      Phase 일정과 공통 완료 기준
+
+  지금 상태: React 버전 (화면은 src/ui만 React). 서버·GPS·지도·통화는 FakeServer 흉내.
+  작업 지침: CLAUDE.md (파일을 새로 만들지 말고 원래 파일을 고친다)
+  폴더: src/core(공통) → src/data(저장·규칙·서버) → src/ui(화면). 반대 방향 import 금지.
+
+rules:
+  proposal:
+    - "사용자가 보는 화면이나 동작이 바뀌는지 먼저 밝힌다. 안 바뀌면 skip_specs: true"
+    - "하지 않는 것(Non-goals)을 적는다"
+  specs:
+    - "시나리오 이름 앞에 기능 번호를 붙인다 (SHELL-, ACC-, PRO-, MAP-, CHAT-, STO-, SWP-, FRD-, PNG-)"
+    - "화면에 보이는 문구는 실제 문구 그대로 큰따옴표로 적는다"
+  design:
+    - "결정마다 이유와 버린 대안을 적는다"
+    - "새 라이브러리는 docs/tech-stack.md에 먼저 올린다"
+  tasks:
+    - "칸마다 확인 방법(시나리오 번호, 시험, 사진 비교)을 적는다"
+    - "파일을 더하거나 지우면 docs/file-tree.md와 docs/code-structure-and-patterns.md도 같이 고친다"
+
+operations:
+  apply:
+    guidance:
+      - "docs/coding-rules.md 6번 체크리스트를 지킨다"
+      - "같은 일을 하는 파일·폴더를 새로 만들지 않고 원래 파일을 고친다 (CLAUDE.md 1번). 결과물 자리를 바꿀 땐 먼저 묻는다"
+      - "화면에 설명·안내 문구를 덧붙이지 않는다. 화면 글자는 미미가 정한 것만, 필요하면 먼저 묻는다 (CLAUDE.md 3번)"
+      - "원본과 화면이 같아야 하는 작업은 npm run compare로 확인한다"

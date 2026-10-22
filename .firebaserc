@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "ururu-6164b"
+  },
+  "targets": {
+    "ururu-6164b": {
+      "hosting": {
+        "app": [
+          "ururu-6164b"
+        ],
+        "admin": [
+          "ururu-admin"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

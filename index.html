@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <!-- 손가락 두 개로 확대·축소는 막아요 (앱인토스 출시 체크리스트, docs/policy/compliance.md) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>우르르</title>
+  <!-- 글꼴: 앱 전체 Noto Sans KR 하나 (굵기 400 · 500 · 700 · 900). Phase 3에서 앱 안에 넣어요 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+</head>
+<body>
+  <!-- 앱 전체 틀. 안쪽(화면, 탭바, 덮개 창, 배너)은 React가 채워요. CSS 9개는 src/main.jsx에서 불러요 -->
+  <div class="app" id="app"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

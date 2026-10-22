@@ -1,0 +1,402 @@
+/* 나 탭: 내 정보, 사진, 스토리 만들기, 설정 + 소리 받기 안내 창 */
+/* 소리 울리기 권한 안내 */
+.guide
+{
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--bg);
+  font-size: var(--fs);
+  line-height: 1.6;
+}
+.guide b
+{
+  display: block;
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+.guide .path
+{
+  font-weight: 900;
+}
+.guide small
+{
+  display: block;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+
+/* 나 */
+.mehead
+{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 16px 18px;
+}
+.mehead .info
+{
+  flex: 1;
+  min-width: 0;
+}
+.mehead h2
+{
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: var(--fs-title);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mehead p
+{
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+.nameedit
+{
+  display: flex;
+  gap: 6px;
+}
+/* 관심사 키워드: 칩 + 지우기 X, 아래 입력 칸 */
+.tagedit
+{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.tagedit .tag
+{
+  height: 32px;
+  padding: 0 4px 0 10px;
+  font-size: var(--fs);
+  box-sizing: border-box;
+}
+.tagedit button
+{
+  width: 24px;
+  height: 24px;
+  flex: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--on-yellow);
+  display: grid;
+  place-items: center;
+}
+.tagedit button svg
+{
+  width: 14px;
+  height: 14px;
+}
+.tagadd .field
+{
+  height: var(--btn-h);
+}
+.box
+{
+  margin: 0 16px 14px;
+  padding: 16px;
+  border-radius: 22px;
+  background: var(--surface);
+}
+.box h4
+{
+  margin: 0 0 12px;
+  font-size: var(--fs);
+}
+.box .hint
+{
+  font-size: var(--fs-small);
+  color: var(--muted);
+  margin: 10px 0 0;
+  line-height: 1.5;
+}
+.storyprev
+{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.thumb
+{
+  background: #111;
+  width: 60px;
+  height: 86px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 4px;
+  background-size: cover;
+  background-position: center;
+  flex: none;
+  word-break: break-word;
+  overflow: hidden;
+}
+.editor
+{
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.editor .thumb
+{
+  width: 96px;
+  height: 150px;
+  font-size: 16px;
+}
+/* 편집 줄 버튼: 왼쪽 [사진 추가], 오른쪽 [스토리 올리기] */
+.editor .btnline
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+.editor .btnline .smallbtn
+{
+  padding: 0 16px;
+}
+.pickers
+{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 4px;
+  margin-top: 1px;
+}
+/* 색 칸: 테두리·바탕 없이 동그라미 + 이름만. 고른 칸(.on)은 글자가 진하고 밑줄이 생겨요 */
+.colorpick
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 6px;
+  border: 0;
+  background: none;
+  font-size: var(--fs);
+  font-weight: 700;
+  color: var(--muted);
+  position: relative;
+}
+.colorpick.on
+{
+  color: var(--ink);
+}
+.colorpick .swatch
+{
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.colorpick .swatch.none
+{
+  background: var(--bg);
+}
+.colorpick .swatch.none::after
+{
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 1.5px;
+  background: var(--alert);
+  transform: rotate(-45deg);
+}
+.sliderrow.off
+{
+  opacity: .4;
+  pointer-events: none;
+}
+.sliderrow
+{
+  margin-top: 18px;
+}
+/* 위(편집 줄)와의 간격: 키우면 크기 막대 묶음이 아래로 내려가요 */
+.sliderrow .lbl
+{
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs);
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+/* "폰트 크기"와 막대 사이 간격 */
+.sliderrow .lbl b
+{
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.slider
+{
+  position: relative;
+  height: 18px;
+  touch-action: none;
+  cursor: pointer;
+}
+/* 막대가 차지하는 높이: 줄이면 글자와 막대가 가까워져요 (손잡이 18px보다 작게는 X) */
+.slider .track
+{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 999px;
+  background: var(--line);
+}
+.slider .fill
+{
+  height: 100%;
+  border-radius: 999px;
+  background: var(--ink);
+}
+.slider .thumb2
+{
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--ink);
+  box-shadow: var(--shadow);
+}
+.setrow
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+}
+.setrow div
+{
+  min-width: 0;
+}
+.setrow b
+{
+  display: block;
+  font-size: var(--fs);
+}
+.linkrow
+{
+  width: 100%;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+.setrow small
+{
+  color: var(--muted);
+  font-size: var(--fs-small);
+}
+.sw
+{
+  position: relative;
+  width: 34px;
+  height: 20px;
+  flex: none;
+  border-radius: 999px;
+  border: 0;
+  padding: 0;
+  background: var(--line);
+}
+.sw::after
+{
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .2s;
+}
+.sw.on
+{
+  background: var(--ok);
+}
+.sw.on::after
+{
+  transform: translateX(14px);
+}
+.sw:active::after
+{
+  width: 20px;
+}
+.sw.on:active::after
+{
+  transform: translateX(10px);
+}
+.photogrid
+{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+}
+.photogrid .cell
+{
+  position: relative;
+  aspect-ratio: 3/4;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 100%;
+}
+.photogrid .del
+{
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.photogrid .add
+{
+  aspect-ratio: 3/4;
+  border-radius: 10px;
+  border: 1.5px dashed var(--muted);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 32px;
+  display: grid;
+  place-items: center;
+}
+.withdraw
+{
+  display: block;
+  width: fit-content;
+  margin: 6px auto 24px;
+  padding: 10px 16px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: var(--fs-small);
+  font-weight: 700;
+}

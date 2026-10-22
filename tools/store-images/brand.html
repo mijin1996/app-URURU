@@ -1,0 +1,89 @@
+<!doctype html>
+<!-- =========================================================
+     tools/store-images/brand.html — 앱 아이콘·그래픽 이미지 원본 (make-store-images.mjs가 찍어요)
+     ---------------------------------------------------------
+     ?kind=icon      정사각형 아이콘 (앱인토스 600×600 / 구글 플레이 512×512, 크기는 찍을 때 정해요)
+     ?kind=feature   구글 플레이 그래픽 이미지 1024×500
+     색은 styles/base.css의 --accent(#7a5cff)와 같게, 글꼴은 앱 로고와 같은 Noto Sans KR 900
+     앱인토스 로고 규칙: 배경색 필수, 투명·둥근 모서리 금지 → 꽉 찬 사각형으로 그려요
+     ========================================================= -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap">
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  body {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #7a5cff;
+    color: #fff;
+    font-family: "Noto Sans KR", "Noto Sans CJK KR", sans-serif;
+    font-weight: 900;
+  }
+  .icon {
+    width: 100vmin;
+    height: 100vmin;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(circle at 30% 25%, #9a86ff 0%, #7a5cff 55%, #5b3ff0 100%);
+  }
+  .icon .mark {
+    font-size: 25vmin;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transform: translateY(-2%);
+  }
+  .feature {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6vw;
+    background: radial-gradient(circle at 20% 30%, #9a86ff 0%, #7a5cff 50%, #5b3ff0 100%);
+  }
+  .feature .mark {
+    font-size: 15vw;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .feature .bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 2.2vh;
+  }
+  .feature .bubbles i {
+    display: block;
+    height: 9vh;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .92);
+  }
+  .feature .bubbles i:nth-child(1) {
+    width: 22vw;
+  }
+  .feature .bubbles i:nth-child(2) {
+    width: 15vw;
+    margin-left: 7vw;
+    background: #ffdd2e;
+  }
+  .feature .bubbles i:nth-child(3) {
+    width: 18vw;
+  }
+</style>
+</head>
+<body>
+<script>
+  const kind = new URLSearchParams(location.search).get("kind") || "icon";
+  document.body.innerHTML = kind === "feature"
+    ? '<div class="feature"><div class="mark">우르르</div><div class="bubbles"><i></i><i></i><i></i></div></div>'
+    : '<div class="icon"><div class="mark">우르르</div></div>';
+</script>
+</body>
+</html>

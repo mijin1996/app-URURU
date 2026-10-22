@@ -1,0 +1,154 @@
+/* 스와이프 탭 */
+/* 스와이프 */
+.deck
+{
+  position: relative;
+  flex: 1;
+  margin: 16px 16px 0;
+}
+.card
+{
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 22px;
+  touch-action: none;
+  box-shadow: var(--shadow);
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+.card > .photo
+{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.card > :not(.photo)
+{
+  position: relative;
+  z-index: 1;
+}
+.card .shade
+{
+  position: absolute!important;
+  inset: 40% 0 0 0;
+  background: linear-gradient(transparent,rgba(0,0,0,.5));
+}
+.card .more
+{
+  font-size: var(--fs-small);
+  font-weight: 700;
+  opacity: .85;
+  margin-top: 8px;
+}
+.card h2
+{
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: var(--fs-title);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 small
+{
+  font: inherit;
+}
+/* 이름과 나이는 같은 글꼴·크기·굵기 */
+.card p
+{
+  margin: 4px 0 10px;
+  font-size: var(--fs-small);
+  opacity: .92;
+}
+.chips
+{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chips .tag
+{
+  font-size: var(--fs-small);
+}
+.stamp
+{
+  position: absolute;
+  top: 26px;
+  padding: 6px 14px;
+  border: 3px solid #fff;
+  border-radius: 12px;
+  font-weight: 900;
+  font-size: 22px;
+  opacity: 0;
+}
+.stamp.yes
+{
+  left: 22px;
+  transform: rotate(-12deg);
+}
+.stamp.no
+{
+  right: 22px;
+  transform: rotate(12deg);
+}
+.card.behind
+{
+  transform: scale(.95) translateY(12px);
+  filter: brightness(.85);
+}
+.swbtns
+{
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 0 14px;
+}
+.swbtns button
+{
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--bg);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow);
+}
+.swbtns .yes
+{
+  color: var(--ok);
+}
+.swbtns .no
+{
+  color: var(--alert);
+}
+.swbtns .yes.liked
+{
+  background: var(--ok);
+  border-color: var(--ok);
+  color: #fff;
+  animation: heartpop .35s ease;
+}
+/* 제목 아래 "이번 1시간에 n / 5명" 과 빈 화면 안내 */
+.swcount
+{
+  margin: -4px 16px 8px;
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+.swempty
+{
+  padding: 40px 24px;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--muted);
+  line-height: 1.7;
+}

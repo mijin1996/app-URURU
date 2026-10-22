@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// =========================================================
+// storage.rules — 사진 저장소 보안 규칙 (add-real-server)
+// ---------------------------------------------------------
+// users/{uid}/photos/…   내 프로필 사진: 나만 올리고 지움, 로그인한 사람은 볼 수 있음
+// users/{uid}/stories/…  사진 스토리: 위와 같음 (24시간 뒤 지움)
+// chats/{pair}/…         대화 사진: 그 두 사람만, 친구일 때만
+// 사진만, 5MB까지 (앱이 올리기 전에 1280px로 줄여요: firebase/shrinkImage.js)
+// =========================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 시험용 익명 계정은 처음 로그인한 지 하루(24시간)까지만 (앱: src/data/login/GoogleLogin.js ANON_LIFETIME_MS)
+    function anonExpired() {
+      return request.auth.token.firebase.sign_in_provider == 'anonymous'
+        && request.time.toMillis() > request.auth.token.auth_time * 1000 + 86400000;
+    }
+    function signedIn() {
+      return request.auth != null && !anonExpired();
+    }
+    function isImage() {
+      return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
+    }
+
+    match /users/{uid}/photos/{file} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid && isImage();
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    // 사진 스토리: 나만 올리고 지움, 로그인한 사람은 볼 수 있음 (24시간 뒤 서버 함수 cleanup이 지움)
+    match /users/{uid}/stories/{file} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid && isImage();
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+
+    match /chats/{pair}/{file} {
+      allow read: if signedIn() && request.auth.uid in pair.split('_')
+        && firestore.exists(/databases/(default)/documents/friendships/$(pair));
+      allow create: if signedIn() && request.auth.uid in pair.split('_') && isImage()
+        && firestore.exists(/databases/(default)/documents/friendships/$(pair));
+      allow update, delete: if false;   // 24시간 정리는 서버 함수
+    }
+  }
+}

@@ -1,0 +1,19 @@
+node_modules/
+dist/
+dist-toss/
+dist-admin/
+*.ait
+.env
+.env.*
+!.env.example
+tools/compare/__screens__/
+test-results/
+playwright-report/
+_to_delete/
+functions/shared/
+
+# 빌드 결과물 · 캐시 · 기록 (키가 들어갈 수 있어서 올리지 않음)
+dist-web-android/
+.firebase/
+*.log
+.claude/settings.local.json

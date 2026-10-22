@@ -1,0 +1,203 @@
+/* 지도 */
+.map
+{
+  position: relative;
+  flex: 1;
+  margin: 12px;
+  border-radius: 26px;
+  overflow: hidden;
+  background: var(--map-land);
+}
+/* 카카오 지도: 지도 칸을 꽉 채우고, 핀·제목은 그 위에 */
+.map .kmap
+{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+/* 진짜 카카오 지도가 뜨면(= "내 위치로" 버튼이 생기면) 위쪽 "신장동"·안내 타일은 숨겨요. 그림 지도일 때만 보임 */
+.map:has(.locatebtn) .maphead
+{
+  display: none;
+}
+/* "내 위치로" 버튼: 지도 오른쪽 아래, 핀보다 위 (KakaoMap) */
+.map .locatebtn
+{
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 5;
+  width: var(--btn-h);
+  height: var(--btn-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.map svg.bg
+{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.map .land
+{
+  fill: var(--map-land);
+}
+.map .park
+{
+  fill: var(--map-park);
+}
+.map .water
+{
+  fill: none;
+  stroke: var(--map-water);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+.map .road
+{
+  fill: none;
+  stroke: var(--map-road);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.map .major
+{
+  fill: none;
+  stroke: var(--map-major);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.map .radius
+{
+  fill: none;
+  stroke: var(--map-ring);
+  stroke-width: 2.5;
+}
+.map .lbl
+{
+  fill: var(--map-label);
+  font-family: var(--display);
+  font-weight: 900;
+  font-size: 22px;
+}
+.maphead
+{
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+}
+/* 위치 공유를 끈 동안 제목 아래 안내 한 줄 */
+.maphead .mapnote
+{
+  margin: 4px auto 0;
+  width: fit-content;
+  max-width: 90%;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--muted);
+  font-size: var(--fs-small);
+  font-weight: 700;
+}
+.maphead span
+{
+  font-size: var(--fs-small);
+  color: var(--muted);
+  font-weight: 700;
+}
+.pin
+{
+  position: absolute;
+  transform: translate(-50%,-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: 0;
+  padding: 0;
+  transition: left 2.6s ease,top 2.6s ease;
+}
+.pin .av
+{
+  box-shadow: 0 0 0 3px var(--bg);
+}
+.pin .ring .av
+{
+  box-shadow: none;
+}
+.pin .ring
+{
+  background: var(--bg);
+}
+.pin.me .tag
+{
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.pin .tag
+{
+  font-size: var(--fs);
+  font-weight: 900;
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  white-space: nowrap;
+}
+.pin.me::before
+{
+  content: "";
+  position: absolute;
+  top: 29px;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  margin: -55px 0 0 -55px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .14;
+  animation: pulse 2.4s ease-out infinite;
+}
+.pin.me.ghost .av
+{
+  filter: grayscale(1);
+  opacity: .6;
+}
+.pin.me.ghost::before
+{
+  display: none;
+}
+@keyframes pulse
+{
+  0%
+  {
+    transform: scale(.4);
+    opacity: .3;
+  }
+  100%
+  {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+.online
+{
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.8);
+}
