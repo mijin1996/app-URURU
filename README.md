@@ -6,4 +6,4 @@
 <img width="596" height="237" alt="image" src="https://github.com/user-attachments/assets/4d74cbfe-e00f-444e-87d1-8aead3b4ee5a" />
 
 ✋챙겨야할 것 
-![Uploading image.png…]()
+<img width="596" height="237" alt="image" src="https://github.com/user-attachments/assets/0b8389cc-fe5c-4236-a02f-886d3d643625" />
