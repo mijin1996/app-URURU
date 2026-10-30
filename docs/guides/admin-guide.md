@@ -21,13 +21,9 @@
 - 지금 코드의 등급은 **운영자 · 총관리자 2개**예요. 최종관리자와 2단계 승인은 `admin-roles.md`대로 만들 예정.
 
 ### 내 컴퓨터에서 열기 (개발 · 임시)
-
-`npm run dev`를 켠 그 컴퓨터에서만 열려요. **데이터는 진짜 서버**라 처리 · 삭제가 실제로 적용돼요.
-
-| 무엇 | 주소 | 켜는 명령 |
-|---|---|---|
-| 사용자 앱 | http://localhost:5173 | `npm run dev` |
-| 운영자 사이트 | http://localhost:5173/admin.html 또는 http://localhost:5180/admin.html | `npm run dev` 또는 `npm run dev:admin` |
+ https://ururu.onrender.com/ ← 사용자 화면 
+ https://ururu.onrender.com/admin ← 운영자 화면 
+ https://ururu.onrender.com/dev ← 개발자 화면
 
 ### 올리기 · 코드
 

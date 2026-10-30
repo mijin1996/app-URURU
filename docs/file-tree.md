@@ -42,7 +42,6 @@ moyeo/
 │  ├─ coding-rules.md                 # [기본 원칙 4] 코드 작성 지침 (원문 그대로)
 │  ├─ code-structure-and-patterns.md  # 파일마다 하는 일·기능·구현 방법·패턴 + OpenSpec 문서 쓰는 법
 │  ├─ file-tree.md                    # 지금 이 문서: 프로젝트 전체 파일 트리
-│  ├─ progress.md                     # 진행 상황과 이어서 할 일 (다른 Claude에게 넘길 때 먼저 읽기)
 │  ├─ guides/                         # 따라 하는 안내
 │  │  ├─ google-maps-api-key-guide.md          # 구글 지도 API 키 받기
 │  │  ├─ google-play-console-release-guide.md  # 구글 플레이 콘솔에 올리기

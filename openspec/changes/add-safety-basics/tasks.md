@@ -16,7 +16,7 @@
 
 ## 2. 약관과 동의
 
-- [ ] 2.1 `docs/policy/terms.md`, `privacy.md`를 쓰고 Firebase Hosting 주소에서 열리는지 확인 — 제출본 완성(2026-10-13: 운영자 진미, 문의 itsjinmi@gmail.com, 만 19세, 기록 보관 1년, 시행일 = 앱인토스 제출일). 웹 주소는 아직
+- [ ] 2.1 `docs/policy/terms.md`, `privacy.md`를 쓰고 Firebase Hosting 주소에서 열리는지 확인 — 제출본 완성(2026-10-13: 운영자 진미, 문의 unidevpeer@gmail.com, 만 19세, 기록 보관 1년, 시행일 = 앱인토스 제출일). 웹 주소는 아직
 - [ ] 2.2 가입 화면 동의 칸을 만들고 SAFE-10~11 확인
 - [ ] 2.3 위치 동의 창을 만들고 SAFE-20~21 확인
 

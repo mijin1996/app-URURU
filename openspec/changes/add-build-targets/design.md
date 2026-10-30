@@ -36,7 +36,7 @@ const FEATURES_BY_TARGET = {
   // 토스: 친구끼리만. 법인 등록 뒤 canSwipe, 위치기반서비스 신고·동의 창 뒤 canShareLocation을 true로
   toss:    { canSwipe: false, canShareLocation: false }
 };
-// minAge는 미미 결정 뒤 추가 (토스 19, 구글 플레이 18?, 시연 14 — progress.md 6번)
+// minAge는 미미 결정 뒤 추가 (토스 19, 구글 플레이 18?, 시연 14 — CLAUDE.md 8번 진행 6)
 ```
 
 - 탭 표(`tabs.js`)는 `canSwipe`가 false면 스와이프 탭을, `canShareLocation`이 false면 홈(지도) 탭을 빼요. 그래서 토스 빌드는 채팅 · 친구 · 나 3칸이고 첫 탭은 채팅이에요. 나 탭의 "친구와 위치 공유" 토글도 `canShareLocation`을 따라요.

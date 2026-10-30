@@ -14,7 +14,7 @@
 
    아직 안 한 것 (add-real-server tasks):
    - 친구 위치(locations): 지도는 add-google-map 뒤에 (토스 첫 출시는 위치 끔)
-   - 소리 울리기 받기: 보내기만 서버에 기록 (받는 화면은 progress.md 6번 질문 뒤에)
+   - 소리 울리기 받기: 보내기만 서버에 기록 (받는 화면은 CLAUDE.md 8번 진행 6 질문 뒤에)
    ========================================================= */
 
 import { SWIPE_LOAD_COUNT } from "../../core/config.js";

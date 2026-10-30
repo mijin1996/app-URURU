@@ -4,7 +4,7 @@
    @apps-in-toss/web-framework는 토스 앱 안에서만 동작해요.
    토스 빌드가 아니면 이 파일을 부르지 않고, vite.config.js가 이 패키지를 묶지 않게 빼둬요.
    그래서 SDK를 설치하기 전에도 web·single 빌드는 그대로 돼요.
-   설치: progress.md 5-3의 7번 (npm install @apps-in-toss/web-framework)
+   설치: CLAUDE.md 8번 진행 5-3의 7번 (npm install @apps-in-toss/web-framework)
    loadTossUser   익명 사용자 키 (AnonKeyLogin)
    listenTossBack 토스 뒤로가기 → 맨 위 창 닫기 / 첫 화면이면 미니앱 나가기
    ========================================================= */
