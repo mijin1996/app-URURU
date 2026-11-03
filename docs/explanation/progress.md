@@ -22,7 +22,7 @@
 | npm | 미미 PC에서 `npm install` · `npm run dev` 동작 확인 (`localhost:5173`) | 2번 "한 번도 안 했어요" |
 | `.env` | 파일 이름이 `env`(점 없음)라 Vite가 못 읽어 가짜 서버로 열리던 것 → **`.env`로 고침** (10-30). Firebase `ururu-6164b` · 카카오 키 · `VITE_SERVER_FUNCTIONS=false`(무료 모드). git에 안 올림 | — |
 | Firebase · 카카오 | 프로젝트 `ururu-6164b`, 카카오 지도 키 등록됨 | 옛 프로젝트 `ururu-eb3db` |
-| 웹 공개 | **Firebase Hosting 하나로** (2026-11-03 미미: 서버 1개 = Firebase, Render 안 씀). 사용자 앱 `ururu-6164b.web.app`, 운영자 사이트 `ururu-6164b-admin.web.app` | 10-30: Render Static Site 등록 중이었음 |
+| 웹 공개 | **Cloudflare Pages** (2026-11-03 미미: 서버는 Firebase 하나, 화면 파일만 Cloudflare. 사용자 앱 · 운영자 사이트 프로젝트 2개, GitHub push로 자동 배포) | 10-30: Render 등록 중 → 11-03 오전: Firebase Hosting으로 배포까지 함 → 11-03 저녁: Cloudflare로 바꿈 |
 
 #### 0-2. 완료한 것 (코드 기준)
 
@@ -51,7 +51,7 @@
 | 2.5 지도 | 카카오 지도 · 내 위치 됨 | 친구 실제 위치 |
 | 4 진짜 서버 | `ururu-6164b` 연결, `.env` 고침 | 두 사람(브라우저 두 개)으로 전 기능 확인 |
 | 4.5 안전 장치 | 차단 · 신고 · 제재 · 운영자 사이트 됨 | 약관 동의 칸, 위치 동의 창, 정책 웹 주소 |
-| 5 빌드 · 출시 | 웹 빌드 됨, Firebase Hosting으로 올릴 준비 | 안드로이드 빌드(`.aab`) |
+| 5 빌드 · 출시 | 웹 빌드 됨, Cloudflare Pages로 옮기는 중 | 안드로이드 빌드(`.aab`) |
 | 3 폰 앱 | ❌ 시작 안 함 | Capacitor `android/` |
 
 #### 0-4. 남은 과제 (구글 플레이 기준, 순서대로)
@@ -64,12 +64,13 @@
 - [ ] 첫 총관리자 아이디 만들기 (`docs/how-to/operate-admin-site.md` 3번)
 - [ ] 다 되면 옛 프로젝트 `ururu-eb3db` 삭제
 
-**B. 웹 공개 (Firebase Hosting 하나로, 2026-11-03 Render에서 바꿈)**
-- [ ] 사용자 앱: `npm run deploy:web` → https://ururu-6164b.web.app (설정은 `firebase.json` · `.firebaserc` `app`에 이미 있음)
-- [ ] 운영자 사이트: `npx firebase hosting:sites:create ururu-6164b-admin` → `npm run deploy:admin` (`.firebaserc` `admin`, 자세히 `docs/how-to/operate-admin-site.md`)
-- [ ] Firebase 승인된 도메인: `localhost`, `ururu-6164b.web.app`, `ururu-6164b.firebaseapp.com`, `ururu-6164b-admin.web.app` — Render 주소를 넣었으면 빼기
-- [ ] 카카오 JavaScript SDK 도메인: `http://localhost:5173`, `https://ururu-6164b.web.app`, `https://ururu-6164b.firebaseapp.com` 3개만 — `http://localhost:5175`는 빼기 (개발 포트를 5173으로 고정함). 안드로이드 앱을 만들면 `https://localhost` 추가
-- [ ] Render에 만들어 둔 사이트가 있으면 지우기
+**B. 웹 공개 (Cloudflare Pages, 2026-11-03 Firebase Hosting에서 바꿈 — 순서는 `docs/how-to/operate-admin-site.md` "Cloudflare Pages 프로젝트 만들기")**
+- [ ] Cloudflare 계정 이메일 인증 (대시보드 위 파란 안내 "Resend verification email")
+- [ ] 사용자 앱 프로젝트: Build `npm run build`, Output `dist`, 환경 변수 `NODE_VERSION=22` + `.env`의 `VITE_…`
+- [ ] 운영자 사이트 프로젝트: Build `npm run build:admin`, Output `dist-admin` (index.html · `_headers`는 빌드가 저절로 만듦)
+- [ ] Firebase 승인된 도메인: `localhost` + 두 `.pages.dev` 주소. Render 주소 · 안 쓸 `web.app` 주소는 빼도 됨
+- [ ] 카카오 JavaScript SDK 도메인: `http://localhost:5173` + 사용자 앱 `.pages.dev` — `localhost:5175` · `web.app` · `firebaseapp.com`은 빼기. 안드로이드 앱을 만들면 `https://localhost` 추가
+- [ ] 새 주소로 로그인 · 지도 · 채팅 확인되면 Firebase Hosting에 올려 둔 사이트 끄기 (`npx firebase hosting:disable`), Render 사이트 지우기
 
 **C. 출시 전 필수**
 - [ ] 가입 화면 약관 동의 칸 (SAFE-10~11), 위치 동의 창 (SAFE-20~21)

@@ -12,8 +12,8 @@
 
 | 등급 | 들어가는 곳 | 주소 | 로그인 | 들어가서 할 수 있는 것 |
 |---|---|---|---|---|
-| **일반 사용자** | 사용자 앱 | https://ururu-6164b.web.app (나중에 구글 플레이 앱 · 토스 미니앱) | 구글 | 채팅, 친구, 스와이프, 스토리, 신고하기 |
-| **일반 운영자** | 운영자 사이트 | https://ururu-6164b-admin.web.app (⏳ 처음 한 번 만들기 — 아래 "주소 한눈에") | 아이디 12자리 | 신고 목록 · 처리 완료 · 경고 · 정지 · 영구정지 · 정지 풀기, 회원 보기 |
+| **일반 사용자** | 사용자 앱 | https://<사용자앱>.pages.dev (나중에 구글 플레이 앱) | 구글 | 채팅, 친구, 스와이프, 스토리, 신고하기 |
+| **일반 운영자** | 운영자 사이트 | https://<운영자>.pages.dev (⏳ Cloudflare Pages 프로젝트 만들기 — 아래 "주소 한눈에") | 아이디 12자리 | 신고 목록 · 처리 완료 · 경고 · 정지 · 영구정지 · 정지 풀기, 회원 보기 |
 | **총관리자** | 운영자 사이트 (같은 주소) | 〃 | 아이디 12자리 | 위 전부 + 회원 삭제 + 운영자 관리(아이디 발급 · 권한 회수) |
 | **최종관리자** | 운영자 사이트 (같은 주소) | 〃 | 아이디 12자리 | **모든 것** (운영자 · 총관리자가 하는 일 전부 + 모든 신청 최종 승인 · 누구든 권한 회수 · 최종관리자 넘겨주기) — ⏳ **설계만** (`admin-roles.md`, B안) |
 | **관리 콘솔** | Firebase 콘솔 | https://console.firebase.google.com/project/ururu-6164b | 구글 `unidevpeer@gmail.com` (프로젝트 주인) | 데이터 직접 보기, 로그인 설정, 배포, 최종관리자 지정 · 비상 변경 |
@@ -22,31 +22,42 @@
 - 권한은 화면이 아니라 서버 규칙(`firestore.rules`)이 막아요. 화면을 고쳐도 등급 밖의 일은 서버가 거절해요.
 - 지금 코드의 등급은 **운영자 · 총관리자 2개**예요. 최종관리자와 2단계 승인은 `admin-roles.md`대로 만들 예정.
 
-### 주소 한눈에 (서버는 Firebase 프로젝트 `ururu-6164b` 하나)
+### 주소 한눈에 (서버는 Firebase 프로젝트 `ururu-6164b` 하나, 화면은 Cloudflare Pages)
 
-| 화면 | 내 컴퓨터 (개발) | 인터넷 (Firebase Hosting) |
+| 화면 | 내 컴퓨터 (개발) | 인터넷 (Cloudflare Pages) |
 |---|---|---|
-| 사용자 앱 | `npm run dev` → http://localhost:5173 | https://ururu-6164b.web.app (같은 사이트: `ururu-6164b.firebaseapp.com`) |
-| 운영자 사이트 | `npm run dev:admin` → http://localhost:5180/admin.html | https://ururu-6164b-admin.web.app — ⏳ 처음 한 번 사이트 만들기 필요 (아래) |
+| 사용자 앱 | `npm run dev` → http://localhost:5173 | https://<사용자앱>.pages.dev — ⏳ 프로젝트 만들면 이름 적기 |
+| 운영자 사이트 | `npm run dev:admin` → http://localhost:5180/admin.html | https://<운영자>.pages.dev — ⏳ 프로젝트 만들면 이름 적기 |
 
-> 2026-11-03: Render는 쓰지 않기로 했어요. 사용자 앱과 운영자 사이트 모두 같은 Firebase에 올려요 (화면 2개, 서버 1개).
+> 2026-11-03: 화면 파일은 Cloudflare Pages에 올리기로 했어요 (Firebase Hosting · Render 안 씀). 데이터 · 로그인은 그대로 Firebase.
 
-**운영자 사이트 처음 한 번 만들기** (미미 PC, 프로젝트 폴더에서)
+**Cloudflare Pages 프로젝트 만들기** (사용자 앱 · 운영자 사이트 각각 한 번씩, 같은 GitHub 저장소)
 
-```bash
-npx firebase login
-npx firebase hosting:sites:create ururu-6164b-admin
-npm run deploy:admin
-```
+1. Cloudflare 대시보드 → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git** → GitHub 로그인 → `mijin1996/app-URURU`
+2. 빌드 설정
 
-- `hosting:sites:create`에서 "이미 있는 이름"이라고 나오면 다른 이름(예: `ururu-6164b-ops`)으로 만들고, `.firebaserc`의 `ururu-6164b-admin`도 같은 이름으로 바꿔요.
-- 운영자 사이트는 지도를 쓰지 않아서 카카오 도메인에는 넣지 않아요. 운영자 로그인을 위해 Firebase 콘솔 → Authentication → 설정 → **승인된 도메인**에 `ururu-6164b-admin.web.app`을 추가해요.
+   | 칸 | 사용자 앱 | 운영자 사이트 |
+   |---|---|---|
+   | Project name | 예: `ururu` → 주소가 `ururu.pages.dev` | 예: `ururu-admin` |
+   | Production branch | `master` | `master` |
+   | Framework preset | None | None |
+   | Build command | `npm run build` | `npm run build:admin` |
+   | Build output directory | `dist` | `dist-admin` |
+   | Environment variables | `NODE_VERSION` = `22` + `.env`의 `VITE_…` 값 전부 | `NODE_VERSION` = `22` + `.env`의 `VITE_FIREBASE_…` 값 |
+
+3. **Save and Deploy** → 끝나면 위 표의 주소를 실제 이름으로 고치기
+4. 도메인 등록 (안 하면 로그인 · 지도가 막혀요)
+   - Firebase 콘솔 → Authentication → 설정 → **승인된 도메인**: 두 `.pages.dev` 주소 추가
+   - 카카오 개발자 콘솔 → JavaScript SDK 도메인: **사용자 앱** 주소만 추가 (운영자 사이트는 지도를 안 씀)
+
+- `.env` 값은 키라서 git에 올리지 않아요. Cloudflare 설정 화면에만 넣어요. 값을 바꾸면 Cloudflare에서 **다시 배포**해야 화면에 들어가요 (`VITE_…`는 빌드할 때 화면 코드 안에 들어가요).
+- 운영자 사이트 빌드에는 `index.html`(admin.html 복사본)과 `_headers`(검색엔진 차단 · 끼워 넣기 금지)가 저절로 같이 만들어져요 (`vite.config.js`의 `writeAdminHosting`).
 
 ### 올리기 · 코드
 
 | | 사용자 앱 | 운영자 사이트 |
 |---|---|---|
-| 올리기 | `npm run deploy:web` (dist/ → Hosting `app`) | `npm run deploy:admin` (dist-admin/ → Hosting `admin`, `.firebaserc` 12줄의 사이트 이름) |
+| 올리기 | GitHub에 push → Cloudflare Pages(사용자 앱 프로젝트)가 `npm run build` → `dist/` | GitHub에 push → Cloudflare Pages(운영자 프로젝트)가 `npm run build:admin` → `dist-admin/` |
 | 코드 | `src/` (admin 제외) | `src/admin/`, `admin.html`, `styles/admin.css` |
 | 로그인 저장 | 앱 것 | 따로 (Firebase 앱 이름 "admin") — 앱에 로그인돼 있어도 운영자 사이트는 따로 로그인, **탭을 닫으면 로그아웃** |
 
@@ -61,8 +72,8 @@ npm run deploy:admin
 ## 3. 처음 한 번: 총관리자 만들기
 
 1. Firebase 콘솔 → Authentication → 로그인 방법 → **이메일/비밀번호** 사용 설정 (운영자 아이디가 이 방식으로 로그인해요).
-2. 운영자 사이트 주소 만들기: 터미널 `npx firebase hosting:sites:create ururu-6164b-admin` (`.firebaserc`에 이미 이 이름, 못 쓰면 다른 이름으로 만들고 `.firebaserc`도 같이 바꾸기).
-3. Authentication → 설정 → 승인된 도메인에 `<이름>.web.app` 추가 (구글 첫 설정 팝업용).
+2. 운영자 사이트 주소 만들기: Cloudflare Pages에 운영자 프로젝트 만들기 (위 "Cloudflare Pages 프로젝트 만들기").
+3. Authentication → 설정 → 승인된 도메인에 운영자 사이트 `<운영자>.pages.dev` 추가 (구글 첫 설정 팝업용).
 4. 규칙 올리기: `npx firebase deploy --only firestore`
 5. 운영자 사이트 올리기: `npm run deploy:admin`
 6. 운영자 사이트 아래쪽 **"총관리자 첫 설정 (구글, 처음 한 번만)"** → `unidevpeer@gmail.com` 으로 로그인 → 역할 **총관리자**로 아이디 발급 → 복사해서 안전한 곳에 보관.

@@ -19,9 +19,9 @@ npm run build:ait    # build:toss + ait build → ururu.ait (앱인토스 콘솔
 npm run spec:check   # openspec validate --all --strict (문서 형식 검사)
 npm run emulators    # 내 컴퓨터 안의 가짜 Firebase (.env에 VITE_FIREBASE_EMULATOR=true, Java 21 이상)
 npm run deploy:server # firestore.rules·storage.rules·서버 함수를 진짜 Firebase에 올리기 (서버 함수는 Blaze 요금제 필요)
-npm run deploy:web    # 빌드 + 사용자 앱을 Hosting(app)에 올리기
+npm run deploy:web    # (안 씀) 옛 Firebase Hosting 올리기 — 지금은 GitHub push → Cloudflare Pages가 빌드
 npm run dev:admin     # 운영자 사이트 개발 서버 (http://localhost:5180/admin.html, 안내: ../how-to/operate-admin-site.md)
-npm run deploy:admin  # 운영자 사이트 빌드(dist-admin/) + Hosting(admin)에 올리기
+npm run deploy:admin  # (안 씀) 옛 Firebase Hosting 올리기 — 지금은 GitHub push → Cloudflare Pages(운영자)가 빌드
 ```
 
 ### 안드로이드 (⏳ 아직 안 됨 — `openspec/changes/add-mobile-apps`에서 Capacitor를 설치한 뒤)
