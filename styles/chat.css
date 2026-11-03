@@ -1,7 +1,6 @@
 /* 채팅 탭(스토리 줄, 대화 목록) + 채팅방 + 전화 화면 + 신고 창 */
 /* 메시지 목록: 스토리 줄 (둥근 네모 + 초록 테두리, 이 화면에서만) */
-.storyrow
-{
+.storyrow {
   display: flex;
   gap: 14px;
   overflow-x: auto;
@@ -10,12 +9,10 @@
   border-bottom: 1px solid var(--line);
   margin-bottom: 14px;
 }
-.storyrow::-webkit-scrollbar
-{
+.storyrow::-webkit-scrollbar {
   display: none;
 }
-.storyrow button
-{
+.storyrow button {
   flex: none;
   display: grid;
   place-items: center;
@@ -23,8 +20,7 @@
   border: 0;
   padding: 4px 0 0;
 }
-.sq
-{
+.sq {
   position: relative;
   width: 64px;
   height: 64px;
@@ -34,17 +30,15 @@
   color: #fff;
   font-weight: 900;
   font-size: 24px;
-  background: linear-gradient(135deg,var(--c1),var(--c2));
+  background: linear-gradient(135deg, var(--c1), var(--c2));
 }
-.sq img
-{
+.sq img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
 }
-.sq .plus
-{
+.sq .plus {
   position: absolute;
   right: -6px;
   bottom: -6px;
@@ -59,8 +53,7 @@
   font-size: 16px;
   line-height: 1;
 }
-.banner
-{
+.banner {
   margin: 0 16px 18px;
   padding: 16px;
   border-radius: 22px;
@@ -70,27 +63,23 @@
   gap: 12px;
   align-items: center;
 }
-.banner b
-{
+.banner b {
   display: block;
   font-size: var(--fs);
   font-weight: 900;
 }
-.banner p
-{
+.banner p {
   margin: 2px 0 0;
   font-size: var(--fs-small);
-  opacity: .85;
+  opacity: 0.85;
   line-height: 1.45;
 }
-.sect
-{
+.sect {
   font-size: var(--fs);
   font-weight: 900;
   margin: 0 16px 6px;
 }
-.row
-{
+.row {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -100,71 +89,60 @@
   border: 0;
   text-align: left;
 }
-.row:hover
-{
+.row:hover {
   background: var(--surface);
 }
-.row .mid
-{
+.row .mid {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.row .nm
-{
+.row .nm {
   font-weight: 900;
   font-size: var(--fs);
 }
-.row .pv
-{
+.row .pv {
   font-size: var(--fs-small);
   color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.row .pv.new
-{
+.row .pv.new {
   color: var(--ink);
   font-weight: 700;
 }
 
 /* 채팅방 */
-.overlay
-{
+.overlay {
   position: absolute;
   inset: 0;
   background: var(--bg);
   display: flex;
   flex-direction: column;
   z-index: 20;
-  animation: slide .22s ease;
+  animation: slide 0.22s ease;
 }
-@keyframes slide
-{
-  from
-  {
+@keyframes slide {
+  from {
     transform: translateX(30px);
     opacity: 0;
   }
-  to
-  {
+  to {
     transform: none;
     opacity: 1;
   }
 }
-.chathead
-{
+.chathead {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
   border-bottom: 1px solid var(--line);
 }
-.chathead .who
-{
+.chathead .who {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -175,18 +153,15 @@
   text-align: left;
   padding: 0;
 }
-.chathead .who b
-{
+.chathead .who b {
   display: block;
   font-size: var(--fs);
 }
-.chathead .who small
-{
+.chathead .who small {
   font-size: var(--fs-small);
   color: var(--muted);
 }
-.iconbtn
-{
+.iconbtn {
   width: 40px;
   height: 40px;
   display: grid;
@@ -195,24 +170,20 @@
   border-radius: 50%;
   background: none;
 }
-.iconbtn:hover
-{
+.iconbtn:hover {
   background: var(--surface);
 }
-.iconbtn.danger
-{
+.iconbtn.danger {
   color: var(--alert);
 }
-.notice
-{
+.notice {
   text-align: center;
   font-size: var(--fs-small);
   color: var(--muted);
   padding: 10px 24px 2px;
   line-height: 1.5;
 }
-.msgs
-{
+.msgs {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -221,24 +192,20 @@
   flex-direction: column;
   gap: 8px;
 }
-.m
-{
+.m {
   display: flex;
   flex-direction: column;
   max-width: 76%;
   gap: 3px;
 }
-.m.me
-{
+.m.me {
   align-self: flex-end;
   align-items: flex-end;
 }
-.m.them
-{
+.m.them {
   align-self: flex-start;
 }
-.bub
-{
+.bub {
   padding: 10px 14px;
   border-radius: 20px;
   font-size: var(--fs);
@@ -246,57 +213,47 @@
   word-break: break-word;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;   /* 받은 메시지는 길게 눌러 신고해서 폰 메뉴가 뜨지 않게 */
+  -webkit-touch-callout: none; /* 받은 메시지는 길게 눌러 신고해서 폰 메뉴가 뜨지 않게 */
   border: 2px solid transparent;
   cursor: pointer;
 }
-.m.me .bub
-{
+.m.me .bub {
   background: var(--accent);
   color: var(--accent-ink);
   border-bottom-right-radius: 6px;
 }
-.m.them .bub
-{
+.m.them .bub {
   font-size: var(--fs-small);
   background: var(--surface);
   border-bottom-left-radius: 6px;
 }
-.bub.saved
-{
+.bub.saved {
   border-color: var(--yellow);
 }
-.bub.photo
-{
+.bub.photo {
   padding: 4px;
-  background: var(--surface)!important;
+  background: var(--surface) !important;
 }
-.bub.photo img
-{
+.bub.photo img {
   display: block;
   max-width: 220px;
   border-radius: 16px;
 }
-.bub.typingbub
-{
+.bub.typingbub {
   padding: 14px 16px;
   color: var(--muted);
   cursor: default;
 }
-.bub.pop
-{
-  animation: pop .3s ease;
+.bub.pop {
+  animation: pop 0.3s ease;
 }
-@keyframes pop
-{
-  50%
-  {
+@keyframes pop {
+  50% {
     transform: scale(1.06);
   }
 }
 /* 첫 대화 상대면 맨 위에 보이는 대화 규칙 안내 (MessageList) */
-.chatrules
-{
+.chatrules {
   align-self: stretch;
   padding: 10px 12px;
   border-radius: 16px;
@@ -307,13 +264,11 @@
 }
 
 /* 채팅 이용 수칙 타일 (ChatRulesTile): 오른쪽 위 X로 닫기 */
-.chatrules.tile
-{
+.chatrules.tile {
   position: relative;
   padding-right: 40px;
 }
-.chatrules .rulesclose
-{
+.chatrules .rulesclose {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -329,14 +284,12 @@
   cursor: pointer;
 }
 /* 채팅 탭 목록에서는 배너와 같은 옆 여백 */
-#chatListRules
-{
+#chatListRules {
   margin: 0 16px 18px;
 }
 
 /* 규칙을 어긴 메시지를 보낸 사람에게만 보이는 경고 줄 (MessageBubble) */
-.chatwarn
-{
+.chatwarn {
   align-self: center;
   max-width: 92%;
   padding: 8px 12px;
@@ -348,63 +301,53 @@
   line-height: 1.45;
   text-align: center;
 }
-.meta
-{
+.meta {
   font-size: var(--fs-small);
   color: var(--muted);
   display: flex;
   gap: 6px;
   align-items: center;
 }
-.meta .sv
-{
+.meta .sv {
   color: var(--on-yellow);
   background: var(--yellow);
   padding: 1px 7px;
   border-radius: 999px;
   font-weight: 900;
 }
-.voice
-{
+.voice {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.voice .wave
-{
+.voice .wave {
   display: flex;
   gap: 2px;
   align-items: center;
   height: 22px;
 }
-.voice .wave i
-{
+.voice .wave i {
   width: 3px;
   border-radius: 2px;
   background: currentColor;
-  opacity: .7;
+  opacity: 0.7;
 }
-.voice.playing .wave i
-{
-  animation: wv .8s ease-in-out infinite;
+.voice.playing .wave i {
+  animation: wv 0.8s ease-in-out infinite;
 }
-@keyframes wv
-{
-  50%
-  {
-    transform: scaleY(.4);
+@keyframes wv {
+  50% {
+    transform: scaleY(0.4);
   }
 }
-.composer
-{
+.composer {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 8px 10px 10px;
   border-top: 1px solid var(--line);
 }
-.composer input[type=text]
-{
+.composer input[type='text'] {
   flex: 1;
   min-width: 0;
   height: 44px;
@@ -416,8 +359,7 @@
   font-size: var(--fs);
   color: var(--ink);
 }
-.sendbtn
-{
+.sendbtn {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -427,8 +369,7 @@
   background: var(--accent);
   color: var(--accent-ink);
 }
-.rec
-{
+.rec {
   flex: 1;
   display: flex;
   align-items: center;
@@ -440,25 +381,21 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-.rec i
-{
+.rec i {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: var(--alert);
   animation: blink 1s infinite;
 }
-@keyframes blink
-{
-  50%
-  {
-    opacity: .2;
+@keyframes blink {
+  50% {
+    opacity: 0.2;
   }
 }
 
 /* 전화 / 스토리 */
-.call
-{
+.call {
   position: absolute;
   inset: 0;
   z-index: 40;
@@ -468,26 +405,22 @@
   justify-content: space-between;
   padding: 70px 20px 50px;
   color: #fff;
-  background: linear-gradient(170deg,var(--c1),var(--c2));
+  background: linear-gradient(170deg, var(--c1), var(--c2));
 }
-.call .av
-{
-  box-shadow: 0 0 0 6px rgba(255,255,255,.25);
+.call .av {
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25);
 }
-.call h2
-{
+.call h2 {
   margin: 16px 0 4px;
   font-family: var(--display);
   font-weight: 900;
   font-size: var(--fs-title);
 }
-.call .st
-{
+.call .st {
   font-variant-numeric: tabular-nums;
-  opacity: .85;
+  opacity: 0.85;
 }
-.endcall
-{
+.endcall {
   width: 72px;
   height: 72px;
   border-radius: 50%;
@@ -497,8 +430,7 @@
   display: grid;
   place-items: center;
 }
-.reason
-{
+.reason {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -507,23 +439,20 @@
   border-bottom: 1px solid var(--line);
 }
 /* 신고 창: 자세한 내용(선택) + 사진 첨부(선택) (ReportDialog) */
-.reportnote
-{
+.reportnote {
   height: calc(var(--btn-h) * 2);
   margin-top: 12px;
   padding: 10px 12px;
   resize: none;
   font: inherit;
 }
-.reportphoto
-{
+.reportphoto {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 8px;
 }
-.reportphoto img
-{
+.reportphoto img {
   width: calc(var(--btn-h) * 1.4);
   height: calc(var(--btn-h) * 1.4);
   object-fit: cover;

@@ -15,148 +15,124 @@
                    "offline" 인터넷 끊김, "error" 서버가 거절함 — 이 둘은 userId 대신 이유 글)
    ========================================================= */
 
-export class ChatServer
-{
-  constructor()
-  {
+export class ChatServer {
+  constructor() {
     this.messageListeners = [];
     this.eventListeners = [];
   }
 
   /* ---------- 소식 구독 (자식이 고칠 필요 없음) ---------- */
-  onMessage(listener)
-  {
+  onMessage(listener) {
     this.messageListeners.push(listener);
   }
 
-  onEvent(listener)
-  {
+  onEvent(listener) {
     this.eventListeners.push(listener);
   }
 
-  emitMessage(fromId)
-  {
+  emitMessage(fromId) {
     this.messageListeners.forEach((listener) => listener(fromId));
   }
 
-  emitEvent(type, userId)
-  {
+  emitEvent(type, userId) {
     this.eventListeners.forEach((listener) => listener(type, userId));
   }
 
   /* ---------- 자식 클래스가 꼭 만들어야 하는 기능 ----------
      안 만들고 부르면 코드 실수(버그)라서 예외를 던져요. */
   // 로그인 → Result.ok({ isLocal, profile }). isLocal이면 이 기기에 저장된 가입 정보를 써요 (가짜 서버)
-  signIn()
-  {
-    notImplemented("signIn");
+  signIn() {
+    notImplemented('signIn');
   }
   // 가입: 아이디를 전체 사용자 중에서 차지 → Result (이미 있으면 실패)
-  register(profile)
-  {
-    notImplemented("register");
+  register(profile) {
+    notImplemented('register');
   }
   // 닉네임·관심사·소리 받기 권한이 바뀌었을 때 / 내 사진 목록이 바뀌었을 때 / 위치 공유를 켜고 껐을 때
-  updateProfile(profile)
-  {
-    notImplemented("updateProfile");
+  updateProfile(profile) {
+    notImplemented('updateProfile');
   }
-  updatePhotos(photos)
-  {
-    notImplemented("updatePhotos");
+  updatePhotos(photos) {
+    notImplemented('updatePhotos');
   }
-  setSharing(isSharing)
-  {
-    notImplemented("setSharing");
+  setSharing(isSharing) {
+    notImplemented('setSharing');
   }
-  // 프로필에 보여줄 대략적인 지역 (예: "경기도 평택시 서정동"), 나라가 없던 예전 가입이면 나라도
-  setRegion(region, country)
-  {
-    notImplemented("setRegion");
+  // 나라 (예전 가입이라 나라가 없던 사람). 프로필에는 지역을 저장하지 않아요 (region은 늘 "")
+  setRegion(region, country) {
+    notImplemented('setRegion');
+  }
+  // 앱을 쓰는 동안 내 지역을 친구에게 ({ province, detail }) — 화면에서 내려가면 clearLocation
+  publishLocation(area) {
+    notImplemented('publishLocation');
+  }
+  // 내 지역 지우기 (앱이 화면에서 내려가거나 위치 공유를 끌 때)
+  clearLocation() {
+    notImplemented('clearLocation');
   }
   // 친구 삭제 (차단 아님)
-  unfriend(userId)
-  {
-    notImplemented("unfriend");
+  unfriend(userId) {
+    notImplemented('unfriend');
   }
-  connect()
-  {
-    notImplemented("connect");
+  connect() {
+    notImplemented('connect');
   }
-  sendMessage(toId, message)
-  {
-    notImplemented("sendMessage");
+  sendMessage(toId, message) {
+    notImplemented('sendMessage');
   }
-  sendTyping(toId)
-  {
-    notImplemented("sendTyping");
+  sendTyping(toId) {
+    notImplemented('sendTyping');
   }
-  sendPing(toId, isLoud)
-  {
-    notImplemented("sendPing");
+  sendPing(toId, isLoud) {
+    notImplemented('sendPing');
   }
-  setMessageSaved(userId, messageId, isSaved)
-  {
-    notImplemented("setMessageSaved");
+  setMessageSaved(userId, messageId, isSaved) {
+    notImplemented('setMessageSaved');
   }
-  sendLike(toId)
-  {
-    notImplemented("sendLike");
+  sendLike(toId) {
+    notImplemented('sendLike');
   }
-  declineLike(fromId)
-  {
-    notImplemented("declineLike");
+  declineLike(fromId) {
+    notImplemented('declineLike');
   }
-  notifyFriendship(userId)
-  {
-    notImplemented("notifyFriendship");
+  notifyFriendship(userId) {
+    notImplemented('notifyFriendship');
   }
   // message: 메시지를 길게 눌러 신고했으면 그 메시지 { id, text, at } (24시간 뒤 지워져도 운영자가 확인하게)
   // extra: { note, photo } 신고한 사람이 덧붙인 자세한 내용·사진 (선택)
-  report(userId, reason, message = null, extra = {})
-  {
-    notImplemented("report");
+  report(userId, reason, message = null, extra = {}) {
+    notImplemented('report');
   }
-  block(userId)
-  {
-    notImplemented("block");
+  block(userId) {
+    notImplemented('block');
   }
-  unblock(userId)
-  {
-    notImplemented("unblock");
+  unblock(userId) {
+    notImplemented('unblock');
   }
   // 쓰는 동안 바로 보여주는 빠른 확인 (진짜 서버는 아는 것만 답하고, 마지막 확인은 register가 해요)
-  isHandleTaken(handle)
-  {
-    notImplemented("isHandleTaken");
+  isHandleTaken(handle) {
+    notImplemented('isHandleTaken');
   }
-  deleteAccount(handle)
-  {
-    notImplemented("deleteAccount");
+  deleteAccount(handle) {
+    notImplemented('deleteAccount');
   }
-  findUserByHandle(handle)
-  {
-    notImplemented("findUserByHandle");
+  findUserByHandle(handle) {
+    notImplemented('findUserByHandle');
   }
-  publishStory(storyAt)
-  {
-    notImplemented("publishStory");
+  publishStory(storyAt) {
+    notImplemented('publishStory');
   }
-  deleteStory()
-  {
-    notImplemented("deleteStory");
+  deleteStory() {
+    notImplemented('deleteStory');
   }
-  sendStoryLike(userId, storyAt, isLiked)
-  {
-    notImplemented("sendStoryLike");
+  sendStoryLike(userId, storyAt, isLiked) {
+    notImplemented('sendStoryLike');
   }
-  startLocationUpdates(onMove)
-  {
-    notImplemented("startLocationUpdates");
+  startLocationUpdates(onMove) {
+    notImplemented('startLocationUpdates');
   }
 }
 
-function notImplemented(name)
-{
+function notImplemented(name) {
   throw new Error(`ChatServer.${name}()을 자식 클래스에서 만들어야 해요`);
 }

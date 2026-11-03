@@ -50,4 +50,4 @@ React 전환 뒤 미미가 화면을 직접 보고 정한 다듬기예요. 지�
 - 화면: `screens/home/*` (`PersonCard.jsx`, `SharePill.jsx` 지움), `ChatListScreen`, `screens/swipe/*`, `screens/friends/*`, `screens/me/*`
 - CSS: `home.css`(카드 줄·알약 삭제), `me.css`(사진 칸 3열, 편집 줄 버튼)
 - 시험: `tests/*` (10명, 지도 친구), `tools/compare` (원본 비교 → 승인한 화면과 비교)
-- 문서: `docs/file-tree.md`, `docs/code-structure-and-patterns.md`, `openspec/changes/add-build-targets`
+- 문서: `docs/reference/file-tree.md`, `docs/code-structure-and-patterns.md`, `openspec/changes/add-build-targets`

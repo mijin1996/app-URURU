@@ -7,20 +7,22 @@
    ========================================================= */
 
 // 태그 바탕색 (글자는 모두 진한 색 --on-yellow라 어떤 색에서도 잘 보여요)
-const TAG_COLORS = ["#ffd23f", "#3ee08f", "#ff9f43", "#b49bff", "#5ec8ff", "#ff7eb6"];
+const TAG_COLORS = ['#ffd23f', '#3ee08f', '#ff9f43', '#b49bff', '#5ec8ff', '#ff7eb6'];
 
 // 글자 → 색 번호 (매번 같은 답)
-function colorOf(text)
-{
+function colorOf(text) {
   let sum = 0;
-  for (const ch of String(text))
-  {
+  for (const ch of String(text)) {
     sum = (sum * 31 + ch.charCodeAt(0)) >>> 0;
   }
   return TAG_COLORS[sum % TAG_COLORS.length];
 }
 
-export function Tag({ text, children })
-{
-  return <span className="tag" style={{ "--tag-bg": colorOf(text) }}>{text}{children}</span>;
+export function Tag({ text, children }) {
+  return (
+    <span className="tag" style={{ '--tag-bg': colorOf(text) }}>
+      {text}
+      {children}
+    </span>
+  );
 }

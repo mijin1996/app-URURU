@@ -1,7 +1,6 @@
 /* 친구 탭 (받은 좋아요, 내 스토리 좋아요, 친구 목록) */
 /* 친구 탭 */
-.friendsbtn
-{
+.friendsbtn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -17,26 +16,22 @@
   font-weight: 900;
   font-size: var(--fs);
 }
-.friendsbtn .cnt
-{
+.friendsbtn .cnt {
   color: var(--muted);
   font-weight: 700;
   font-size: var(--fs-small);
 }
-.likerow
-{
+.likerow {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
 }
-.likerow .mid
-{
+.likerow .mid {
   flex: 1;
   min-width: 0;
 }
-.likerow .nm
-{
+.likerow .nm {
   font-weight: 900;
   font-size: var(--fs);
   white-space: nowrap;
@@ -45,8 +40,7 @@
 }
 /* 좁은 폰에서 이름·나이가 두 줄로 안 갈라지게 */
 /* 이름과 나이는 같은 글꼴·굵기·색 */
-.likerow small
-{
+.likerow small {
   display: block;
   color: var(--muted);
   font-size: var(--fs-small);
@@ -54,15 +48,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.avbtn
-{
+.avbtn {
   padding: 0;
   border: 0;
   background: none;
   border-radius: 50%;
 }
-.acceptbtn
-{
+.acceptbtn {
   height: var(--btn-h);
   padding: 0 16px;
   border-radius: 999px;
@@ -78,13 +70,11 @@
   align-items: center;
   gap: 4px;
 }
-.minilike
-{
+.minilike {
   color: var(--alert);
   flex: none;
 }
-.empty
-{
+.empty {
   margin: 0;
   padding: 6px 16px 14px;
   color: var(--muted);
@@ -92,30 +82,25 @@
   line-height: 1.6;
 }
 /* 아이디로 친구 찾기 */
-.searchbox
-{
+.searchbox {
   margin: 16px 0 14px;
 }
-.searchrow
-{
+.searchrow {
   display: flex;
   gap: 8px;
   align-items: center;
   padding: 0 16px;
 }
-.searchrow .field
-{
+.searchrow .field {
   flex: 1;
   height: var(--btn-h);
 }
-.searchmsg
-{
+.searchmsg {
   margin: 8px 16px 0;
   font-size: var(--fs-small);
   color: var(--muted);
 }
-.acceptbtn:disabled
-{
+.acceptbtn:disabled {
   background: var(--line);
   color: var(--muted);
 }

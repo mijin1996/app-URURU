@@ -8,62 +8,50 @@
    한 번에 여러 주제가 바뀌어도 같은 부품은 한 번만 불러요.
    ========================================================= */
 
-export class ChangeHub
-{
-  constructor()
-  {
-    this.versions = new Map();    // 주제 → 버전 숫자
-    this.listeners = new Map();   // 주제 → 구독한 함수들
+export class ChangeHub {
+  constructor() {
+    this.versions = new Map(); // 주제 → 버전 숫자
+    this.listeners = new Map(); // 주제 → 구독한 함수들
   }
 
-  subscribe(topics, listener)
-  {
-    topics.forEach((topic) =>
-    {
-      if (!this.listeners.has(topic))
-      {
+  subscribe(topics, listener) {
+    topics.forEach((topic) => {
+      if (!this.listeners.has(topic)) {
         this.listeners.set(topic, new Set());
       }
       this.listeners.get(topic).add(listener);
     });
-    return () => topics.forEach((topic) =>
-    {
-      const set = this.listeners.get(topic);
-      if (!set)
-      {
-        return;
-      }
-      set.delete(listener);
-      if (!set.size)
-      {
-        this.listeners.delete(topic);   // 아무도 안 보는 주제는 지워서 목록이 커지지 않게
-      }
-    });
+    return () =>
+      topics.forEach((topic) => {
+        const set = this.listeners.get(topic);
+        if (!set) {
+          return;
+        }
+        set.delete(listener);
+        if (!set.size) {
+          this.listeners.delete(topic); // 아무도 안 보는 주제는 지워서 목록이 커지지 않게
+        }
+      });
   }
 
   // 구독한 주제들의 버전을 한 줄로 → 하나라도 바뀌면 다른 글자가 돼서 다시 그려요
-  versionOf(topics)
-  {
-    return topics.map((topic) => this.versions.get(topic) || 0).join(".");
+  versionOf(topics) {
+    return topics.map((topic) => this.versions.get(topic) || 0).join('.');
   }
 
-  emit(topics)
-  {
+  emit(topics) {
     const toCall = new Set();
-    topics.forEach((topic) =>
-    {
+    topics.forEach((topic) => {
       this.versions.set(topic, (this.versions.get(topic) || 0) + 1);
       const set = this.listeners.get(topic);
-      if (set)
-      {
+      if (set) {
         set.forEach((listener) => toCall.add(listener));
       }
     });
     toCall.forEach((listener) => listener());
   }
 
-  emitAll()
-  {
+  emitAll() {
     this.emit([...this.listeners.keys()]);
   }
 }

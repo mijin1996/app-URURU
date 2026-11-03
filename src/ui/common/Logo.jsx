@@ -6,19 +6,21 @@
    isAnimated: 로고 화면처럼 글자마다 따로 튀어 들어오게 (글자를 span으로 나눠요)
    ========================================================= */
 
-import { t } from "../../core/i18n/index.js";
+import { t } from '../../core/i18n/index.js';
 
-const LOGO_TEXT = t("app.name");
+const LOGO_TEXT = t('app.name');
 
-export function Logo({ isAnimated = false })
-{
-  if (!isAnimated)
-  {
+export function Logo({ isAnimated = false }) {
+  if (!isAnimated) {
     return <div className="logo">{LOGO_TEXT}</div>;
   }
   return (
     <div className="logo" aria-label={LOGO_TEXT}>
-      {LOGO_TEXT.split("").map((letter, index) => <span key={index} style={{ "--i": index }} aria-hidden="true">{letter}</span>)}
+      {LOGO_TEXT.split('').map((letter, index) => (
+        <span key={index} style={{ '--i': index }} aria-hidden="true">
+          {letter}
+        </span>
+      ))}
     </div>
   );
 }

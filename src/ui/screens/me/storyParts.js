@@ -5,23 +5,53 @@
    colorKey: 색 / sizeKey: 크기 / canBeEmpty: 팔레트에 "없음"을 넣을지
    ========================================================= */
 
-import { STORY_TEXT } from "../../../core/config.js";
-import { t } from "../../../core/i18n/index.js";
+import { STORY_TEXT } from '../../../core/config.js';
+import { t } from '../../../core/i18n/index.js';
 
 export const STYLE_PARTS = [
-  { label: t("me.background"), title: t("me.textBackground"), colorKey: "bg", sizeKey: "bgSize", min: 0, max: STORY_TEXT.maxBgSize, sizeLabel: t("me.backgroundSize"), canBeEmpty: true },
-  { label: t("me.font"), title: t("me.font"), colorKey: "textColor", sizeKey: "textSize", min: STORY_TEXT.minSize, max: STORY_TEXT.maxSize, sizeLabel: t("me.fontSize"), canBeEmpty: false },
-  { label: t("me.outline"), title: t("me.textOutline"), colorKey: "stroke", sizeKey: "strokeWidth", min: 0, max: STORY_TEXT.maxStroke, sizeLabel: t("me.outlineWidth"), canBeEmpty: true }
+  {
+    label: t('me.background'),
+    title: t('me.textBackground'),
+    colorKey: 'bg',
+    sizeKey: 'bgSize',
+    min: 0,
+    max: STORY_TEXT.maxBgSize,
+    sizeLabel: t('me.backgroundSize'),
+    canBeEmpty: true,
+  },
+  {
+    label: t('me.font'),
+    title: t('me.font'),
+    colorKey: 'textColor',
+    sizeKey: 'textSize',
+    min: STORY_TEXT.minSize,
+    max: STORY_TEXT.maxSize,
+    sizeLabel: t('me.fontSize'),
+    canBeEmpty: false,
+  },
+  {
+    label: t('me.outline'),
+    title: t('me.textOutline'),
+    colorKey: 'stroke',
+    sizeKey: 'strokeWidth',
+    min: 0,
+    max: STORY_TEXT.maxStroke,
+    sizeLabel: t('me.outlineWidth'),
+    canBeEmpty: true,
+  },
 ];
 
-export const FIRST_PART_KEY = "textColor";   // 처음엔 "폰트" 칸이 골라져 있어요
+export const FIRST_PART_KEY = 'textColor'; // 처음엔 "폰트" 칸이 골라져 있어요
 
-export const DEFAULT_DRAFT =
-{
-  text: "", img: "",                       // img: [사진 추가]로 넣은 바탕 사진 (없으면 "")
-  bg: "#7a5cff", bgSize: STORY_TEXT.defaultBgSize,
-  textColor: "#ffffff", textSize: STORY_TEXT.defaultSize,
-  stroke: "#131218", strokeWidth: STORY_TEXT.defaultStroke
+export const DEFAULT_DRAFT = {
+  text: '',
+  img: '', // img: [사진 추가]로 넣은 바탕 사진 (없으면 "")
+  bg: '#7a5cff',
+  bgSize: STORY_TEXT.defaultBgSize,
+  textColor: '#ffffff',
+  textSize: STORY_TEXT.defaultSize,
+  stroke: '#131218',
+  strokeWidth: STORY_TEXT.defaultStroke,
 };
 
 export const findPart = (colorKey) => STYLE_PARTS.find((part) => part.colorKey === colorKey);

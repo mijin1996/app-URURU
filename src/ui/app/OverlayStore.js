@@ -13,21 +13,18 @@
    (없음)                                    overlays.closeTop()  ← 토스·안드로이드 뒤로 버튼이 씀 (nav.back)
    ========================================================= */
 
-import { Observable } from "./Observable.js";
+import { Observable } from './Observable.js';
 
-export class OverlayStore extends Observable
-{
-  constructor()
-  {
+export class OverlayStore extends Observable {
+  constructor() {
     super();
-    this.items = [];   // [{ id, kind, meta, render, close }]
+    this.items = []; // [{ id, kind, meta, render, close }]
     this.lastId = 0;
   }
 
   // render(close) → 그릴 화면. meta: 창에 붙여둘 정보 (예: 채팅방 상대 id)
   // 닫는 함수를 돌려줘요
-  open({ kind, render, meta = {} })
-  {
+  open({ kind, render, meta = {} }) {
     this.lastId += 1;
     const id = this.lastId;
     const close = () => this.close(id);
@@ -36,49 +33,40 @@ export class OverlayStore extends Observable
     return close;
   }
 
-  close(id)
-  {
+  close(id) {
     this.keepOnly((item) => item.id !== id);
   }
 
-  closeKinds(kinds)
-  {
+  closeKinds(kinds) {
     this.keepOnly((item) => !kinds.includes(item.kind));
   }
 
-  closeWhere(predicate)
-  {
+  closeWhere(predicate) {
     this.keepOnly((item) => !predicate(item));
   }
 
   // 맨 위 창 하나 닫기. 닫은 게 없으면 false (뒤로 버튼: 그때는 앱 나가기)
   // keep: 뒤로 버튼으로 닫으면 안 되는 창 (예: 이용정지 안내, 가입 화면) → 닫지 않고 true
-  closeTop(keep = [])
-  {
+  closeTop(keep = []) {
     const top = this.items[this.items.length - 1];
-    if (!top)
-    {
+    if (!top) {
       return false;
     }
-    if (keep.includes(top.kind))
-    {
+    if (keep.includes(top.kind)) {
       return true;
     }
     this.close(top.id);
     return true;
   }
 
-  has(predicate)
-  {
+  has(predicate) {
     return this.items.some(predicate);
   }
 
   // 바뀐 게 있을 때만 알려서 쓸데없이 다시 그리지 않게
-  keepOnly(predicate)
-  {
+  keepOnly(predicate) {
     const next = this.items.filter(predicate);
-    if (next.length === this.items.length)
-    {
+    if (next.length === this.items.length) {
       return;
     }
     this.items = next;

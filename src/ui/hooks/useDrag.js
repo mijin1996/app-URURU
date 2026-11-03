@@ -11,29 +11,24 @@
    <div {...drag}> …
    ========================================================= */
 
-import { useMemo, useRef } from "react";
+import { useMemo, useRef } from 'react';
 
-export function useDrag(handlers)
-{
+export function useDrag(handlers) {
   const latest = useRef(handlers);
-  latest.current = handlers;   // 다시 그려도 최신 함수를 부르게
+  latest.current = handlers; // 다시 그려도 최신 함수를 부르게
   const state = useRef({ isDragging: false, startX: 0, dx: 0 });
 
-  return useMemo(() =>
-  {
-    const end = (event) =>
-    {
+  return useMemo(() => {
+    const end = (event) => {
       const drag = state.current;
-      if (!drag.isDragging)
-      {
+      if (!drag.isDragging) {
         return;
       }
       drag.isDragging = false;
       latest.current.onEnd?.(event, drag.dx);
     };
     return {
-      onPointerDown(event)
-      {
+      onPointerDown(event) {
         const drag = state.current;
         drag.isDragging = true;
         drag.startX = event.clientX;
@@ -42,18 +37,16 @@ export function useDrag(handlers)
         event.currentTarget.setPointerCapture?.(event.pointerId);
         latest.current.onStart?.(event);
       },
-      onPointerMove(event)
-      {
+      onPointerMove(event) {
         const drag = state.current;
-        if (!drag.isDragging)
-        {
+        if (!drag.isDragging) {
           return;
         }
         drag.dx = event.clientX - drag.startX;
         latest.current.onMove?.(event, drag.dx);
       },
       onPointerUp: end,
-      onPointerCancel: end
+      onPointerCancel: end,
     };
   }, []);
 }

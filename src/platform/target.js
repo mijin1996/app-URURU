@@ -7,10 +7,9 @@
    Vite가 --mode 값을 import.meta.env.MODE에 넣어줘요.
    ========================================================= */
 
-const MODE_TO_TARGET =
-{
-  toss: "toss",
-  android: "android"
+const MODE_TO_TARGET = {
+  toss: 'toss',
+  android: 'android',
 };
 
-export const TARGET = MODE_TO_TARGET[import.meta.env.MODE] || "web";
+export const TARGET = MODE_TO_TARGET[import.meta.env.MODE] || 'web';

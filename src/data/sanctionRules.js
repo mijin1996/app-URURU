@@ -18,27 +18,28 @@
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-export const STRIKES_TO_SUSPEND = 2;    // 이 횟수면 일시 이용정지
-export const STRIKES_TO_PERMANENT = 3;  // 이 횟수부터 영구정지
-export const SUSPEND_MS = 7 * DAY_MS;   // 일시 이용정지 기간 (7일)
+export const STRIKES_TO_SUSPEND = 2; // 이 횟수면 일시 이용정지
+export const STRIKES_TO_PERMANENT = 3; // 이 횟수부터 영구정지
+export const SUSPEND_MS = 7 * DAY_MS; // 일시 이용정지 기간 (7일)
 
 // 지금 정지 중인지 (영구정지 포함)
-export function isSuspended(record, now)
-{
+export function isSuspended(record, now) {
   return Boolean(record.isPermanent) || (record.bannedUntil || 0) > now;
 }
 
 // 위반 1회를 더한 새 기록. level: "warning" | "suspended" | "permanent"
-export function addStrike(record, now)
-{
+export function addStrike(record, now) {
   const warnings = (record.warnings || 0) + 1;
-  if (warnings >= STRIKES_TO_PERMANENT)
-  {
-    return { warnings, bannedUntil: record.bannedUntil || 0, isPermanent: true, level: "permanent" };
+  if (warnings >= STRIKES_TO_PERMANENT) {
+    return {
+      warnings,
+      bannedUntil: record.bannedUntil || 0,
+      isPermanent: true,
+      level: 'permanent',
+    };
   }
-  if (warnings >= STRIKES_TO_SUSPEND)
-  {
-    return { warnings, bannedUntil: now + SUSPEND_MS, isPermanent: false, level: "suspended" };
+  if (warnings >= STRIKES_TO_SUSPEND) {
+    return { warnings, bannedUntil: now + SUSPEND_MS, isPermanent: false, level: 'suspended' };
   }
-  return { warnings, bannedUntil: record.bannedUntil || 0, isPermanent: false, level: "warning" };
+  return { warnings, bannedUntil: record.bannedUntil || 0, isPermanent: false, level: 'warning' };
 }

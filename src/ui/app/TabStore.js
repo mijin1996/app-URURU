@@ -5,18 +5,15 @@
    React 바깥(FriendActions, 서버 소식)에서도 바꿀 수 있게 Store로 뒀어요.
    ========================================================= */
 
-import { Observable } from "./Observable.js";
+import { Observable } from './Observable.js';
 
-export class TabStore extends Observable
-{
-  constructor(firstTab)
-  {
+export class TabStore extends Observable {
+  constructor(firstTab) {
     super();
     this.current = firstTab;
   }
 
-  set(tabId)
-  {
+  set(tabId) {
     this.current = tabId;
     this.emit();
   }

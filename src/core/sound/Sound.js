@@ -6,18 +6,14 @@
    자식(NotificationSound, BubbleSound)은 어디서든 Sound 자리에 넣어도 똑같이 play()가 돼요. (LSP)
    ========================================================= */
 
-export class Sound
-{
-  constructor(engine, fileUrl = "")
-  {
+export class Sound {
+  constructor(engine, fileUrl = '') {
     this.engine = engine;
     this.fileUrl = fileUrl;
   }
 
-  play()
-  {
-    if (this.fileUrl)
-    {
+  play() {
+    if (this.fileUrl) {
       this.playFile();
       return;
     }
@@ -25,15 +21,13 @@ export class Sound
     this.playDefault();
   }
 
-  playFile()
-  {
+  playFile() {
     // catch: 브라우저가 소리 재생을 막는 건 흔한 일이라 앱을 멈추지 않음
     new Audio(this.fileUrl).play().catch(() => {});
   }
 
   // 자식 클래스가 꼭 만들어야 하는 부분. 안 만들었다면 코드 실수(버그)라서 예외를 던져요.
-  playDefault()
-  {
+  playDefault() {
     throw new Error(`${this.constructor.name}: playDefault()를 만들어야 해요`);
   }
 }

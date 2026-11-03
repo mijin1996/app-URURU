@@ -1,7 +1,7 @@
 # 앱인토스 등록용 (토스 빌드)
 
-> 앱인토스 콘솔에 넣을 글·그림·파일을 이 폴더 하나에 모았어요. 구글 플레이용은 `store/google-play/`.
-> 준수사항 점검은 `docs/policy/compliance.md`, 올리는 순서는 `docs/guides/launch-checklist.md`.
+> 앱인토스 콘솔에 넣을 글·그림·파일을 이 폴더 하나에 모았어요. 구글 플레이용은 `UploadPlatform/google-play/`.
+> ⚠️ 2026-10-30부터 구글 플레이로만 내기로 해서 지금은 쓰지 않아요 (`docs/explanation/progress.md` 0-5).
 > 글은 **초안**이에요. 미미가 읽고 고친 뒤 콘솔에 붙여 넣으세요.
 
 ## 1. 올릴 파일
@@ -60,9 +60,9 @@
 
 | 앱인토스가 요구하는 것 | 우르르 파일 |
 |---|---|
-| 이용자 보호 및 불법 행위 방지 조치 | `docs/policy/chat-rules.md` (채팅 이용 수칙), `docs/policy/report-handling.md` 2장 |
+| 이용자 보호 및 불법 행위 방지 조치 | `docs/policy/chat-rules.md` (채팅 이용 수칙), `docs/policy/terms.md` 제7조 (옛 report-handling.md는 2026-10-20 없앰) |
 | 기본 서비스 운영 약관 | `docs/policy/terms.md` |
-| 운영 정책과 대응 프로세스 (신고 처리, 제재, 수사기관 협조) | `docs/policy/report-handling.md` |
+| 운영 정책과 대응 프로세스 (신고 처리, 제재, 수사기관 협조) | `docs/policy/terms.md` 제7조 · `docs/policy/chat-rules.md` 5장 (옛 report-handling.md는 2026-10-20 없앰) |
 | (함께 내면 좋은 것) 개인정보처리방침 | `docs/policy/privacy.md` |
 
 > 약관·정책 글은 앱의 "나" 탭 → 정책에서도 똑같이 보여요 (앱이 이 .md 파일을 그대로 읽어요).
@@ -70,4 +70,4 @@
 
 ## 6. 채널톡에 같이 물어볼 것
 
-`docs/policy/compliance.md` 6장 1번 (익명 키 로그인, 기록 1년 보관, 개인 출시, mTLS 인증서)
+(옛 준수사항 메모: 익명 키 로그인, 기록 1년 보관, 개인 출시, mTLS 인증서)

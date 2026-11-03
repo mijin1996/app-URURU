@@ -15,14 +15,13 @@
    moderation 내 위반 횟수·이용정지
    ========================================================= */
 
-export const TOPIC =
-{
-  users: "users",
-  chats: "chats",
-  stories: "stories",
-  likes: "likes",
-  me: "me",
-  moderation: "moderation",
+export const TOPIC = {
+  users: 'users',
+  chats: 'chats',
+  stories: 'stories',
+  likes: 'likes',
+  me: 'me',
+  moderation: 'moderation',
   user: (id) => `user:${id}`,
-  chat: (id) => `chat:${id}`
+  chat: (id) => `chat:${id}`,
 };

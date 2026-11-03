@@ -17,59 +17,52 @@
    시험에서는 가짜 SDK를 넣어 볼 수 있어요. (DI)
    ========================================================= */
 
-import { Result } from "../../core/result.js";
-import { LOGIN_FAILED, LoginProvider } from "./LoginProvider.js";
-import { t } from "../../core/i18n/index.js";
+import { Result } from '../../core/result.js';
+import { LOGIN_FAILED, LoginProvider } from './LoginProvider.js';
+import { t } from '../../core/i18n/index.js';
 
-export const TOSS_TOO_OLD = t("server.tossTooOld");
+export const TOSS_TOO_OLD = t('server.tossTooOld');
 
-export class AnonKeyLogin extends LoginProvider
-{
+export class AnonKeyLogin extends LoginProvider {
   // loadTossUser: () => Promise<User>  (@apps-in-toss/web-framework의 User)
   // callTossLogin: (functions, code) => Promise<token> — 시험에서 바꿔 끼우려고 따로 받아요
-  constructor(loadTossUser, callTossLogin = callTossLoginFunction, signInWithToken = signInWithFirebaseToken)
-  {
+  constructor(
+    loadTossUser,
+    callTossLogin = callTossLoginFunction,
+    signInWithToken = signInWithFirebaseToken,
+  ) {
     super();
     this.loadTossUser = loadTossUser;
     this.callTossLogin = callTossLogin;
     this.signInWithToken = signInWithToken;
   }
 
-  async signIn({ auth, functions })
-  {
+  async signIn({ auth, functions }) {
     let code;
-    try
-    {
+    try {
       const User = await this.loadTossUser();
       ({ code } = await User.createAnonymousKeyAuthCode());
+    } catch (error) {
+      return Result.fail(TOSS_TOO_OLD); // SDK가 없는 오래된 토스 앱 (5.232.0 미만)
     }
-    catch (error)
-    {
-      return Result.fail(TOSS_TOO_OLD);   // SDK가 없는 오래된 토스 앱 (5.232.0 미만)
-    }
-    try
-    {
+    try {
       const token = await this.callTossLogin(functions, code);
       const uid = await this.signInWithToken(auth, token);
       return Result.ok(uid);
-    }
-    catch (error)
-    {
+    } catch (error) {
       return Result.fail(LOGIN_FAILED);
     }
   }
 }
 
-async function callTossLoginFunction(functions, code)
-{
-  const { httpsCallable } = await import("firebase/functions");
-  const response = await httpsCallable(functions, "tossLogin")({ code });
+async function callTossLoginFunction(functions, code) {
+  const { httpsCallable } = await import('firebase/functions');
+  const response = await httpsCallable(functions, 'tossLogin')({ code });
   return response.data.token;
 }
 
-async function signInWithFirebaseToken(auth, token)
-{
-  const { signInWithCustomToken } = await import("firebase/auth");
+async function signInWithFirebaseToken(auth, token) {
+  const { signInWithCustomToken } = await import('firebase/auth');
   const credential = await signInWithCustomToken(auth, token);
   return credential.user.uid;
 }

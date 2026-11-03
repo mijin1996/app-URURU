@@ -11,24 +11,21 @@
    입력 칸은 다시 그려도 같은 요소라서 커서도 그대로예요.
    ========================================================= */
 
-import { MAX_HANDLE_LENGTH } from "../../../core/config.js";
-import { useCtx } from "../../app/AppContext.jsx";
-import { Icon } from "../../common/Icon.jsx";
-import { useKept } from "../../hooks/useKept.js";
-import { ProfileButton } from "./LikeRow.jsx";
-import { t } from "../../../core/i18n/index.js";
+import { MAX_HANDLE_LENGTH } from '../../../core/config.js';
+import { useCtx } from '../../app/AppContext.jsx';
+import { Icon } from '../../common/Icon.jsx';
+import { useKept } from '../../hooks/useKept.js';
+import { ProfileButton } from './LikeRow.jsx';
+import { t } from '../../../core/i18n/index.js';
 
-export function FriendSearchBox()
-{
+export function FriendSearchBox() {
   const { friendSearch } = useCtx();
-  const [query, setQuery] = useKept("friendSearch.query", "");
-  const [result, setResult] = useKept("friendSearch.result", null);   // 아직 안 찾았으면 null
+  const [query, setQuery] = useKept('friendSearch.query', '');
+  const [result, setResult] = useKept('friendSearch.result', null); // 아직 안 찾았으면 null
 
-  const search = () => friendSearch.find(query).then(setResult);   // 서버에 물어봐서 Promise
-  const onKeyDown = (event) =>
-  {
-    if (event.key === "Enter" && !event.nativeEvent.isComposing)
-    {
+  const search = () => friendSearch.find(query).then(setResult); // 서버에 물어봐서 Promise
+  const onKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       search();
     }
   };
@@ -36,57 +33,93 @@ export function FriendSearchBox()
   return (
     <div className="searchbox">
       <div className="searchrow">
-        <input className="field" id="friendSearch" placeholder={t("friends.findFriends")} maxLength={MAX_HANDLE_LENGTH}
-          autoCapitalize="none" spellCheck="false" value={query} aria-label={t("friends.handleLabel")}
-          onChange={(event) => setQuery(event.target.value)} onKeyDown={onKeyDown} />
-        <button className="smallbtn" id="friendSearchGo" onClick={search}>{t("friends.search")}</button>
+        <input
+          className="field"
+          id="friendSearch"
+          placeholder={t('friends.findFriends')}
+          maxLength={MAX_HANDLE_LENGTH}
+          autoCapitalize="none"
+          spellCheck="false"
+          value={query}
+          aria-label={t('friends.handleLabel')}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={onKeyDown}
+        />
+        <button className="smallbtn" id="friendSearchGo" onClick={search}>
+          {t('friends.search')}
+        </button>
       </div>
       <SearchResult result={result} />
     </div>
   );
 }
 
-function SearchResult({ result })
-{
-  if (!result)
-  {
+function SearchResult({ result }) {
+  if (!result) {
     return null;
   }
-  if (!result.isOk)
-  {
+  if (!result.isOk) {
     return <p className="searchmsg">{result.reason}</p>;
   }
   const user = result.value;
   return (
     <div className="likerow">
       <ProfileButton user={user} />
-      <div className="mid"><div className="nm">{user.name}</div><small>{`@${user.handle}`}</small></div>
+      <div className="mid">
+        <div className="nm">{user.name}</div>
+        <small>{`@${user.handle}`}</small>
+      </div>
       <SearchAction user={user} />
     </div>
   );
 }
 
 // 관계에 따라 버튼 하나
-function SearchAction({ user })
-{
+function SearchAction({ user }) {
   const { likes, nav, friendActions } = useCtx();
   // 누른 뒤 버튼 상태(예: 좋아요 보냄)를 바로 바꿔 보여주려고 다시 그려요
-  const act = (action) => () =>
-  {
+  const act = (action) => () => {
     action();
     nav.refresh();
   };
-  if (user.isFriend)
-  {
-    return <button className="acceptbtn" data-search-act="chat" onClick={act(() => nav.openChat(user.id))}><Icon name="chat" />{t("common.message")}</button>;
+  if (user.isFriend) {
+    return (
+      <button
+        className="acceptbtn"
+        data-search-act="chat"
+        onClick={act(() => nav.openChat(user.id))}
+      >
+        <Icon name="chat" />
+        {t('common.message')}
+      </button>
+    );
   }
-  if (likes.hasLikedMe(user.id))
-  {
-    return <button className="acceptbtn" data-search-act="accept" onClick={act(() => friendActions.accept(user.id))}>{t("friends.beFriends")}</button>;
+  if (likes.hasLikedMe(user.id)) {
+    return (
+      <button
+        className="acceptbtn"
+        data-search-act="accept"
+        onClick={act(() => friendActions.accept(user.id))}
+      >
+        {t('friends.beFriends')}
+      </button>
+    );
   }
-  if (likes.hasSentTo(user.id))
-  {
-    return <button className="acceptbtn" disabled>{t("friends.likeSent")}</button>;
+  if (likes.hasSentTo(user.id)) {
+    return (
+      <button className="acceptbtn" disabled>
+        {t('friends.likeSent')}
+      </button>
+    );
   }
-  return <button className="acceptbtn" data-search-act="like" onClick={act(() => friendActions.like(user.id))}><Icon name="heart" />{t("friends.addFriend")}</button>;
+  return (
+    <button
+      className="acceptbtn"
+      data-search-act="like"
+      onClick={act(() => friendActions.like(user.id))}
+    >
+      <Icon name="heart" />
+      {t('friends.addFriend')}
+    </button>
+  );
 }

@@ -10,13 +10,7 @@
     {
       "target": "app",
       "public": "dist",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "moyeo.html",
-        "forServer.html",
-        "_*.txt"
-      ],
+      "ignore": ["firebase.json", "**/.*", "moyeo.html", "forServer.html", "_*.txt"],
       "rewrites": [
         {
           "source": "**",
@@ -27,11 +21,7 @@
     {
       "target": "admin",
       "public": "dist-admin",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "_*.txt"
-      ],
+      "ignore": ["firebase.json", "**/.*", "_*.txt"],
       "rewrites": [
         {
           "source": "**",
@@ -64,9 +54,7 @@
       "source": "functions",
       "codebase": "default",
       "runtime": "nodejs22",
-      "predeploy": [
-        "node tools/copy-shared.mjs"
-      ]
+      "predeploy": ["node tools/copy-shared.mjs"]
     }
   ],
   "emulators": {

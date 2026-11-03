@@ -1,5 +1,5 @@
 {
-  "name": "moyeo",
+  "name": "ururu",
   "version": "0.8.0",
   "private": true,
   "type": "module",
@@ -21,7 +21,9 @@
     "build:admin": "vite build --mode admin",
     "deploy:admin": "vite build --mode admin && firebase deploy --only hosting:admin",
     "deploy:server": "node tools/copy-shared.mjs && firebase deploy --only firestore,storage,functions",
-    "store:images": "node tools/store-images/make-store-images.mjs"
+    "store:images": "node tools/store-images/make-store-images.mjs",
+    "format": "npx --yes prettier@3.3.3 --write \"src/**/*.{js,jsx}\" \"styles/**/*.css\" \"tests/**/*.js\" \"tools/**/*.{js,mjs,html}\" \"functions/index.js\" \"*.{js,ts,html,json}\"",
+    "format:check": "npx --yes prettier@3.3.3 --check \"src/**/*.{js,jsx}\" \"styles/**/*.css\" \"tests/**/*.js\" \"tools/**/*.{js,mjs,html}\" \"functions/index.js\" \"*.{js,ts,html,json}\""
   },
   "dependencies": {
     "@apps-in-toss/web-framework": "3.8.0",

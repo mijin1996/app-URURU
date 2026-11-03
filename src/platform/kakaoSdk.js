@@ -7,54 +7,43 @@
    홈 지도(KakaoMap.jsx)와 지역 찾기(region.js)가 같이 써서 여기로 옮겼어요
    ========================================================= */
 
-const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY || "";
+const KAKAO_KEY = import.meta.env.VITE_KAKAO_MAP_KEY || '';
 
 let sdkPromise = null;
 
-export function hasKakaoKey()
-{
+export function hasKakaoKey() {
   return !!KAKAO_KEY;
 }
 
 // → Promise<kakao.maps>
-export function loadKakaoSdk()
-{
-  if (sdkPromise)
-  {
+export function loadKakaoSdk() {
+  if (sdkPromise) {
     return sdkPromise;
   }
-  sdkPromise = new Promise((resolve, reject) =>
-  {
-    if (!KAKAO_KEY)
-    {
-      reject(new Error("no kakao key"));
+  sdkPromise = new Promise((resolve, reject) => {
+    if (!KAKAO_KEY) {
+      reject(new Error('no kakao key'));
       return;
     }
-    if (window.kakao && window.kakao.maps)
-    {
+    if (window.kakao && window.kakao.maps) {
       window.kakao.maps.load(() => resolve(window.kakao.maps));
       return;
     }
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(KAKAO_KEY)}&libraries=services&autoload=false`;
     script.async = true;
-    script.onload = () =>
-    {
-      if (window.kakao && window.kakao.maps)
-      {
+    script.onload = () => {
+      if (window.kakao && window.kakao.maps) {
         window.kakao.maps.load(() => resolve(window.kakao.maps));
-      }
-      else
-      {
-        reject(new Error("kakao sdk"));
+      } else {
+        reject(new Error('kakao sdk'));
       }
     };
-    script.onerror = () => reject(new Error("kakao sdk"));
+    script.onerror = () => reject(new Error('kakao sdk'));
     document.head.appendChild(script);
   });
-  sdkPromise.catch(() =>
-  {
-    sdkPromise = null;   // 실패하면 다음에 다시 시도할 수 있게
+  sdkPromise.catch(() => {
+    sdkPromise = null; // 실패하면 다음에 다시 시도할 수 있게
   });
   return sdkPromise;
 }

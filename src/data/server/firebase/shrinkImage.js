@@ -9,19 +9,16 @@ const MAX_SIDE_PX = 1280;
 const JPEG_QUALITY = 0.8;
 
 // maxSide·quality: 무료 모드(서버 함수 없음)에서는 문서에 넣으려고 더 작게 (RealServer.upload)
-export function shrinkImage(dataUrl, maxSide = MAX_SIDE_PX, quality = JPEG_QUALITY)
-{
-  return new Promise((resolve) =>
-  {
+export function shrinkImage(dataUrl, maxSide = MAX_SIDE_PX, quality = JPEG_QUALITY) {
+  return new Promise((resolve) => {
     const image = new Image();
-    image.onload = () =>
-    {
+    image.onload = () => {
       const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = Math.round(image.width * scale);
       canvas.height = Math.round(image.height * scale);
-      canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-      resolve(canvas.toDataURL("image/jpeg", quality));
+      canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
     };
     image.onerror = () => resolve(dataUrl);
     image.src = dataUrl;

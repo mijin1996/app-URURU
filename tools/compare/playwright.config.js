@@ -10,19 +10,18 @@
    그 뒤 refine-screens로 화면을 일부러 바꿔서, 이제 정답은 미미가 승인한 React 화면이에요.
    ========================================================= */
 
-import { defineConfig } from "@playwright/test";
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
-  testDir: ".",
-  testMatch: "compare.spec.js",
-  snapshotPathTemplate: "{testDir}/__screens__/{arg}{ext}",
+  testDir: '.',
+  testMatch: 'compare.spec.js',
+  snapshotPathTemplate: '{testDir}/__screens__/{arg}{ext}',
   fullyParallel: true,
-  reporter: [["list"], ["html", { open: "never", outputFolder: "../../playwright-report" }]],
-  outputDir: "../../test-results",
-  expect:
-  {
+  reporter: [['list'], ['html', { open: 'never', outputFolder: '../../playwright-report' }]],
+  outputDir: '../../test-results',
+  expect: {
     // 글자 가장자리 몇 점 정도는 허용 (글꼴 그리는 순서 차이)
-    toHaveScreenshot: { maxDiffPixels: 30, animations: "disabled", caret: "hide" }
+    toHaveScreenshot: { maxDiffPixels: 30, animations: 'disabled', caret: 'hide' },
   },
-  use: { appFile: "dist/moyeo.html" }
+  use: { appFile: 'dist/moyeo.html' },
 });

@@ -11,8 +11,7 @@
      useName(result.value);                               // 성공: 값 쓰기
    ========================================================= */
 
-export const Result =
-{
+export const Result = {
   ok: (value) => ({ isOk: true, value }),
-  fail: (reason) => ({ isOk: false, reason })
+  fail: (reason) => ({ isOk: false, reason }),
 };

@@ -5,16 +5,22 @@
    모양은 styles/base.css의 .langswitch 한 곳
    ========================================================= */
 
-import { getLanguage, LANGUAGES, setLanguage } from "../../core/i18n/index.js";
+import { getLanguage, LANGUAGES, setLanguage } from '../../core/i18n/index.js';
 
-export function LanguageSwitch({ id })
-{
+export function LanguageSwitch({ id }) {
   const current = getLanguage();
   return (
     <div className="langswitch" id={id} role="group" aria-label="Language">
       {LANGUAGES.map((language) => (
-        <button key={language.code} type="button" className={language.code === current ? "on" : ""}
-          aria-pressed={language.code === current} onClick={() => setLanguage(language.code)}>{language.label}</button>
+        <button
+          key={language.code}
+          type="button"
+          className={language.code === current ? 'on' : ''}
+          aria-pressed={language.code === current}
+          onClick={() => setLanguage(language.code)}
+        >
+          {language.label}
+        </button>
       ))}
     </div>
   );

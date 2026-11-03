@@ -7,19 +7,20 @@
      채팅방: 그 상대와 처음 대화할 때. X로 닫거나 메시지를 주고받으면 사라지고, 대화한 적이 있으면 안 보여요 (MessageList)
    ========================================================= */
 
-import { useCtx } from "../app/AppContext.jsx";
-import { Icon } from "./Icon.jsx";
-import { policyDoc, PolicyText } from "./PolicyText.jsx";
-import { t } from "../../core/i18n/index.js";
+import { useCtx } from '../app/AppContext.jsx';
+import { Icon } from './Icon.jsx';
+import { policyDoc, PolicyText } from './PolicyText.jsx';
+import { t } from '../../core/i18n/index.js';
 
-const CHAT_RULES = policyDoc("chat-rules.md");   // 채팅 이용 수칙
+const CHAT_RULES = policyDoc('chat-rules.md'); // 채팅 이용 수칙
 
-export function ChatRulesTile({ id, onClose })
-{
+export function ChatRulesTile({ id, onClose }) {
   const { nav } = useCtx();
   return (
     <div className="chatrules tile" id={id}>
-      <button type="button" className="rulesclose" aria-label={t("common.close")} onClick={onClose}><Icon name="x" /></button>
+      <button type="button" className="rulesclose" aria-label={t('common.close')} onClick={onClose}>
+        <Icon name="x" />
+      </button>
       <PolicyText markdown={CHAT_RULES.text} onOpenDoc={nav.openPolicy} />
     </div>
   );

@@ -5,17 +5,14 @@
    delay가 null이면 멈춰요.
    ========================================================= */
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-export function useInterval(callback, delay)
-{
+export function useInterval(callback, delay) {
   const latest = useRef(callback);
   latest.current = callback;
 
-  useEffect(() =>
-  {
-    if (delay === null)
-    {
+  useEffect(() => {
+    if (delay === null) {
       return undefined;
     }
     const timer = setInterval(() => latest.current(), delay);

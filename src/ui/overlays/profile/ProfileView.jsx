@@ -10,37 +10,54 @@
    그 왼쪽 친구 삭제 버튼: 친구일 때만. 차단과 달리 친구만 끊어요
    ========================================================= */
 
-import { useCtx } from "../../app/AppContext.jsx";
-import { Icon } from "../../common/Icon.jsx";
-import { PhotoCarousel } from "../../common/PhotoCarousel.jsx";
-import { ProfileActions } from "./ProfileActions.jsx";
-import { ProfileInfo } from "./ProfileInfo.jsx";
-import { t } from "../../../core/i18n/index.js";
+import { useCtx } from '../../app/AppContext.jsx';
+import { Icon } from '../../common/Icon.jsx';
+import { PhotoCarousel } from '../../common/PhotoCarousel.jsx';
+import { ProfileActions } from './ProfileActions.jsx';
+import { ProfileInfo } from './ProfileInfo.jsx';
+import { t } from '../../../core/i18n/index.js';
 
-const NO_PHOTOS = [null];   // 사진이 없으면 기본 한 장
+const NO_PHOTOS = [null]; // 사진이 없으면 기본 한 장
 
-export function ProfileView({ userId, isFromChat = false, isGrow = false, source = "", close })
-{
+export function ProfileView({ userId, isFromChat = false, isGrow = false, source = '', close }) {
   const { users, nav } = useCtx();
   const user = users.user(userId);
-  const isMe = userId === "me";
+  const isMe = userId === 'me';
   const photos = user.photos && user.photos.length ? user.photos : NO_PHOTOS;
   const hasActions = !isFromChat && !isMe;
   return (
-    <div className={isGrow ? "pview grow" : "pview"}>
+    <div className={isGrow ? 'pview grow' : 'pview'}>
       <div className="pvtop">
-        <button className="iconbtn" id="pvClose" aria-label={t("common.close")} onClick={close}><Icon name="down" /></button>
+        <button className="iconbtn" id="pvClose" aria-label={t('common.close')} onClick={close}>
+          <Icon name="down" />
+        </button>
         {!isMe && (
           <span className="pvtopbtns">
-            {user.isFriend && <button className="iconbtn" id="pvUnfriend" aria-label={t("friends.remove")} onClick={() => nav.openUnfriend(user.id)}><Icon name="userMinus" /></button>}
-            <button className="iconbtn" id="pvBlock" aria-label={t("common.block")} onClick={() => nav.openBlock(user.id)}><Icon name="block" /></button>
+            {user.isFriend && (
+              <button
+                className="iconbtn"
+                id="pvUnfriend"
+                aria-label={t('friends.remove')}
+                onClick={() => nav.openUnfriend(user.id)}
+              >
+                <Icon name="userMinus" />
+              </button>
+            )}
+            <button
+              className="iconbtn"
+              id="pvBlock"
+              aria-label={t('common.block')}
+              onClick={() => nav.openBlock(user.id)}
+            >
+              <Icon name="block" />
+            </button>
           </span>
         )}
       </div>
       <PhotoCarousel user={user} photos={photos}>
         <ProfileInfo user={user} isMe={isMe} />
       </PhotoCarousel>
-      {hasActions && <ProfileActions user={user} canPing={source === "home"} close={close} />}
+      {hasActions && <ProfileActions user={user} canPing={source === 'home'} close={close} />}
     </div>
   );
 }

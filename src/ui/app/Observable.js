@@ -6,25 +6,21 @@
    emit()할 때마다 version이 1씩 올라가고, useStore 훅은 이 숫자가 바뀌면 다시 그려요.
    ========================================================= */
 
-export class Observable
-{
-  constructor()
-  {
+export class Observable {
+  constructor() {
     this.listeners = new Set();
     this.version = 0;
   }
 
   // 화살표 함수로 만들어서 useSyncExternalStore에 그대로 넘겨도 this가 안 바뀌어요
-  subscribe = (listener) =>
-  {
+  subscribe = (listener) => {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   };
 
   getVersion = () => this.version;
 
-  emit()
-  {
+  emit() {
     this.version += 1;
     this.listeners.forEach((listener) => listener());
   }

@@ -7,74 +7,88 @@
    - 친구: "메시지" (+ 홈에서 열었으면 "소리 울리기"와 안내 한 줄)
    ========================================================= */
 
-import { useState } from "react";
-import { HEART_POP_MS } from "../../../core/config.js";
-import { useCtx } from "../../app/AppContext.jsx";
-import { Icon } from "../../common/Icon.jsx";
-import { t } from "../../../core/i18n/index.js";
+import { useState } from 'react';
+import { HEART_POP_MS } from '../../../core/config.js';
+import { useCtx } from '../../app/AppContext.jsx';
+import { Icon } from '../../common/Icon.jsx';
+import { t } from '../../../core/i18n/index.js';
 
-export function ProfileActions({ user, canPing, close })
-{
+export function ProfileActions({ user, canPing, close }) {
   const { likes, nav, friendActions } = useCtx();
-  const [isLiked, setIsLiked] = useState(false);   // 방금 누른 하트 (잠깐 보여준 뒤 넘어감)
+  const [isLiked, setIsLiked] = useState(false); // 방금 누른 하트 (잠깐 보여준 뒤 넘어감)
 
-  if (!user.isFriend)
-  {
-    if (likes.hasLikedMe(user.id))
-    {
-      const accept = () =>
-      {
+  if (!user.isFriend) {
+    if (likes.hasLikedMe(user.id)) {
+      const accept = () => {
         close();
         friendActions.accept(user.id);
       };
-      return <div className="pvact"><button id="pvAccept" onClick={accept}><Icon name="heartFill" />{t("friends.beFriends")}</button></div>;
+      return (
+        <div className="pvact">
+          <button id="pvAccept" onClick={accept}>
+            <Icon name="heartFill" />
+            {t('friends.beFriends')}
+          </button>
+        </div>
+      );
     }
-    if (likes.hasSentTo(user.id))
-    {
-      return <div className="pvact"><button disabled><Icon name="heartFill" />{t("friends.likeSent")}</button></div>;
+    if (likes.hasSentTo(user.id)) {
+      return (
+        <div className="pvact">
+          <button disabled>
+            <Icon name="heartFill" />
+            {t('friends.likeSent')}
+          </button>
+        </div>
+      );
     }
     // 하트가 그 자리에서 꽉 찬 하트로 바뀐 걸 잠깐 보여주고 넘어감
-    const like = () =>
-    {
-      if (isLiked)
-      {
-        return;   // 두 번 눌러도 한 번만 보내기
+    const like = () => {
+      if (isLiked) {
+        return; // 두 번 눌러도 한 번만 보내기
       }
       setIsLiked(true);
-      setTimeout(() =>
-      {
+      setTimeout(() => {
         close();
         friendActions.like(user.id);
       }, HEART_POP_MS);
     };
     return (
       <div className="pvact">
-        <button id="pvLike" className={isLiked ? "liked" : undefined} onClick={like}>
-          <Icon name={isLiked ? "heartFill" : "heart"} />{isLiked ? t("friends.likeSent") : t("common.like")}
+        <button id="pvLike" className={isLiked ? 'liked' : undefined} onClick={like}>
+          <Icon name={isLiked ? 'heartFill' : 'heart'} />
+          {isLiked ? t('friends.likeSent') : t('common.like')}
         </button>
       </div>
     );
   }
 
-  const openChat = () =>
-  {
+  const openChat = () => {
     close();
     nav.openChat(user.id);
   };
-  const chatButton = <button id="pvChat" onClick={openChat}><Icon name="chat" />{t("common.message")}</button>;
-  if (!canPing)
-  {
+  const chatButton = (
+    <button id="pvChat" onClick={openChat}>
+      <Icon name="chat" />
+      {t('common.message')}
+    </button>
+  );
+  if (!canPing) {
     return <div className="pvact">{chatButton}</div>;
   }
   // 친구가 "무음에서도 소리 받기"를 켜뒀는지 미리 알려줌
-  const hint = user.pingPermission === "granted"
-    ? t("ring.willRing", { name: user.name })
-    : t("ring.willVibrate", { name: user.name });
+  const hint =
+    user.pingPermission === 'granted'
+      ? t('ring.willRing', { name: user.name })
+      : t('ring.willVibrate', { name: user.name });
   return (
     <>
       <div className="pvact">
         {chatButton}
-        <button id="pvPing" className="ping" onClick={() => friendActions.ping(user)}><Icon name="bell" />{t("ring.ring")}</button>
+        <button id="pvPing" className="ping" onClick={() => friendActions.ping(user)}>
+          <Icon name="bell" />
+          {t('ring.ring')}
+        </button>
       </div>
       <p className="pvhint">{hint}</p>
     </>

@@ -6,25 +6,19 @@
    진짜 출시용 로그인이 아니라서, 출시 빌드(토스·안드로이드)는 다른 방법을 써요.
    ========================================================= */
 
-import { Result } from "../../core/result.js";
-import { LOGIN_FAILED, LoginProvider } from "./LoginProvider.js";
+import { Result } from '../../core/result.js';
+import { LOGIN_FAILED, LoginProvider } from './LoginProvider.js';
 
-export class DemoLogin extends LoginProvider
-{
-  async signIn({ auth })
-  {
-    try
-    {
-      const { signInAnonymously } = await import("firebase/auth");
+export class DemoLogin extends LoginProvider {
+  async signIn({ auth }) {
+    try {
+      const { signInAnonymously } = await import('firebase/auth');
       await auth.authStateReady();
-      if (!auth.currentUser)
-      {
+      if (!auth.currentUser) {
         await signInAnonymously(auth);
       }
       return Result.ok(auth.currentUser.uid);
-    }
-    catch (error)
-    {
+    } catch (error) {
       return Result.fail(LOGIN_FAILED);
     }
   }

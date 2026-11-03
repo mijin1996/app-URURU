@@ -1,7 +1,6 @@
 /* 모든 화면이 같이 쓰는 기본 모양: 색(밝은/어두운 모드), 앱 틀, 하단 탭, 아바타, 스토리 테두리, 버튼, 알림 배너 */
 /* 화면 구성: 로고 → (처음이면 가입) → 위 제목줄 / 가운데 화면 / 아래 5칸 탭바 */
-:root
-{
+:root {
   --bg: #ffffff;
   --surface: #f2f1f6;
   --ink: #131218;
@@ -20,27 +19,25 @@
   --map-water: #a8d3f4;
   --map-ring: #ffffff;
   --map-label: #6f7a63;
-  --scrim: rgba(10,9,14,.45);
-  --shadow: 0 6px 20px rgba(20,16,40,.12);
-  --display: "Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --scrim: rgba(10, 9, 14, 0.45);
+  --shadow: 0 6px 20px rgba(20, 16, 40, 0.12);
+  --display: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', sans-serif;
   /* 제목도 본문과 같은 글꼴, 굵기만 900 */
   /* 크기 규칙: 화면 폭에 맞춰 저절로 커지고 작아져요 (폭 390px 폰에서 14 / 13 / 22 / 20 / 38px)
      --appw: 앱 폭 (폰은 화면 폭, PC는 최대 440px). clamp(가장 작게, 폭에 비례, 가장 크게)
      --fs 일반 폰트 · --fs-small 회색·설명 폰트, 받은 메시지 · --fs-title 제목·이름 · --icon 아이콘 · --btn-h 버튼·입력 칸 높이 */
-  --appw: min(100vw,440px);
-  --fs: clamp(12px,calc(var(--appw) * 14 / 390),16px);
-  --fs-small: clamp(12px,calc(var(--appw) * 13 / 390),15px);
-  --fs-title: clamp(19px,calc(var(--appw) * 22 / 390),25px);
-  --icon: clamp(18px,calc(var(--appw) * 20 / 390),23px);
-  --btn-h: clamp(34px,calc(var(--appw) * 38 / 390),44px);
+  --appw: min(100vw, 440px);
+  --fs: clamp(12px, calc(var(--appw) * 14 / 390), 16px);
+  --fs-small: clamp(12px, calc(var(--appw) * 13 / 390), 15px);
+  --fs-title: clamp(19px, calc(var(--appw) * 22 / 390), 25px);
+  --icon: clamp(18px, calc(var(--appw) * 20 / 390), 23px);
+  --btn-h: clamp(34px, calc(var(--appw) * 38 / 390), 44px);
   --fs-profile: 10px;
   /* 프로필 보기 화면의 이름·나이 밖 폰트 (고정) */
-  --body: "Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif;
+  --body: 'Noto Sans KR', system-ui, -apple-system, 'Apple SD Gothic Neo', sans-serif;
 }
-@media (prefers-color-scheme: dark)
-{
-  :root:not([data-theme="light"])
-  {
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
     --bg: #0f0e13;
     --surface: #1c1a23;
     --ink: #f3f1f8;
@@ -57,15 +54,14 @@
     --map-road: #30333a;
     --map-major: #6a5a24;
     --map-water: #1b3850;
-    --map-ring: rgba(255,255,255,.45);
+    --map-ring: rgba(255, 255, 255, 0.45);
     --map-label: #8b9a86;
-    --scrim: rgba(0,0,0,.62);
-    --shadow: 0 6px 20px rgba(0,0,0,.45);
+    --scrim: rgba(0, 0, 0, 0.62);
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
     color-scheme: dark;
   }
 }
-:root[data-theme="dark"]
-{
+:root[data-theme='dark'] {
   --bg: #0f0e13;
   --surface: #1c1a23;
   --ink: #f3f1f8;
@@ -82,19 +78,18 @@
   --map-road: #30333a;
   --map-major: #6a5a24;
   --map-water: #1b3850;
-  --map-ring: rgba(255,255,255,.45);
+  --map-ring: rgba(255, 255, 255, 0.45);
   --map-label: #8b9a86;
-  --scrim: rgba(0,0,0,.62);
-  --shadow: 0 6px 20px rgba(0,0,0,.45);
+  --scrim: rgba(0, 0, 0, 0.62);
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
 
-html,body
-{
+html,
+body {
   height: 100%;
 }
-body
-{
+body {
   margin: 0;
   font-size: var(--fs);
   background: var(--bg);
@@ -104,19 +99,18 @@ body
   place-items: center;
   overflow: hidden;
 }
-button
-{
+button {
   font: inherit;
   color: inherit;
   cursor: pointer;
 }
-button:focus-visible,input:focus-visible,[role=slider]:focus-visible
-{
+button:focus-visible,
+input:focus-visible,
+[role='slider']:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.app
-{
+.app {
   position: relative;
   width: 100%;
   max-width: 440px;
@@ -126,46 +120,39 @@ button:focus-visible,input:focus-visible,[role=slider]:focus-visible
   background: var(--bg);
   overflow: hidden;
 }
-@media (min-width:600px)
-{
-  .app
-  {
-    height: min(100%,900px);
+@media (min-width: 600px) {
+  .app {
+    height: min(100%, 900px);
     border: 1px solid var(--line);
     border-radius: 32px;
     box-shadow: var(--shadow);
   }
 }
 
-.screen
-{
+.screen {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
-.screen.fixed
-{
+.screen.fixed {
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 /* 하단 탭바: 5칸을 정확히 같은 너비로 */
-.nav
-{
+.nav {
   display: grid;
-  grid-template-columns: repeat(5,1fr);
+  grid-template-columns: repeat(5, 1fr);
   border-top: 1px solid var(--line);
   padding: 8px 0 6px;
   background: var(--bg);
 }
-.nav:empty
-{
+.nav:empty {
   display: none;
 }
-.nav button
-{
+.nav button {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -178,29 +165,24 @@ button:focus-visible,input:focus-visible,[role=slider]:focus-visible
   font-weight: 700;
   padding: 4px 0;
 }
-.nav button.on
-{
+.nav button.on {
   color: var(--ink);
 }
-.nav button .dot
-{
+.nav button .dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: transparent;
 }
-.nav button.on .dot
-{
+.nav button.on .dot {
   background: var(--ink);
 }
-.nav .icowrap
-{
+.nav .icowrap {
   position: relative;
   display: grid;
   place-items: center;
 }
-.badge
-{
+.badge {
   min-width: 22px;
   height: 22px;
   padding: 0 6px;
@@ -215,8 +197,7 @@ button:focus-visible,input:focus-visible,[role=slider]:focus-visible
   border: 2px solid var(--bg);
   box-sizing: border-box;
 }
-.nav .badge
-{
+.nav .badge {
   position: absolute;
   top: -9px;
   left: 12px;
@@ -224,15 +205,13 @@ button:focus-visible,input:focus-visible,[role=slider]:focus-visible
 /* 탭 아이콘 오른쪽 위에 겹쳐 띄움 */
 
 /* 아이콘: 크기는 --icon 하나로 (화면 폭에 맞춰 바뀜) */
-svg[viewBox="0 0 24 24"]
-{
+svg[viewBox='0 0 24 24'] {
   width: var(--icon);
   height: var(--icon);
 }
 
 /* 아바타 */
-.av
-{
+.av {
   --s: 48px;
   width: var(--s);
   height: var(--s);
@@ -242,12 +221,11 @@ svg[viewBox="0 0 24 24"]
   place-items: center;
   color: #fff;
   font-weight: 900;
-  font-size: calc(var(--s)*.38);
-  background: linear-gradient(135deg,var(--c1),var(--c2));
+  font-size: calc(var(--s) * 0.38);
+  background: linear-gradient(135deg, var(--c1), var(--c2));
   overflow: hidden;
 }
-.av img
-{
+.av img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -257,14 +235,12 @@ svg[viewBox="0 0 24 24"]
    안 봄: 남은 부분 초록 / 지나간 부분 회색
    봄:   남은 부분 회색 / 지나간 부분 투명(흰 바탕)
    .blank: 스토리가 없어도 같은 크기 자리를 차지해서 옆 칸과 줄이 맞게 (내 스토리 칸) */
-@property --p
-{
-  syntax: "<number>";
+@property --p {
+  syntax: '<number>';
   inherits: true;
   initial-value: 100;
 }
-.ring
-{
+.ring {
   --p: 100;
   --rc: var(--ok);
   --rt: var(--line);
@@ -276,158 +252,138 @@ svg[viewBox="0 0 24 24"]
   flex: none;
   transition: --p 1s linear;
 }
-.ring::before
-{
-  content: "";
+.ring::before {
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
   padding: 3px;
-  background: conic-gradient(var(--rc) calc(var(--p) * 1%),var(--rt) 0);
-  -webkit-mask: linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  background: conic-gradient(var(--rc) calc(var(--p) * 1%), var(--rt) 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
 }
-.ring.seen
-{
+.ring.seen {
   --rc: var(--muted);
   --rt: transparent;
 }
-.ring.blank
-{
+.ring.blank {
   --rc: transparent;
   --rt: transparent;
 }
-.ring.sqr
-{
+.ring.sqr {
   border-radius: 28px;
 }
 
 /* 프로필 사진 한 장 (실제 사진 또는 예시용 그라데이션) */
-.photo
-{
+.photo {
   position: relative;
   width: 100%;
   height: 100%;
   display: grid;
   place-items: center;
   color: #fff;
-  background: linear-gradient(var(--ang),var(--c1),var(--c2));
+  background: linear-gradient(var(--ang), var(--c1), var(--c2));
   overflow: hidden;
 }
-.photo img
-{
+.photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.photo .ini
-{
+.photo .ini {
   font-family: var(--display);
   font-weight: 900;
   font-size: 150px;
-  opacity: .28;
+  opacity: 0.28;
 }
-.photo .cap
-{
+.photo .cap {
   position: absolute;
   top: 24px;
   right: 14px;
   font-size: var(--fs);
   font-weight: 700;
-  background: rgba(0,0,0,.28);
+  background: rgba(0, 0, 0, 0.28);
   padding: 3px 9px;
   border-radius: 999px;
 }
 
 /* 입력 중 애니메이션 (상대 쪽 목록과 채팅방에서만) */
-.typing-anim
-{
+.typing-anim {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--ok);
   font-weight: 700;
 }
-.dots
-{
+.dots {
   display: inline-flex;
   gap: 4px;
   align-items: center;
 }
-.dots i
-{
+.dots i {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: currentColor;
   animation: bnc 1.2s infinite;
 }
-.dots i:nth-child(2)
-{
-  animation-delay: .15s;
+.dots i:nth-child(2) {
+  animation-delay: 0.15s;
 }
-.dots i:nth-child(3)
-{
-  animation-delay: .3s;
+.dots i:nth-child(3) {
+  animation-delay: 0.3s;
 }
-@keyframes bnc
-{
-  0%,60%,100%
-  {
+@keyframes bnc {
+  0%,
+  60%,
+  100% {
     transform: none;
-    opacity: .45;
+    opacity: 0.45;
   }
-  30%
-  {
+  30% {
     transform: translateY(-4px);
     opacity: 1;
   }
 }
 
 /* 시트 / 모달 */
-.scrim
-{
+.scrim {
   position: absolute;
   inset: 0;
   background: var(--scrim);
   z-index: 75;
   display: flex;
   align-items: flex-end;
-  animation: fade .2s;
+  animation: fade 0.2s;
 }
-.scrim.center
-{
+.scrim.center {
   align-items: center;
   justify-content: center;
   padding: 0 20px;
 }
-@keyframes fade
-{
-  from
-  {
+@keyframes fade {
+  from {
     opacity: 0;
   }
 }
-@keyframes up
-{
-  from
-  {
+@keyframes up {
+  from {
     transform: translateY(40px);
-    opacity: .6;
+    opacity: 0.6;
   }
 }
 /* 버튼 규칙: 모든 글자 버튼은 글자를 감싸는 알약 모양 (높이 --btn-h, 양옆 16px), 늘어나지 않아요 */
-.btnrow
-{
+.btnrow {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   margin: 16px 0 0;
 }
-.btn
-{
+.btn {
   height: var(--btn-h);
   padding: 0 16px;
   border-radius: 999px;
@@ -443,32 +399,27 @@ svg[viewBox="0 0 24 24"]
   justify-content: center;
   gap: 6px;
 }
-.btn.primary
-{
+.btn.primary {
   background: var(--ink);
   color: var(--bg);
 }
-.btn.alert
-{
+.btn.alert {
   background: var(--alert);
   color: #fff;
 }
-.modal
-{
+.modal {
   width: 100%;
   max-width: 360px;
   background: var(--bg);
   border-radius: 24px;
   padding: 22px;
-  animation: up .2s;
+  animation: up 0.2s;
 }
-.modal h3
-{
+.modal h3 {
   margin: 0 0 6px;
   font-size: var(--fs-title);
 }
-.modal p
-{
+.modal p {
   margin: 0 0 14px;
   color: var(--muted);
   font-size: var(--fs-small);
@@ -476,8 +427,7 @@ svg[viewBox="0 0 24 24"]
 }
 
 /* 공통 입력칸 / 작은 버튼 / 하트 튀는 효과 */
-.field
-{
+.field {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
@@ -490,8 +440,7 @@ svg[viewBox="0 0 24 24"]
   font: inherit;
   font-size: var(--fs);
 }
-.smallbtn
-{
+.smallbtn {
   height: var(--btn-h);
   padding: 0 16px;
   border-radius: 999px;
@@ -509,23 +458,19 @@ svg[viewBox="0 0 24 24"]
   justify-content: center;
   gap: 6px;
 }
-.smallbtn.ghost
-{
+.smallbtn.ghost {
   background: var(--bg);
   color: var(--ink);
   border: 1.5px solid var(--line);
 }
-@keyframes heartpop
-{
-  40%
-  {
+@keyframes heartpop {
+  40% {
     transform: scale(1.18);
   }
 }
 
 /* 알림 배너 (누르면 해당 채팅방으로) */
-.toast
-{
+.toast {
   position: absolute;
   left: 12px;
   right: 12px;
@@ -543,77 +488,66 @@ svg[viewBox="0 0 24 24"]
   font-weight: 700;
   box-shadow: var(--shadow);
   text-align: left;
-  animation: drop .25s;
+  animation: drop 0.25s;
 }
-.toast .tx
-{
+.toast .tx {
   flex: 1;
   min-width: 0;
 }
-.toast .tx b
-{
+.toast .tx b {
   display: block;
   font-size: var(--fs);
 }
-.toast .tx span
-{
+.toast .tx span {
   display: block;
-  opacity: .8;
+  opacity: 0.8;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--fs-small);
 }
-@keyframes drop
-{
-  from
-  {
+@keyframes drop {
+  from {
     transform: translateY(-14px);
     opacity: 0;
   }
 }
-@media (prefers-reduced-motion:reduce)
-{
+@media (prefers-reduced-motion: reduce) {
   * {
-    animation: none!important;
-    transition: none!important;
+    animation: none !important;
+    transition: none !important;
   }
 }
 
 /* 색 고르기 팔레트 창: 아래에서 올라오는 판 (ColorPalette.js) */
-.sheet
-{
+.sheet {
   width: 100%;
   max-height: 86%;
   overflow-y: auto;
   background: var(--surface);
   border-radius: 26px 26px 0 0;
   padding: 20px 18px 22px;
-  animation: up .25s ease;
+  animation: up 0.25s ease;
 }
-.sheet h3
-{
+.sheet h3 {
   margin: 0 0 6px;
   font-size: var(--fs-title);
   font-weight: 900;
 }
-.sheet p
-{
+.sheet p {
   margin: 0;
   color: var(--muted);
   font-size: var(--fs-small);
   line-height: 1.55;
 }
-.pgrid
-{
+.pgrid {
   display: grid;
-  grid-template-columns: repeat(7,1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   margin-top: 12px;
 }
-.pswatch
-{
+.pswatch {
   position: relative;
   aspect-ratio: 1;
   max-width: 100%;
@@ -623,17 +557,16 @@ svg[viewBox="0 0 24 24"]
   overflow: hidden;
   cursor: pointer;
 }
-.pswatch.on
-{
-  box-shadow: 0 0 0 2px var(--surface),0 0 0 4px var(--ink);
+.pswatch.on {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--ink);
 }
-.pswatch.none
-{
+.pswatch.none {
   background: var(--bg);
 }
-.pswatch.none::after
-{
-  content: "";
+.pswatch.none::after {
+  content: '';
   position: absolute;
   left: -10%;
   right: -10%;
@@ -642,12 +575,10 @@ svg[viewBox="0 0 24 24"]
   background: var(--alert);
   transform: rotate(-45deg);
 }
-.pswatch.custom
-{
-  background: conic-gradient(#ff2d55,#ffdd2e,#1fc95b,#38bdf8,#7a5cff,#ff2d55);
+.pswatch.custom {
+  background: conic-gradient(#ff2d55, #ffdd2e, #1fc95b, #38bdf8, #7a5cff, #ff2d55);
 }
-.pswatch.custom input
-{
+.pswatch.custom input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -658,50 +589,42 @@ svg[viewBox="0 0 24 24"]
 
 /* 생년월일·국가 돌림판 (DateWheelPicker.jsx): 아이폰처럼 위아래로 굴리는 바퀴 (생년월일 3개, 국가 1개)
    한 칸 36px × 5칸 = 180px. 위아래 72px(2칸) 여백이 있어서 첫 칸도 가운데 줄에 올 수 있어요 */
-.dphead
-{
+.dphead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
-.dphead b
-{
+.dphead b {
   font-size: var(--fs);
 }
-.dpbtn
-{
+.dpbtn {
   border: 0;
   background: none;
   padding: 8px 4px;
   font-size: var(--fs);
   color: var(--accent);
 }
-.dpbtn.strong
-{
+.dpbtn.strong {
   font-weight: 900;
 }
-.wheels
-{
+.wheels {
   position: relative;
   display: grid;
   grid-template-columns: 1.3fr 1fr 1fr;
   height: 180px;
 }
 /* 국가 돌림판: 바퀴 하나. 긴 나라 이름은 끝을 …로 */
-.wheels.single
-{
+.wheels.single {
   grid-template-columns: 1fr;
 }
-.wheels.single .wheel li
-{
+.wheels.single .wheel li {
   padding: 0 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.wheel
-{
+.wheel {
   position: relative;
   z-index: 1;
   list-style: none;
@@ -712,15 +635,13 @@ svg[viewBox="0 0 24 24"]
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(transparent,#000 35%,#000 65%,transparent);
-  mask-image: linear-gradient(transparent,#000 35%,#000 65%,transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent);
+  mask-image: linear-gradient(transparent, #000 35%, #000 65%, transparent);
 }
-.wheel::-webkit-scrollbar
-{
+.wheel::-webkit-scrollbar {
   display: none;
 }
-.wheel li
-{
+.wheel li {
   height: 36px;
   line-height: 36px;
   text-align: center;
@@ -728,13 +649,11 @@ svg[viewBox="0 0 24 24"]
   font-size: var(--fs);
   color: var(--muted);
 }
-.wheel li.on
-{
+.wheel li.on {
   color: var(--ink);
   font-weight: 700;
 }
-.wband
-{
+.wband {
   position: absolute;
   left: 0;
   right: 0;
@@ -746,71 +665,59 @@ svg[viewBox="0 0 24 24"]
 }
 
 /* 정책 문서 (PolicyText.jsx: 채팅 이용 수칙, 이용약관, 운영정책, 개인정보처리방침) */
-.policysheet
-{
+.policysheet {
   max-height: 92%;
 }
-.sheettop
-{
+.sheettop {
   display: flex;
   justify-content: flex-end;
   margin: -8px -6px 0;
 }
-.policytext
-{
+.policytext {
   font-size: var(--fs-small);
   line-height: 1.6;
   color: var(--ink);
   overflow-wrap: anywhere;
 }
-.policytext h3
-{
+.policytext h3 {
   margin: 0 0 8px;
   font-size: var(--fs-title);
   font-weight: 900;
 }
-.policytext h4
-{
+.policytext h4 {
   margin: 14px 0 4px;
   font-size: var(--fs);
   font-weight: 900;
 }
 .policytext p,
 .policytext ul,
-.policytext blockquote
-{
+.policytext blockquote {
   margin: 4px 0;
 }
-.policytext ul
-{
+.policytext ul {
   padding-left: 18px;
 }
-.policytext blockquote
-{
+.policytext blockquote {
   padding-left: 10px;
   border-left: 3px solid var(--line);
   color: var(--muted);
 }
-.policytext .tablewrap
-{
+.policytext .tablewrap {
   overflow-x: auto;
   margin: 6px 0;
 }
-.policytext table
-{
+.policytext table {
   border-collapse: collapse;
   min-width: 100%;
 }
 .policytext th,
-.policytext td
-{
+.policytext td {
   padding: 4px 6px;
   border: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }
-.doclink
-{
+.doclink {
   padding: 0;
   border: 0;
   background: none;
@@ -823,8 +730,7 @@ svg[viewBox="0 0 24 24"]
 /* 관심사 태그 (Tag.jsx): 스와이프 카드 · 프로필 · 나 탭이 모두 이 한 규칙
    알록달록한 바탕(--tag-bg, 글자마다 색이 정해짐) + 진한 굵은 글자 + 살짝 둥근 네모
    글자 크기는 놓인 자리(카드·프로필·나 탭)의 크기를 그대로 따라가요 */
-.tag
-{
+.tag {
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -833,16 +739,15 @@ svg[viewBox="0 0 24 24"]
   background: var(--tag-bg, var(--yellow));
   color: var(--on-yellow);
   font-weight: 900;
-  letter-spacing: .02em;
-  text-transform: uppercase;   /* 영어는 대문자로 (한글은 그대로) */
+  letter-spacing: 0.02em;
+  text-transform: uppercase; /* 영어는 대문자로 (한글은 그대로) */
   line-height: 1.2;
   white-space: nowrap;
 }
 
 /* 언어 바 [KR | EN] (LanguageSwitch.jsx): 가입 화면 오른쪽 위 · 나 탭 설정이 모두 이 한 규칙
    고른 언어만 보라 바탕, 나머지는 회색 글자 */
-.langswitch
-{
+.langswitch {
   display: inline-flex;
   flex: none;
   padding: 3px;
@@ -850,8 +755,7 @@ svg[viewBox="0 0 24 24"]
   background: var(--surface);
   gap: 2px;
 }
-.langswitch button
-{
+.langswitch button {
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -861,8 +765,7 @@ svg[viewBox="0 0 24 24"]
   border-radius: 999px;
   cursor: pointer;
 }
-.langswitch button.on
-{
+.langswitch button.on {
   background: var(--accent);
   color: var(--accent-ink);
 }

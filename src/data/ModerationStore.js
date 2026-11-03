@@ -8,35 +8,30 @@
          서버가 알려주면 applyServer로 덮어써요 (앱을 지웠다 깔거나 탈퇴했다 다시 가입해도 그대로)
    ========================================================= */
 
-import { TOPIC } from "../core/topics.js";
-import { addStrike, isSuspended } from "./sanctionRules.js";
+import { TOPIC } from '../core/topics.js';
+import { addStrike, isSuspended } from './sanctionRules.js';
 
-export class ModerationStore
-{
+export class ModerationStore {
   // repository: load / save 약속 (ProfileRepository와 같은 모양)
-  constructor(notifier, repository)
-  {
+  constructor(notifier, repository) {
     this.notifier = notifier;
     this.repository = repository;
     const saved = repository.load();
     this.setRecord(saved.isOk ? saved.value : {});
   }
 
-  setRecord({ warnings = 0, bannedUntil = 0, isPermanent = false })
-  {
+  setRecord({ warnings = 0, bannedUntil = 0, isPermanent = false }) {
     this.warnings = warnings;
     this.bannedUntil = bannedUntil;
     this.isPermanent = isPermanent;
   }
 
-  isBanned()
-  {
+  isBanned() {
     return isSuspended(this, Date.now());
   }
 
   // 위반 1회 더하기. 결과 { warnings, level: "warning" | "suspended" | "permanent" }
-  addWarning()
-  {
+  addWarning() {
     const next = addStrike(this, Date.now());
     this.setRecord(next);
     this.save();
@@ -44,15 +39,17 @@ export class ModerationStore
   }
 
   // 진짜 서버의 기록으로 덮어쓰기 (서버가 정답)
-  applyServer(record)
-  {
+  applyServer(record) {
     this.setRecord(record);
     this.save();
   }
 
-  save()
-  {
-    this.repository.save({ warnings: this.warnings, bannedUntil: this.bannedUntil, isPermanent: this.isPermanent });
+  save() {
+    this.repository.save({
+      warnings: this.warnings,
+      bannedUntil: this.bannedUntil,
+      isPermanent: this.isPermanent,
+    });
     this.notifier.notify(TOPIC.moderation);
   }
 }

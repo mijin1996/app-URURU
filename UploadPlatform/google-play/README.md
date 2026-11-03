@@ -1,7 +1,7 @@
 # 구글 플레이 등록용 (원래 기능 전부)
 
-> 플레이 콘솔에 넣을 글·그림을 이 폴더 하나에 모았어요. 앱인토스용은 `store/apps-in-toss/`.
-> 준수사항 점검은 `docs/policy/compliance.md`, 올리는 순서는 `docs/guides/launch-checklist.md`와 `docs/guides/google-play-console-release-guide.md`.
+> 플레이 콘솔에 넣을 글·그림을 이 폴더 하나에 모았어요. 앱인토스용은 `UploadPlatform/apps-in-toss/`.
+> 플레이 정책 점검과 올리는 순서는 `docs/explanation/progress.md`의 0-4(남은 과제)와 5번(구글 플레이 출시).
 > 글은 **초안**이에요. 미미가 읽고 고친 뒤 콘솔에 붙여 넣으세요.
 
 ## 0. 지금 상태 (2026-10-15)
@@ -9,7 +9,7 @@
 - 그림·글: ✅ 준비됨 (이 폴더)
 - **AAB 파일: ❌ 아직 만들 수 없어요.** 안드로이드 프로젝트(Capacitor, `android/` 폴더)가 아직 없어요 → `openspec/changes/add-mobile-apps`
 - 진짜 지도·위치: ❌ 아직 그린 지도와 가짜 위치예요 → `openspec/changes/add-google-map`
-- 개인정보처리방침·계정 삭제 **웹 주소**: ⏳ 아직 없어요 (`docs/policy/compliance.md` 6장 3번)
+- 개인정보처리방침·계정 삭제 **웹 주소**: ⏳ 아직 없어요 (`docs/explanation/progress.md` 0-4 C)
 
 ## 1. 올릴 그림
 

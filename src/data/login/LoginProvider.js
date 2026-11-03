@@ -15,14 +15,12 @@
      실패(인터넷 끊김, 토스 앱이 오래됨 등)는 흔한 일이라 Result로 이유를 돌려줘요.
    ========================================================= */
 
-import { t } from "../../core/i18n/index.js";
+import { t } from '../../core/i18n/index.js';
 
-export class LoginProvider
-{
-  signIn(firebase, options)
-  {
-    throw new Error("LoginProvider.signIn()을 자식 클래스에서 만들어야 해요");
+export class LoginProvider {
+  signIn(firebase, options) {
+    throw new Error('LoginProvider.signIn()을 자식 클래스에서 만들어야 해요');
   }
 }
 
-export const LOGIN_FAILED = t("server.loginFailed");
+export const LOGIN_FAILED = t('server.loginFailed');

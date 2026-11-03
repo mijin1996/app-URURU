@@ -7,38 +7,35 @@
    차단: 서로 못 보게만, 나 탭에서 풀 수 있어요 (SAFE-01~03)
    ========================================================= */
 
-import { t } from "../../core/i18n/index.js";
+import { t } from '../../core/i18n/index.js';
 
-export class SafetyActions
-{
-  constructor(ctx)
-  {
+export class SafetyActions {
+  constructor(ctx) {
     this.ctx = ctx;
   }
 
   // extra: { note, photo } 신고 창에서 쓴 자세한 내용·첨부 사진 (선택, 운영자 사이트에서 봐요)
-  report(userId, reason, message = null, extra = {})
-  {
+  report(userId, reason, message = null, extra = {}) {
     const { users, server, toast } = this.ctx;
     const user = users.user(userId);
     users.report(userId);
-    server.report(userId, reason, message, extra);   // 서버에 신고 기록 + 상대 기기에서도 서로 숨김 (SYNC-50)
+    server.report(userId, reason, message, extra); // 서버에 신고 기록 + 상대 기기에서도 서로 숨김 (SYNC-50)
     this.hideUser(userId);
-    toast.show(t("safety.reportedToast", { name: user.name }), { sub: t("safety.hiddenFromEachOther") });
+    toast.show(t('safety.reportedToast', { name: user.name }), {
+      sub: t('safety.hiddenFromEachOther'),
+    });
   }
 
-  block(userId)
-  {
+  block(userId) {
     const { users, server, toast } = this.ctx;
     const user = users.user(userId);
     users.block(userId);
-    server.block(userId);   // 서버: 서로 메시지·스토리·프로필 못 읽게 + 친구 끊기 (SAFE-02)
+    server.block(userId); // 서버: 서로 메시지·스토리·프로필 못 읽게 + 친구 끊기 (SAFE-02)
     this.hideUser(userId);
-    toast.show(t("safety.blockedToast", { name: user.name }));
+    toast.show(t('safety.blockedToast', { name: user.name }));
   }
 
-  unblock(userId)
-  {
+  unblock(userId) {
     const { users, server, nav } = this.ctx;
     users.unblock(userId);
     server.unblock(userId);
@@ -46,11 +43,10 @@ export class SafetyActions
   }
 
   // 신고·차단 뒤 그 사람과 열린 창(채팅방, 프로필)을 닫고 목록을 다시 그려요
-  hideUser(userId)
-  {
+  hideUser(userId) {
     const { overlays, nav } = this.ctx;
     nav.closeChatIfWith(userId);
-    overlays.closeKinds(["pview"]);
+    overlays.closeKinds(['pview']);
     nav.refresh();
   }
 }

@@ -6,30 +6,28 @@
    React는 탭을 옮기면 부품이 사라지니까, 값을 ctx.kept(Map)에 같이 적어둬요. (STO-32, FRD-17)
    ========================================================= */
 
-import { useCallback, useState } from "react";
-import { useCtx } from "../app/AppContext.jsx";
+import { useCallback, useState } from 'react';
+import { useCtx } from '../app/AppContext.jsx';
 
-export function useKept(key, initialValue)
-{
+export function useKept(key, initialValue) {
   const { kept } = useCtx();
-  const [value, setValue] = useState(() =>
-  {
-    if (kept.has(key))
-    {
+  const [value, setValue] = useState(() => {
+    if (kept.has(key)) {
       return kept.get(key);
     }
-    return typeof initialValue === "function" ? initialValue() : initialValue;
+    return typeof initialValue === 'function' ? initialValue() : initialValue;
   });
 
-  const setKept = useCallback((next) =>
-  {
-    setValue((previous) =>
-    {
-      const resolved = typeof next === "function" ? next(previous) : next;
-      kept.set(key, resolved);
-      return resolved;
-    });
-  }, [key, kept]);
+  const setKept = useCallback(
+    (next) => {
+      setValue((previous) => {
+        const resolved = typeof next === 'function' ? next(previous) : next;
+        kept.set(key, resolved);
+        return resolved;
+      });
+    },
+    [key, kept],
+  );
 
   return [value, setKept];
 }

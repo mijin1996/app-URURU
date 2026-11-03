@@ -6,25 +6,20 @@
    사진 한 장을 골라 바로 읽는 일(채팅 사진, 스토리 사진)은 pickImage() 한 곳에서 해요.
    ========================================================= */
 
-import { readImage } from "../../data/imageReader.js";
+import { readImage } from '../../data/imageReader.js';
 
-export class PhotoPicker
-{
-  constructor(input)
-  {
-    this.input = input;   // <input type="file" accept="image/*">
+export class PhotoPicker {
+  constructor(input) {
+    this.input = input; // <input type="file" accept="image/*">
   }
 
   // const files = await picker.pick({ isMultiple: true });
-  pick({ isMultiple = false } = {})
-  {
-    return new Promise((resolve) =>
-    {
+  pick({ isMultiple = false } = {}) {
+    return new Promise((resolve) => {
       this.input.multiple = isMultiple;
-      this.input.onchange = () =>
-      {
+      this.input.onchange = () => {
         const files = [...this.input.files];
-        this.input.value = "";   // 같은 사진을 또 골라도 change가 일어나게 비워둠
+        this.input.value = ''; // 같은 사진을 또 골라도 change가 일어나게 비워둠
         resolve(files);
       };
       this.input.click();
@@ -32,11 +27,9 @@ export class PhotoPicker
   }
 
   // 사진 한 장 고르고 읽기: 취소하면 null, 아니면 readImage 결과(Result)
-  async pickImage()
-  {
+  async pickImage() {
     const [file] = await this.pick();
-    if (!file)
-    {
+    if (!file) {
       return null;
     }
     return readImage(file);

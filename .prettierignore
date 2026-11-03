@@ -1,0 +1,24 @@
+# 설치 · 빌드 결과물 (만들어지는 것)
+node_modules/
+dist/
+dist-toss/
+dist-admin/
+dist-web-android/
+functions/node_modules/
+functions/shared/
+tools/compare/__screens__/
+test-results/
+playwright-report/
+package-lock.json
+functions/package-lock.json
+
+# 지울 것 · Claude Code 도구 (OpenSpec이 만듦)
+_to_delete/
+.claude/
+
+# 문서 · 명세 · 정책은 손으로 관리 (앱이 docs/policy/*.md를 그대로 읽어요)
+*.md
+openspec/
+
+# 스토어 등록 자료
+UploadPlatform/

@@ -6,21 +6,17 @@
    (안 쓰는 기능을 억지로 갖지 않게 — ISP)
    ========================================================= */
 
-const POP = { length: 0.07, volume: 0.3, wave: "triangle" };
+const POP = { length: 0.07, volume: 0.3, wave: 'triangle' };
 const SECOND_POP_DELAY = 0.06;
 
-export class ToggleSound
-{
-  constructor(engine)
-  {
+export class ToggleSound {
+  constructor(engine) {
     this.engine = engine;
   }
 
-  play(isOn)
-  {
+  play(isOn) {
     this.engine.unlock();
-    if (isOn)
-    {
+    if (isOn) {
       this.engine.tone({ ...POP, from: 520, to: 1100 });
       this.engine.tone({ ...POP, from: 900, to: 1600, delay: SECOND_POP_DELAY });
       return;

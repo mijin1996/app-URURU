@@ -9,25 +9,20 @@
    listenTossBack 토스 뒤로가기 → 맨 위 창 닫기 / 첫 화면이면 미니앱 나가기
    ========================================================= */
 
-export async function loadTossUser()
-{
-  const { User } = await import("@apps-in-toss/web-framework");
+export async function loadTossUser() {
+  const { User } = await import('@apps-in-toss/web-framework');
   return User;
 }
 
 // 토스 뒤로가기(내비게이션 바·안드로이드 뒤로 버튼): onBack()이 false면(닫을 창이 없으면) 미니앱을 나가요
 // (앱인토스 출시 체크리스트: 첫 화면에서 뒤로가기를 누르면 미니앱이 종료돼야 해요)
-export async function listenTossBack(onBack)
-{
-  const { graniteEvent, closeView } = await import("@apps-in-toss/web-framework");
-  graniteEvent.addEventListener("backEvent",
-  {
-    onEvent: () =>
-    {
-      if (!onBack())
-      {
+export async function listenTossBack(onBack) {
+  const { graniteEvent, closeView } = await import('@apps-in-toss/web-framework');
+  graniteEvent.addEventListener('backEvent', {
+    onEvent: () => {
+      if (!onBack()) {
         closeView();
       }
-    }
+    },
   });
 }

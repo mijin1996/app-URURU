@@ -1,7 +1,9 @@
 # admin-roles.md — 운영자 권한 흐름 (B안: 무료 모드, 메일 없이 운영자 센터 안에서 승인)
 
+> 분류: Explanation (왜 이렇게 했는지)
+
 > 2026-10-21 미미와 정함. **설계 문서 (아직 코드에 적용 안 됨).**
-> 지금 코드는 "총관리자가 아이디 발급 → 받은 사람이 처음 등록" 방식이에요 (docs/guides/admin-guide.md).
+> 지금 코드는 "총관리자가 아이디 발급 → 받은 사람이 처음 등록" 방식이에요 (docs/how-to/operate-admin-site.md).
 > 이 문서대로 바꾸면 발급 방식과 구글 첫 설정 경로는 없어져요.
 
 ## 1. 등급
@@ -82,4 +84,4 @@
 - `firestore.rules`: `adminIds` · `isBootstrapOwner()` 삭제, `adminRequests` · `config/root` · `isRoot()` 추가, `admins` 만들기를 최종관리자만
 - `src/admin/AdminService.js`: 아이디 발급 → 신청·승인·거절·넘겨주기
 - `src/admin/AdminApp.jsx`: 입구 [로그인 | 운영자 신청], 탭 [신고 목록 | 회원 관리 | 승인 대기 | 운영자 관리]
-- `src/admin/adminText.js`, `docs/guides/admin-guide.md`
+- `src/admin/adminText.js`, `docs/how-to/operate-admin-site.md`

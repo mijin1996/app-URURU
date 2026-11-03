@@ -10,18 +10,17 @@
    새 부품을 추가하고 싶으면 PARTS에 하나 더 넣으면 돼요. (OCP)
    ========================================================= */
 
-import { InterestEditor } from "./InterestEditor.jsx";
-import { PhotoManager } from "./PhotoManager.jsx";
-import { ProfileHeader } from "./ProfileHeader.jsx";
-import { SettingsPanel } from "./SettingsPanel.jsx";
-import { StoryEditor } from "./StoryEditor.jsx";
-import { TOPIC } from "../../../core/topics.js";
-import { useChanges } from "../../hooks/useChanges.js";
+import { InterestEditor } from './InterestEditor.jsx';
+import { PhotoManager } from './PhotoManager.jsx';
+import { ProfileHeader } from './ProfileHeader.jsx';
+import { SettingsPanel } from './SettingsPanel.jsx';
+import { StoryEditor } from './StoryEditor.jsx';
+import { TOPIC } from '../../../core/topics.js';
+import { useChanges } from '../../hooks/useChanges.js';
 
 const PARTS = [ProfileHeader, PhotoManager, InterestEditor, StoryEditor, SettingsPanel];
 
-export function MeScreen()
-{
-  useChanges(TOPIC.me, TOPIC.users, TOPIC.stories, TOPIC.likes);   // 내 정보·차단 목록·내 스토리
+export function MeScreen() {
+  useChanges(TOPIC.me, TOPIC.users, TOPIC.stories, TOPIC.likes); // 내 정보·차단 목록·내 스토리
   return PARTS.map((Part, i) => <Part key={i} />);
 }

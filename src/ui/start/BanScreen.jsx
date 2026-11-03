@@ -8,24 +8,30 @@
    가입 화면과 같은 덮개 창 자리(kind: "ban")에 열려요.
    ========================================================= */
 
-import { Logo } from "../common/Logo.jsx";
-import { t } from "../../core/i18n/index.js";
+import { Logo } from '../common/Logo.jsx';
+import { t } from '../../core/i18n/index.js';
 
 // 1791000000000 → "2026년 11월 12일"
-function dateLabel(ms)
-{
+function dateLabel(ms) {
   const date = new Date(ms);
-  return t("ban.dateLabel", { getFullYear: date.getFullYear(), n: date.getMonth() + 1, getDate: date.getDate() });
+  return t('ban.dateLabel', {
+    getFullYear: date.getFullYear(),
+    n: date.getMonth() + 1,
+    getDate: date.getDate(),
+  });
 }
 
-export function BanScreen({ bannedUntil, isPermanent })
-{
+export function BanScreen({ bannedUntil, isPermanent }) {
   return (
-    <div className="ban" id="ban" role="alertdialog" aria-label={t("ban.label")}>
+    <div className="ban" id="ban" role="alertdialog" aria-label={t('ban.label')}>
       <Logo />
-      <h2>{isPermanent ? t("ban.permanentTitle") : t("ban.suspendedTitle")}</h2>
-      <p>{isPermanent ? t("ban.permanentReason") : t("ban.suspendedUntil", { bannedUntil: dateLabel(bannedUntil) })}</p>
-      <p>{t("ban.rules")}</p>
+      <h2>{isPermanent ? t('ban.permanentTitle') : t('ban.suspendedTitle')}</h2>
+      <p>
+        {isPermanent
+          ? t('ban.permanentReason')
+          : t('ban.suspendedUntil', { bannedUntil: dateLabel(bannedUntil) })}
+      </p>
+      <p>{t('ban.rules')}</p>
     </div>
   );
 }

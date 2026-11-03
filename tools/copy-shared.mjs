@@ -8,14 +8,14 @@
    functions/shared/는 복사본이라 고치지 않아요 (.gitignore에 있어요). 고칠 때는 src/data/ 원본을.
    ========================================================= */
 
-import { copyFileSync, mkdirSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { copyFileSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SHARED_FILES = ["MessageFilter.js", "sanctionRules.js"];   // src/data/ 안의 파일 이름
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
+const SHARED_FILES = ['MessageFilter.js', 'sanctionRules.js']; // src/data/ 안의 파일 이름
 
-const target = join(ROOT, "functions", "shared");
+const target = join(ROOT, 'functions', 'shared');
 mkdirSync(target, { recursive: true });
-SHARED_FILES.forEach((name) => copyFileSync(join(ROOT, "src", "data", name), join(target, name)));
-console.log(`functions/shared/에 복사했어요: ${SHARED_FILES.join(", ")}`);
+SHARED_FILES.forEach((name) => copyFileSync(join(ROOT, 'src', 'data', name), join(target, name)));
+console.log(`functions/shared/에 복사했어요: ${SHARED_FILES.join(', ')}`);

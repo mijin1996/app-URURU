@@ -5,22 +5,19 @@
    어느 부품에서든 const { users, toast } = useCtx(); 로 꺼내 써요. (의존성 주입은 그대로)
    ========================================================= */
 
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
 const CtxContext = createContext(null);
 
-export function AppProvider({ ctx, children })
-{
+export function AppProvider({ ctx, children }) {
   return <CtxContext.Provider value={ctx}>{children}</CtxContext.Provider>;
 }
 
-export function useCtx()
-{
+export function useCtx() {
   const ctx = useContext(CtxContext);
-  if (!ctx)
-  {
+  if (!ctx) {
     // AppProvider 밖에서 부른 건 코드 실수(버그)라서 예외
-    throw new Error("useCtx()는 <AppProvider> 안에서만 쓸 수 있어요");
+    throw new Error('useCtx()는 <AppProvider> 안에서만 쓸 수 있어요');
   }
   return ctx;
 }

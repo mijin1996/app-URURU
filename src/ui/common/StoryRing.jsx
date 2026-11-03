@@ -10,26 +10,27 @@
    keepSpace: 스토리가 없어도 테두리 자리만큼 비워둠 (옆 칸들과 크기·줄을 맞추려고)
    ========================================================= */
 
-import { useCtx } from "../app/AppContext.jsx";
-import { useStore } from "../hooks/useStore.js";
+import { useCtx } from '../app/AppContext.jsx';
+import { useStore } from '../hooks/useStore.js';
 
 const PERCENT = 100;
 
-export function StoryRing({ user, isSquare = false, keepSpace = false, children })
-{
+export function StoryRing({ user, isSquare = false, keepSpace = false, children }) {
   const { stories, clock } = useCtx();
   useStore(clock);
   const hasStory = stories.hasActive(user);
-  if (!hasStory && !keepSpace)
-  {
+  if (!hasStory && !keepSpace) {
     return children;
   }
-  if (!hasStory)
-  {
-    return <span className={`ring ${isSquare ? "sqr" : ""} blank`}>{children}</span>;
+  if (!hasStory) {
+    return <span className={`ring ${isSquare ? 'sqr' : ''} blank`}>{children}</span>;
   }
-  const isSeen = user.id !== "me" && stories.isSeen(user);
-  const classes = ["ring", isSquare ? "sqr" : "", isSeen ? "seen" : ""].join(" ");
+  const isSeen = user.id !== 'me' && stories.isSeen(user);
+  const classes = ['ring', isSquare ? 'sqr' : '', isSeen ? 'seen' : ''].join(' ');
   const percent = (stories.leftRatio(user) * PERCENT).toFixed(3);
-  return <span className={classes} data-ring={user.id} style={{ "--p": percent }}>{children}</span>;
+  return (
+    <span className={classes} data-ring={user.id} style={{ '--p': percent }}>
+      {children}
+    </span>
+  );
 }

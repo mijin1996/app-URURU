@@ -1,13 +1,11 @@
 /* 스와이프 탭 */
 /* 스와이프 */
-.deck
-{
+.deck {
   position: relative;
   flex: 1;
   margin: 16px 16px 0;
 }
-.card
-{
+.card {
   position: absolute;
   inset: 0;
   border-radius: 28px;
@@ -23,32 +21,27 @@
   overflow: hidden;
   cursor: pointer;
 }
-.card > .photo
-{
+.card > .photo {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
-.card > :not(.photo)
-{
+.card > :not(.photo) {
   position: relative;
   z-index: 1;
 }
-.card .shade
-{
-  position: absolute!important;
+.card .shade {
+  position: absolute !important;
   inset: 40% 0 0 0;
-  background: linear-gradient(transparent,rgba(0,0,0,.5));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
 }
-.card .more
-{
+.card .more {
   font-size: var(--fs-small);
   font-weight: 700;
-  opacity: .85;
+  opacity: 0.85;
   margin-top: 8px;
 }
-.card h2
-{
+.card h2 {
   margin: 0;
   font-family: var(--display);
   font-weight: 900;
@@ -57,29 +50,24 @@
   align-items: center;
   gap: 8px;
 }
-.card h2 small
-{
+.card h2 small {
   font: inherit;
 }
 /* 이름과 나이는 같은 글꼴·크기·굵기 */
-.card p
-{
+.card p {
   margin: 4px 0 10px;
   font-size: var(--fs-small);
-  opacity: .92;
+  opacity: 0.92;
 }
-.chips
-{
+.chips {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
-.chips .tag
-{
+.chips .tag {
   font-size: var(--fs-small);
 }
-.stamp
-{
+.stamp {
   position: absolute;
   top: 26px;
   padding: 6px 14px;
@@ -89,30 +77,25 @@
   font-size: 22px;
   opacity: 0;
 }
-.stamp.yes
-{
+.stamp.yes {
   left: 22px;
   transform: rotate(-12deg);
 }
-.stamp.no
-{
+.stamp.no {
   right: 22px;
   transform: rotate(12deg);
 }
-.card.behind
-{
-  transform: scale(.95) translateY(12px);
-  filter: brightness(.85);
+.card.behind {
+  transform: scale(0.95) translateY(12px);
+  filter: brightness(0.85);
 }
-.swbtns
-{
+.swbtns {
   display: flex;
   justify-content: center;
   gap: 28px;
   padding: 16px 0 14px;
 }
-.swbtns button
-{
+.swbtns button {
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -122,30 +105,25 @@
   place-items: center;
   box-shadow: var(--shadow);
 }
-.swbtns .yes
-{
+.swbtns .yes {
   color: var(--ok);
 }
-.swbtns .no
-{
+.swbtns .no {
   color: var(--alert);
 }
-.swbtns .yes.liked
-{
+.swbtns .yes.liked {
   background: var(--ok);
   border-color: var(--ok);
   color: #fff;
-  animation: heartpop .35s ease;
+  animation: heartpop 0.35s ease;
 }
 /* 제목 아래 "이번 1시간에 n / 5명" 과 빈 화면 안내 */
-.swcount
-{
+.swcount {
   margin: -4px 16px 8px;
   font-size: var(--fs-small);
   color: var(--muted);
 }
-.swempty
-{
+.swempty {
   padding: 40px 24px;
   text-align: center;
   font-size: var(--fs-small);

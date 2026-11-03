@@ -10,22 +10,18 @@
    이름표 없이 부르면 "전부 바뀌었어요" (모든 화면을 다시 그림)
    ========================================================= */
 
-export class ChangeNotifier
-{
-  constructor()
-  {
+export class ChangeNotifier {
+  constructor() {
     this.listeners = [];
   }
 
   // 바뀔 때마다 실행할 함수 등록. listener(topics) — topics가 빈 배열이면 전부
-  subscribe(listener)
-  {
+  subscribe(listener) {
     this.listeners.push(listener);
   }
 
   // 등록된 함수 모두 실행
-  notify(...topics)
-  {
+  notify(...topics) {
     this.listeners.forEach((listener) => listener(topics));
   }
 }

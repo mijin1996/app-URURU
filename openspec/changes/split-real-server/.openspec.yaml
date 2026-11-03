@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-11-03
+goal: 853줄짜리 RealServer.js를 기능별 파일로 나눠 한 파일 한 가지 일(SRP)로 만들기 — 동작은 그대로
+skip_specs: true

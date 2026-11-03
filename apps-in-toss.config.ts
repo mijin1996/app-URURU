@@ -6,13 +6,13 @@
    토스 첫 출시는 위치를 끈 빌드라서 권한(permissions)이 없어요 (src/platform/features.js).
    ========================================================= */
 
-import { defineConfig } from "@apps-in-toss/web-framework/config";
+import { defineConfig } from '@apps-in-toss/web-framework/config';
 
 export default defineConfig({
-  appName: "ururu",
+  appName: 'ururu',
   brand: {
-    primaryColor: "#7a5cff"   // styles/base.css의 --accent와 같은 색
+    primaryColor: '#7a5cff', // styles/base.css의 --accent와 같은 색
   },
   permissions: [],
-  webBundleDir: "dist-toss"
+  webBundleDir: 'dist-toss',
 });

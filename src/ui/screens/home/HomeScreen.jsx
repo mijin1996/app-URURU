@@ -10,26 +10,31 @@
    위치가 3초마다 바뀌어도 MapPin만 다시 그려져요.
    ========================================================= */
 
-import { useCtx } from "../../app/AppContext.jsx";
-import { KakaoMap } from "./KakaoMap.jsx";
-import { MapPin, MyPin } from "./MapPin.jsx";
-import { TOPIC } from "../../../core/topics.js";
-import { useChanges } from "../../hooks/useChanges.js";
-import { t } from "../../../core/i18n/index.js";
+import { useCtx } from '../../app/AppContext.jsx';
+import { KakaoMap } from './KakaoMap.jsx';
+import { MapPin, MyPin } from './MapPin.jsx';
+import { TOPIC } from '../../../core/topics.js';
+import { useChanges } from '../../hooks/useChanges.js';
+import { t } from '../../../core/i18n/index.js';
 
-export function HomeScreen()
-{
-  useChanges(TOPIC.users, TOPIC.me);   // 지도에 보일 친구·내 위치 공유 (핀 움직임은 MapPin이 따로)
+export function HomeScreen() {
+  useChanges(TOPIC.users, TOPIC.me); // 지도에 보일 친구·내 위치 공유 (핀 움직임은 MapPin이 따로)
   const { users } = useCtx();
   return (
     <>
       <div className="map" id="map">
         <KakaoMap />
         <div className="maphead">
-          <span>{t("map.demoLabel")}</span>
-          {!users.me.isSharing && <p className="mapnote" id="mapNote">{t("map.notRealMap")}</p>}
+          <span>{t('map.demoLabel')}</span>
+          {!users.me.isSharing && (
+            <p className="mapnote" id="mapNote">
+              {t('map.notRealMap')}
+            </p>
+          )}
         </div>
-        {users.friendsOnMap().map((friend) => <MapPin key={friend.id} user={friend} />)}
+        {users.friendsOnMap().map((friend) => (
+          <MapPin key={friend.id} user={friend} />
+        ))}
         <MyPin />
       </div>
     </>

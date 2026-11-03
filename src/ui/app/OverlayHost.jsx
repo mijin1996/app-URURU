@@ -6,17 +6,15 @@
     데이터가 바뀔 때 다시 그려야 하는 창(채팅방)은 그 창이 직접 useStore로 구독해요.)
    ========================================================= */
 
-import { memo } from "react";
-import { useStore } from "../hooks/useStore.js";
-import { useCtx } from "./AppContext.jsx";
+import { memo } from 'react';
+import { useStore } from '../hooks/useStore.js';
+import { useCtx } from './AppContext.jsx';
 
-const OverlayItem = memo(function OverlayItem({ item })
-{
+const OverlayItem = memo(function OverlayItem({ item }) {
   return item.render(item.close);
 });
 
-export function OverlayHost()
-{
+export function OverlayHost() {
   const { overlays } = useCtx();
   useStore(overlays);
   return overlays.items.map((item) => <OverlayItem key={item.id} item={item} />);

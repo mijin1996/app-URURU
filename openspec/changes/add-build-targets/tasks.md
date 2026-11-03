@@ -13,17 +13,17 @@
 
 - [x] 2.1 `LoginProvider` 약속과 `DemoLogin`을 만들고 TGT-20 확인 (설정 없는 시연 빌드는 로그인 없이 그대로)
 - [ ] 2.2 `GoogleLogin`, `EmailLogin`을 만들고 안드로이드 에뮬레이터에서 TGT-11~11b 확인
-- [ ] 2.3 서버 함수 `tossLogin`과 `AnonKeyLogin`을 만들고 토스 앱 테스트 QR로 TGT-04~04b, 06 확인 (SDK 3.x는 샌드박스 앱 없음) — 코드와 시험(가짜 SDK)은 끝, 실제 확인은 mTLS 인증서 뒤
+- [x] ~~2.3 서버 함수 `tossLogin`과 `AnonKeyLogin`을 만들고 토스 앱 테스트 QR로 TGT-04~04b, 06 확인 (SDK 3.x는 샌드박스 앱 없음) — 코드와 시험(가짜 SDK)은 끝, 실제 확인은 mTLS 인증서 뒤~~ → 앱인토스에는 올리지 않기로 해서 해당 없음 (2026-10-30 미미)
 
 ## 3. 앱인토스
 
 - [x] 3.1 `@apps-in-toss/web-framework` 버전을 `docs/tech-stack.md`에 고정하고 `apps-in-toss.config.ts` 작성 (3.8.0, `ait init` 대신 직접)
-- [ ] 3.2 `npm run build:toss`로 `dist-toss/`가 생기고, 앱인토스 도구로 `moyeo.ait`를 만들어 100MB 이하인지 확인
+- [x] ~~3.2 `npm run build:toss`로 `dist-toss/`가 생기고, 앱인토스 도구로 `moyeo.ait`를 만들어 100MB 이하인지 확인~~ → 앱인토스에는 올리지 않기로 해서 해당 없음 (2026-10-30 미미)
 - [x] 3.2b 앱인토스 출시 체크리스트 화면 규칙: 자체 뒤로 버튼 숨김 + 토스 뒤로가기(`nav.back`, `listenTossBack`), 라이트 모드, 진입 직후 창 없음, 거리 숨김, 확대 막기 — TGT-07~09c, 시험 3개, 토스 빌드 브라우저 확인 (2026-10-15). 토스 뒤로가기는 토스 앱 테스트 QR로 다시 확인
 - [x] 3.2c 스토어 이미지: `npm run store:images` (`tools/store-images/`) → `store/apps-in-toss/images`, `store/google-play/images`
-- [ ] 3.3 콘솔 업로드 → 토스 앱 QR 테스트를 `docs/guides/apps-in-toss-release-guide.md` 순서대로 해서 되는지 확인
+- [x] ~~3.3 콘솔 업로드 → 토스 앱 QR 테스트를 `docs/guides/apps-in-toss-release-guide.md` 순서대로 해서 되는지 확인~~ → 앱인토스에는 올리지 않기로 해서 해당 없음 (2026-10-30 미미)
 
 ## 4. 마무리
 
-- [ ] 4.1 `docs/code-structure-and-patterns.md`, `docs/guides/google-play-release-guide.md`, `apps-in-toss-release-guide.md`을 실제 명령에 맞게 고침
+- [x] ~~4.1 `docs/code-structure-and-patterns.md`, `docs/guides/google-play-release-guide.md`, `apps-in-toss-release-guide.md`을 실제 명령에 맞게 고침~~ → 문서를 없애서 해당 없음 (2026-10-30, 파일 위치는 docs/reference/file-tree.md)
 - [ ] 4.2 `openspec validate --all --strict` 통과 후 `openspec archive add-build-targets`

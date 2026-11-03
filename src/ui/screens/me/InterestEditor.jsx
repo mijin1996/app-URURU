@@ -8,61 +8,77 @@
    - 5개가 차면 입력 칸이 사라져요
    ========================================================= */
 
-import { useRef } from "react";
-import { MAX_TAG_LENGTH, MAX_TAGS } from "../../../core/config.js";
-import { useCtx } from "../../app/AppContext.jsx";
-import { Icon } from "../../common/Icon.jsx";
-import { Tag } from "../../common/Tag.jsx";
-import { t } from "../../../core/i18n/index.js";
+import { useRef } from 'react';
+import { MAX_TAG_LENGTH, MAX_TAGS } from '../../../core/config.js';
+import { useCtx } from '../../app/AppContext.jsx';
+import { Icon } from '../../common/Icon.jsx';
+import { Tag } from '../../common/Tag.jsx';
+import { t } from '../../../core/i18n/index.js';
 
-export function InterestEditor()
-{
+export function InterestEditor() {
   const { users, account, toast, nav } = useCtx();
   const tags = users.me.tags;
   const input = useRef(null);
   const canAddMore = tags.length < MAX_TAGS;
 
-  const addTag = () =>
-  {
+  const addTag = () => {
     const result = account.addTag(input.current.value);
-    if (!result.isOk)
-    {
+    if (!result.isOk) {
       toast.show(result.reason);
       return;
     }
-    input.current.value = "";
+    input.current.value = '';
     nav.refresh();
   };
 
-  const removeTag = (index) =>
-  {
+  const removeTag = (index) => {
     account.removeTag(index);
     nav.refresh();
   };
 
-  const onKeyDown = (event) =>
-  {
-    if (event.key === "Enter" && !event.nativeEvent.isComposing)
-    {
+  const onKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       addTag();
     }
   };
 
   return (
     <div className="box">
-      <h4>{t("me.interestsCount", { n: tags.length, MAX_TAGS })}</h4>
+      <h4>{t('me.interestsCount', { n: tags.length, MAX_TAGS })}</h4>
       {tags.length ? (
         <div className="tagedit">
           {tags.map((tag, i) => (
-            <Tag key={tag} text={tag}><button data-untag={i} aria-label={t("me.removeTag", { tag })} onClick={() => removeTag(i)}><Icon name="x" /></button></Tag>
+            <Tag key={tag} text={tag}>
+              <button
+                data-untag={i}
+                aria-label={t('me.removeTag', { tag })}
+                onClick={() => removeTag(i)}
+              >
+                <Icon name="x" />
+              </button>
+            </Tag>
           ))}
         </div>
       ) : null}
       {canAddMore && (
         <div className="nameedit tagadd">
-          <input className="field" id="tagInput" ref={input} placeholder={t("me.keyword")} maxLength={MAX_TAG_LENGTH}
-            aria-label={t("me.interests")} onKeyDown={onKeyDown} />
-          <button className="smallbtn" id="tagAdd" aria-label={t("me.addInterest")} onClick={addTag}>+</button>
+          <input
+            className="field"
+            id="tagInput"
+            ref={input}
+            placeholder={t('me.keyword')}
+            maxLength={MAX_TAG_LENGTH}
+            aria-label={t('me.interests')}
+            onKeyDown={onKeyDown}
+          />
+          <button
+            className="smallbtn"
+            id="tagAdd"
+            aria-label={t('me.addInterest')}
+            onClick={addTag}
+          >
+            +
+          </button>
         </div>
       )}
     </div>

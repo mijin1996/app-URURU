@@ -9,23 +9,21 @@
    "지금 이 방이 열려 있나?"는 OverlayStore가 알아요 (nav.isChatOpenWith).
    ========================================================= */
 
-import { useEffect, useState } from "react";
-import { useCtx } from "../../app/AppContext.jsx";
-import { TOPIC } from "../../../core/topics.js";
-import { useChanges } from "../../hooks/useChanges.js";
-import { ChatHeader } from "./ChatHeader.jsx";
-import { Composer } from "./Composer.jsx";
-import { MessageList } from "./MessageList.jsx";
+import { useEffect, useState } from 'react';
+import { useCtx } from '../../app/AppContext.jsx';
+import { TOPIC } from '../../../core/topics.js';
+import { useChanges } from '../../hooks/useChanges.js';
+import { ChatHeader } from './ChatHeader.jsx';
+import { Composer } from './Composer.jsx';
+import { MessageList } from './MessageList.jsx';
 
-export function ChatRoom({ userId, close })
-{
+export function ChatRoom({ userId, close }) {
   const { users, chats } = useCtx();
-  useChanges(TOPIC.chat(userId), TOPIC.user(userId));   // 이 친구의 메시지·입력 중·정보가 바뀔 때만
+  useChanges(TOPIC.chat(userId), TOPIC.user(userId)); // 이 친구의 메시지·입력 중·정보가 바뀔 때만
   // 열 때 한 번만 정해요: 첫 대화면 이번에 열려 있는 동안 계속 규칙 안내가 보여요
   const [isFirstChat] = useState(() => chats.isFirstChat(userId));
 
-  useEffect(() =>
-  {
+  useEffect(() => {
     chats.markRead(userId);
   }, [userId]);
 

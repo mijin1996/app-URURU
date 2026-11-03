@@ -8,33 +8,28 @@
    배너는 하나만: 새로 show하면 이전 것은 사라져요.
    ========================================================= */
 
-import { NOTIFY_MS, TOAST_MS } from "../../core/config.js";
-import { Observable } from "../app/Observable.js";
+import { NOTIFY_MS, TOAST_MS } from '../../core/config.js';
+import { Observable } from '../app/Observable.js';
 
-export class ToastStore extends Observable
-{
-  constructor()
-  {
+export class ToastStore extends Observable {
+  constructor() {
     super();
-    this.current = null;   // { id, title, sub, onTap } 또는 null
+    this.current = null; // { id, title, sub, onTap } 또는 null
     this.lastId = 0;
   }
 
-  show(title, { sub = "", onTap = null } = {})
-  {
+  show(title, { sub = '', onTap = null } = {}) {
     this.lastId += 1;
     const id = this.lastId;
-    const isTappable = typeof onTap === "function";
+    const isTappable = typeof onTap === 'function';
     this.current = { id, title, sub, onTap: isTappable ? onTap : null };
     this.emit();
     setTimeout(() => this.clear(id), isTappable ? NOTIFY_MS : TOAST_MS);
   }
 
   // id: 그 배너가 아직 떠 있을 때만 지움 (새 배너를 실수로 지우지 않게)
-  clear(id)
-  {
-    if (!this.current || this.current.id !== id)
-    {
+  clear(id) {
+    if (!this.current || this.current.id !== id) {
       return;
     }
     this.current = null;

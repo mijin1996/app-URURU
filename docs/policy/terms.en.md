@@ -37,16 +37,17 @@ Users must not do any of the following. Violations will restrict your use under 
    - **2nd: 7-day suspension** — you can't send messages or use the service for 7 days
    - **3rd or more: Permanent ban** — you can no longer use the service
 4. Serious violations (spreading illegally filmed content or child sexual exploitation material, arranging prostitution, fraud, threats, etc.) may lead to an **immediate permanent ban**.
-5. Violation and suspension records are kept for 1 year after you delete your account (to prevent avoiding sanctions by re-joining).
+5. Violation and suspension records are kept for 1 month after you delete your account (to prevent avoiding sanctions by re-joining).
 
 ## Article 7 (Content)
 1. Users are responsible for the messages and stories they send.
-2. If reported content violates Article 4, the operator suspends it, keeps it for 3 months and then deletes it.
+2. If reported content violates Article 4, the operator suspends it, keeps it for 1 month and then deletes it.
 
 ## Article 8 (Deleting your account)
 1. You can delete your account at any time from the "Me" tab → Delete account. If you request deletion by contacting us, we'll handle it within 7 days after verification.
-2. When you delete your account, your account, profile, photos, messages, stories, likes and friends are **deleted immediately** and can't be restored. Your ID can be used by someone else.
-3. Report records and violation/suspension records are kept for 3 months after deletion to protect other users.
+2. When you delete your account, your account and profile are **kept for 7 days and then deleted**, after which they can't be restored. Your ID can be used by someone else.
+2-1. Member information such as photos, messages, stories, likes and friends is reviewed by the operator and **permanently deleted within 1 month** of deletion.
+3. Report records and violation/suspension records are kept for 1 month after deletion to protect other users, and are then permanently deleted along with your member information.
 
 ## Article 9 (Changes and interruptions)
 The operator may change or stop the service, and will announce important changes in the app 7 days in advance.

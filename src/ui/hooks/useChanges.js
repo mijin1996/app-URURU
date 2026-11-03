@@ -5,13 +5,12 @@
    그 주제가 바뀔 때만 이 부품이 다시 그려져요. (주제 이름표: core/topics.js)
    ========================================================= */
 
-import { useCallback, useSyncExternalStore } from "react";
-import { useCtx } from "../app/AppContext.jsx";
+import { useCallback, useSyncExternalStore } from 'react';
+import { useCtx } from '../app/AppContext.jsx';
 
-export function useChanges(...topics)
-{
+export function useChanges(...topics) {
   const { changes } = useCtx();
-  const key = topics.join("|");
+  const key = topics.join('|');
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const subscribe = useCallback((listener) => changes.subscribe(topics, listener), [changes, key]);
   // eslint-disable-next-line react-hooks/exhaustive-deps

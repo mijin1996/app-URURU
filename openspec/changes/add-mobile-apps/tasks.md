@@ -22,5 +22,5 @@
 ## 3. 문서와 전체 확인
 
 - [ ] 3.1 `docs/tech-stack.md` 9번 빌드 방법을 실제로 따라 해서 그대로 되는지 확인
-- [ ] 3.2 `docs/code-structure-and-patterns.md`에 `platform/`, `storage/` 파일을 더하고 표에 없는 파일이 없는지 확인
+- [x] ~~3.2 `docs/code-structure-and-patterns.md`에 `platform/`, `storage/` 파일을 더하고 표에 없는 파일이 없는지 확인~~ → 문서를 없애서 해당 없음 (2026-10-30, 파일 위치는 docs/reference/file-tree.md)
 - [ ] 3.3 `openspec validate --all --strict` 통과 후 `openspec archive add-mobile-apps`로 spec에 합치기
