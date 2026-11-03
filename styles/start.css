@@ -69,7 +69,7 @@
 /* 로고·제목·칸·버튼 모두 가로 가운데 정렬 (rename-app ACC-10).
    칸 묶음(칸 이름 + 입력 칸 + 검사 문구)은 가운데에 놓되, 글자는 입력 칸 왼쪽 테두리에 맞춰요 */
 .signup {
-  --signup-field-w: min(100%, 340px); /* 칸 폭: 낮고 길게 */
+  --signup-field-w: min(80%, 340px); /* 칸 폭: 낮고 길게 */
   --signup-label-w: 120px; /* 칸 이름(아이디·닉네임·생년월일·국가) 자리. 입력한 글은 그 오른쪽부터 */
   --signup-title-gap: 50px; /* "처음 오셨네요!"와 첫 칸 사이. 줄이면 로고·제목이 아래로 내려가요 */
   position: absolute;
@@ -147,7 +147,7 @@
 }
 .signup .float .field {
   height: calc(var(--btn-h) * 1.1);
-  padding: 0 10px 0 var(--signup-label-w); /* 왼쪽: 칸 이름 자리 / 오른쪽: ◀ 화살표 자리 */
+  padding: 0 10px 0 var(--signup-label-w); /* 왼쪽: 칸 이름 자리 */
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -189,23 +189,7 @@
   display: flex;
   align-items: center;
 }
-/* 고르는 칸(생년월일·국가) 오른쪽 화살표 (두 칸 공통)
-   닫혀 있으면 ◀, 눌러서 열면 ▼ (생년월일·국가 돌림판이 열린 동안 .open)
-   \25C0\FE0E: 폰에서 이모지(◀️)로 바뀌지 않게 글자 모양으로 */
-.signup .float.picker::after {
-  content: '\25C0\FE0E';
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 9px;
-  color: var(--muted);
-  pointer-events: none; /* 화살표를 눌러도 칸이 열리게 */
-}
-.signup .float.picker.open::after {
-  content: '\25BC';
-  color: var(--accent);
-}
+/* 고르는 칸(생년월일·국가): 오른쪽 화살표 없음 (2026-11-03 미미). 칸을 누르면 돌림판이 열려요 */
 @keyframes snapbox {
   0% {
     transform: scale(0.97);

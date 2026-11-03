@@ -5,7 +5,7 @@
    입력 칸 네 개: 아이디 / 닉네임 / 생년월일 (아이폰처럼 굴려서 고르는 달력) / 국가
    - 국가: 전 세계 249개 (core/countries.js, 이름순: 한국어 가나다 / 영어 ABC). 고르기 전에는 빈칸
      누르면 생년월일처럼 아래에서 올라오는 돌림판 (DateWheelPicker.jsx의 countryPicker)
-   - 고르는 칸(생년월일·국가) 오른쪽 화살표: 닫혀 있으면 ◀, 눌러서 열면 ▼ (styles/start.css .picker)
+   - 고르는 칸(생년월일·국가): 칸을 누르면 돌림판이 열려요 (화살표 표시는 없앰, 2026-11-03)
    - 아이디는 쓰는 동안 바로 검사해서 "사용할 수 있어요" 또는 "이미 존재"를 보여줘요
    - 검사 결과는 아이디 글자에서 바로 계산해요 (따로 저장하면 글자와 어긋날 수 있어서)
    덮개 창(kind: "signup")으로 열어서, 팔레트·달력 팝업이 그 위에 떠요. (SHELL-43)
@@ -38,7 +38,7 @@ const BUTTON_IDS = {
 const COUNTRY_OPTIONS = countryOptions();
 // 칸이 나타나는 차례 (위에서부터 0, 1, 2 …): 칸을 더하거나 옮겨도 이 번호만 맞추면 순서대로 나와요
 const order = (index) => ({ '--order': index });
-// 칸 겉모양 이름: 채웠으면 filled, 고르는 칸(생년월일·국가)이면 picker(오른쪽 ◀), 열려 있으면 open(▼)
+// 칸 겉모양 이름: 채웠으면 filled, 고르는 칸(생년월일·국가)이면 picker, 열려 있으면 open (칸 이름이 보라색)
 const floatClass = (value, isPicker, isOpen) =>
   ['float', value ? 'filled' : '', isPicker ? 'picker' : '', isOpen ? 'open' : '']
     .filter(Boolean)
@@ -55,9 +55,9 @@ export function SignupScreen({ close, onDone, needsLogin = false, firstError = '
   const [handle, setHandle] = useState('');
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState(''); // "YYYY-MM-DD" 또는 ""
-  const [isPickingDate, setIsPickingDate] = useState(false); // 달력이 열려 있는 동안 화살표 ▼
+  const [isPickingDate, setIsPickingDate] = useState(false); // 달력이 열려 있는 동안 (칸 이름 보라색)
   const [country, setCountry] = useState(''); // "KR" 같은 두 글자 코드. 고르기 전에는 빈칸
-  const [isPickingCountry, setIsPickingCountry] = useState(false); // 국가 돌림판이 열려 있는 동안 화살표 ▼
+  const [isPickingCountry, setIsPickingCountry] = useState(false); // 국가 돌림판이 열려 있는 동안 (칸 이름 보라색)
   const [error, setError] = useState(firstError);
   const isSubmitting = useRef(false); // 서버 답을 기다리는 동안 두 번 눌러도 한 번만
   const screen = useRef(null);

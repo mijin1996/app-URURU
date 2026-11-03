@@ -122,6 +122,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: DEV_PORT,
       strictPort: true,
+      // 파일이 바뀐 걸 0.3초마다 직접 확인해요 (polling).
+      // Windows에서 다른 프로그램(Claude · 동기화 도구)이 파일을 덮어쓰면 기본 감시가 알아채지 못해서
+      // 저장해도 개발 화면이 그대로인 일이 있었어요 (2026-11-03)
+      watch: { usePolling: true, interval: 300 },
     },
     test: {
       environment: 'jsdom',
