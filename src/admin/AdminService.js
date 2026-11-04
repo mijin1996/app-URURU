@@ -4,12 +4,15 @@
    보안은 서버 규칙(firestore.rules의 isAdmin / isOwnerAdmin / isBootstrapOwner)이 지켜요.
    이 파일은 요청만 보내고, 규칙이 거절하면 실패를 돌려줘요 (화면 코드를 고쳐도 데이터를 볼 수 없어요).
 
-   운영자 아이디 (docs/how-to/operate-admin-site.md)
-   - 12자리: 영어 대문자·소문자·숫자·특수문자가 모두 섞여요 (대소문자 구분)
+   운영자 로그인 (docs/how-to/operate-admin-site.md)
+   - 처음 등록: 총관리자가 발급한 12자리 아이디로 "발급받은 사람"인지 한 번 확인해요
+   - 그다음 로그인: 닉네임 + 성명 (2026-11-04 미미). 닉네임은 영어 · 특수문자 10자 이내, 운영자끼리 겹치면 안 돼요
    - 속으로는 Firebase 이메일/비밀번호 로그인을 써요
        이메일   = idHash(아이디를 SHA-256으로 바꾼 값 앞 40자) + "@admin.ururu.app"  (진짜 이메일 아님)
-       비밀번호 = 아이디 그대로
-     그래서 운영자는 아이디만 알면 되고, 서버에는 아이디 원문이 남지 않아요 (idHash와 idMask만)
+       비밀번호 = loginSecret(닉네임, 성명)
+     닉네임 → idHash는 adminLogins/{닉네임 소문자}에 있어요 (로그인 전에 읽어야 해서 누구나 한 칸씩만 읽기 가능).
+     이 문서가 닉네임마다 하나뿐이라 닉네임이 겹치지 않아요
+     서버에는 아이디 원문이 남지 않아요 (idHash와 idMask만)
    - 화면에 보이는 건 idMask (앞 3자 … 뒤 3자, 예: Ab3…9x!) — 다른 운영자가 아이디를 알아낼 수 없게
    - 탭을 닫으면 로그아웃 (browserSessionPersistence)
 
@@ -25,6 +28,14 @@ import { createFirebase } from '../data/server/firebase/firebaseApp.js';
 import { addStrike, SUSPEND_MS } from '../data/sanctionRules.js';
 
 export const ID_LENGTH = 12;
+export const NICKNAME_MAX = 10;
+// 운영자 닉네임: 영어 글자 + 특수문자, 10자 이내, 영어 글자 한 개 이상 (firestore.rules adminLogins와 같게)
+const NICKNAME_SHAPE = /^[A-Za-z!@#$%^&*._~-]{1,10}$/;
+export const isAdminNicknameShape = (nickname) =>
+  NICKNAME_SHAPE.test(nickname) && /[A-Za-z]/.test(nickname);
+const nicknameKey = (nickname) => nickname.toLowerCase(); // 대소문자가 달라도 같은 닉네임
+// Firebase 비밀번호는 6자 이상이라 앞에 고정 글자를 붙여요
+const loginSecret = (nickname, name) => `ururu-admin:${nicknameKey(nickname)}:${name}`;
 const EMAIL_DOMAIN = '@admin.ururu.app'; // firestore.rules와 같게
 const REPORT_LIMIT = 300; // 한 번에 보는 신고 수
 const MEMBER_PAGE = 50; // 회원 목록 한 번에 보는 수
@@ -88,6 +99,7 @@ export class AdminService {
     this.fb = createFirebase(env, 'admin'); // 앱과 다른 이름 → 로그인 저장 칸도 따로
     this.hasFunctions = env.VITE_SERVER_FUNCTIONS === 'true';
     this.sdk = null;
+    this.outNotice = ''; // 로그아웃될 때 첫 화면에 보여줄 안내 (adminText 이름표)
     this.listener = null; // 로그인 상태를 알려줄 곳
     this.isRegistering = false;
     this.me = null; // 내 운영자 정보 { uid, name, nickname, birthDate, idMask, role }
@@ -122,17 +134,36 @@ export class AdminService {
       }
       if (!user) {
         this.me = null;
-        listener({ kind: 'out' });
+        listener({ kind: 'out', notice: this.outNotice });
+        this.outNotice = '';
         return;
       }
       const provider = user.providerData[0] ? user.providerData[0].providerId : '';
       if (provider === 'google.com') {
-        listener({ kind: 'bootstrap' }); // 첫 총관리자 아이디 발급용 구글 로그인
+        // 첫 총관리자 아이디 발급용 구글 로그인. Firebase의 config/bootstrap 목록에 없는 계정이면 바로 로그아웃
+        if (await this.isBootstrapOwner()) {
+          listener({ kind: 'bootstrap' });
+        } else {
+          this.outNotice = 'notBootstrap'; // 로그아웃 소식(위 !user)에 실어 보내요
+          await auth.signOut(this.fb.auth);
+        }
         return;
       }
       this.me = await this.readMe();
       listener(this.me ? { kind: 'admin', me: this.me } : { kind: 'unknown' });
     });
+  }
+
+  // 총관리자 첫 설정이 허락된 구글 계정인지: 그 계정만 읽을 수 있는 발급 목록을 한 칸 읽어 봐요 (서버 규칙이 판단)
+  async isBootstrapOwner() {
+    const { firestore } = await this.load();
+    const { collection, getDocs, limit, query } = firestore;
+    try {
+      await getDocs(query(collection(this.fb.db, 'adminIds'), limit(1)));
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async readMe() {
@@ -150,12 +181,18 @@ export class AdminService {
     return { uid: this.me.uid, name: this.me.name, idMask: this.me.idMask };
   }
 
-  /* ---------- 아이디 로그인 · 등록 ---------- */
-  async signIn(id) {
-    const { auth } = await this.load();
-    const email = `${await hashId(id)}${EMAIL_DOMAIN}`;
+  /* ---------- 로그인 (닉네임 + 성명) · 처음 등록 (발급 아이디) ---------- */
+  async signIn(nickname, name) {
+    const { auth, firestore } = await this.load();
     try {
-      await auth.signInWithEmailAndPassword(this.fb.auth, email, id);
+      const login = await firestore.getDoc(
+        firestore.doc(this.fb.db, 'adminLogins', nicknameKey(nickname)),
+      );
+      if (!login.exists()) {
+        return { isOk: false };
+      }
+      const email = `${login.data().idHash}${EMAIL_DOMAIN}`;
+      await auth.signInWithEmailAndPassword(this.fb.auth, email, loginSecret(nickname, name));
       return { isOk: true };
     } catch (error) {
       return { isOk: false };
@@ -167,13 +204,19 @@ export class AdminService {
     const { auth, firestore } = await this.load();
     const idHash = await hashId(id);
     const email = `${idHash}${EMAIL_DOMAIN}`;
+    const loginRef = firestore.doc(this.fb.db, 'adminLogins', nicknameKey(nickname));
+    const taken = await firestore.getDoc(loginRef).catch(() => null);
+    if (taken && taken.exists()) {
+      return { isOk: false, reason: 'nicknameTaken' };
+    }
     let isNew = false;
     this.isRegistering = true;
     try {
-      await auth.createUserWithEmailAndPassword(this.fb.auth, email, id);
+      await auth.createUserWithEmailAndPassword(this.fb.auth, email, loginSecret(nickname, name));
       isNew = true;
     } catch (error) {
       this.isRegistering = false;
+      console.warn('[AdminService] 등록: 로그인 계정을 만들지 못했어요', error && error.code); // 원인 찾기용 (F12 → Console)
       if (error && error.code === 'auth/email-already-in-use') {
         return { isOk: false, reason: 'already' };
       }
@@ -202,6 +245,7 @@ export class AdminService {
           role,
           createdAt: Date.now(),
         });
+        batch.set(loginRef, { idHash, uid: this.user.uid });
         try {
           await batch.commit();
           this.me = await this.readMe();
@@ -217,6 +261,10 @@ export class AdminService {
       throw new Error('not issued');
     } catch (error) {
       // 발급되지 않았거나 이미 쓴 아이디: 방금 만든 로그인 계정을 지워서 흔적을 남기지 않아요
+      console.warn(
+        '[AdminService] 등록: 운영자 명단에 넣지 못했어요',
+        error && (error.code || error.message),
+      );
       this.isRegistering = false;
       if (isNew && this.user) {
         await this.user.delete().catch(() => {});
@@ -232,9 +280,13 @@ export class AdminService {
   }
 
   // 첫 총관리자 아이디 발급용 (구글, 딱 한 번)
+  // prompt: 'select_account' — 크롬에 이미 구글 로그인이 돼 있어도 계정 고르는 창을 꼭 띄워요
+  // (없으면 구글이 창을 바로 닫아서 저절로 로그인된 것처럼 보여요)
   async signInBootstrap() {
     const { auth } = await this.load();
-    await auth.signInWithPopup(this.fb.auth, new auth.GoogleAuthProvider());
+    const provider = new auth.GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
+    await auth.signInWithPopup(this.fb.auth, provider);
   }
 
   /* ---------- 신고 ---------- */
@@ -372,6 +424,12 @@ export class AdminService {
     }
     const { firestore } = await this.load();
     await firestore.deleteDoc(firestore.doc(this.fb.db, 'admins', uid));
+    if (target && target.nickname) {
+      // 회수한 사람의 닉네임 로그인도 지워요 (닉네임을 다시 쓸 수 있게)
+      await firestore
+        .deleteDoc(firestore.doc(this.fb.db, 'adminLogins', nicknameKey(target.nickname)))
+        .catch(() => {});
+    }
     return { isOk: true };
   }
 

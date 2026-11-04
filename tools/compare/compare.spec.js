@@ -11,7 +11,7 @@ import { resolve } from 'node:path';
 import { expect, test as base } from '@playwright/test';
 
 // appFile: 어떤 HTML을 열지 (playwright.config.js의 use에서 정함)
-const test = base.extend({ appFile: ['dist/moyeo.html', { option: true }] });
+const test = base.extend({ appFile: ['dist/ururu.html', { option: true }] });
 
 const START_TIME = new Date('2026-10-13T12:00:00+09:00');
 const SAVED_PROFILE = {
@@ -101,7 +101,7 @@ async function openApp(page, appFile, scene) {
       return (seed - 1) / 2147483646;
     };
     if (saved) {
-      localStorage.setItem('moyeo.profile', JSON.stringify(saved));
+      localStorage.setItem('ururu.profile', JSON.stringify(saved));
     }
   }, profile);
   await page.goto(pathToFileURL(resolve(appFile)).href);

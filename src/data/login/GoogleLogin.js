@@ -93,6 +93,7 @@ export class GoogleLogin extends LoginProvider {
       if (error && error.code === 'auth/account-exists-with-different-credential') {
         return { ...Result.fail(OTHER_METHOD), needsLogin: true };
       }
+      console.warn('[GoogleLogin] 로그인 실패', error && error.code);
       return { ...Result.fail(LOGIN_FAILED), needsLogin: true };
     }
   }

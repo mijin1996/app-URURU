@@ -23,5 +23,5 @@ export default defineConfig({
     // 글자 가장자리 몇 점 정도는 허용 (글꼴 그리는 순서 차이)
     toHaveScreenshot: { maxDiffPixels: 30, animations: 'disabled', caret: 'hide' },
   },
-  use: { appFile: 'dist/moyeo.html' },
+  use: { appFile: 'dist/ururu.html' },
 });

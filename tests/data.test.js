@@ -19,7 +19,8 @@ import { Validator } from '../src/data/Validator.js';
 import { SUSPEND_MS } from '../src/data/sanctionRules.js';
 import { checkMessage } from '../src/data/MessageFilter.js';
 import { ModerationStore } from '../src/data/ModerationStore.js';
-import { AnonKeyLogin, TOSS_TOO_OLD } from '../src/data/login/AnonKeyLogin.js';
+import { ProfileRepository } from '../src/data/ProfileRepository.js';
+import { AccountService } from '../src/data/AccountService.js';
 import { otherOf, pairId } from '../src/data/server/firebase/paths.js';
 import {
   toProfile,
@@ -27,7 +28,7 @@ import {
   toStoreMessage,
   toStoreUser,
 } from '../src/data/server/firebase/userMapper.js';
-import { createWorld, setNow, START } from './helpers.js';
+import { createWorld, memoryProfiles, setNow, START } from './helpers.js';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -74,7 +75,43 @@ describe('SwipeLimit (SWP: 10분에 10명)', () => {
   });
 });
 
+describe('ProfileRepository (이름을 ururu로 바꾸기 전 저장값 옮기기)', () => {
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  it('예전 moyeo 칸에 저장된 가입 정보를 새 칸으로 옮기고 예전 칸은 지운다', () => {
+    // Given
+    localStorage.setItem('moyeo.profile', JSON.stringify({ handle: 'mimi2026' }));
+
+    // When
+    const profiles = new ProfileRepository('ururu.profile', 'moyeo.profile');
+
+    // Then
+    expect(profiles.load().value.handle).toBe('mimi2026');
+    expect(localStorage.getItem('moyeo.profile')).toBeNull();
+  });
+
+  it('새 칸에 이미 값이 있으면 예전 값으로 덮어쓰지 않는다', () => {
+    // Given
+    localStorage.setItem('ururu.profile', JSON.stringify({ handle: 'new2026' }));
+    localStorage.setItem('moyeo.profile', JSON.stringify({ handle: 'old2026' }));
+
+    // When
+    const profiles = new ProfileRepository('ururu.profile', 'moyeo.profile');
+
+    // Then
+    expect(profiles.load().value.handle).toBe('new2026');
+  });
+});
+
 describe('Validator (ACC: 가입 입력 검사)', () => {
+  it('달력에 없는 날짜(2월 30일)는 생년월일로 받지 않는다', () => {
+    // Given · When · Then
+    expect(Validator.birthDate('2001-02-30').isOk).toBe(false);
+    expect(Validator.birthDate('2001-02-28').isOk).toBe(true);
+  });
+
   it('아이디: 대소문자 그대로, 모양·길이 검사', () => {
     // When · Then
     expect(Validator.handle(' Teo24 ').value).toBe('Teo24');
@@ -129,6 +166,45 @@ describe('AccountService (ACC: 가입·닉네임·탈퇴)', () => {
     expect(world.profiles.saved.handle).toBe('Mimi2026');
     expect((await world.account.loadSaved()).isOk).toBe(true);
     expect((await world.account.withdraw()).isOk).toBe(true);
+    expect((await world.account.loadSaved()).isOk).toBe(false);
+  });
+
+  it('이 기기에서 가입하면 기억하고, 로그아웃해도 남고, 탈퇴하면 지운다', async () => {
+    // Given
+    const world = createWorld();
+    const account = new AccountService(world.users, world.profiles, world.server, memoryProfiles());
+    expect(account.hasSignedUpHere).toBe(false);
+
+    // When
+    await account.register({
+      handle: 'Mimi2026',
+      name: 'Mimi',
+      birthDate: birthDateYearsAgo(20),
+      country: 'KR',
+    });
+    await account.signOut();
+
+    // Then
+    expect(account.hasSignedUpHere).toBe(true);
+    await account.withdraw();
+    expect(account.hasSignedUpHere).toBe(false);
+  });
+
+  it('로그아웃하면 이 기기의 가입 정보만 지운다', async () => {
+    // Given
+    const world = createWorld();
+    await world.account.register({
+      handle: 'Mimi2026',
+      name: 'Mimi',
+      birthDate: birthDateYearsAgo(20),
+      country: 'KR',
+    });
+
+    // When
+    const result = await world.account.signOut();
+
+    // Then
+    expect(result.isOk).toBe(true);
     expect((await world.account.loadSaved()).isOk).toBe(false);
   });
 
@@ -622,56 +698,6 @@ describe('진짜 서버 준비 (add-real-server)', () => {
 
     // Then
     expect(world.likes.pendingLikes().length).toBe(before - 1);
-  });
-});
-
-describe('AnonKeyLogin (토스 익명 사용자 키)', () => {
-  const fakeFirebase = { auth: {}, functions: {} };
-
-  it('토스 코드 → 서버 함수 → 맞춤 토큰 로그인 순서로 uid를 받는다', async () => {
-    // Given
-    const calls = [];
-    const login = new AnonKeyLogin(
-      async () => ({ createAnonymousKeyAuthCode: async () => ({ code: 'c1', expiresIn: 300 }) }),
-      async (functions, code) => {
-        calls.push(code);
-        return 'token1';
-      },
-      async (auth, token) => {
-        calls.push(token);
-        return 'tossabc';
-      },
-    );
-
-    // When
-    const result = await login.signIn(fakeFirebase);
-
-    // Then
-    expect(result.value).toBe('tossabc');
-    expect(calls).toEqual(['c1', 'token1']);
-  });
-
-  it('토스 SDK가 없으면(오래된 토스 앱) 업데이트하라고 알려준다', async () => {
-    // Given · When
-    const login = new AnonKeyLogin(async () => {
-      throw new Error('no sdk');
-    });
-
-    // Then
-    expect((await login.signIn(fakeFirebase)).reason).toBe(TOSS_TOO_OLD);
-  });
-
-  it('서버 함수가 실패하면 Result로 이유를 돌려준다', async () => {
-    // Given · When
-    const login = new AnonKeyLogin(
-      async () => ({ createAnonymousKeyAuthCode: async () => ({ code: 'c1' }) }),
-      async () => {
-        throw new Error('4011');
-      },
-    );
-
-    // Then
-    expect((await login.signIn(fakeFirebase)).isOk).toBe(false);
   });
 });
 

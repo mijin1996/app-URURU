@@ -115,6 +115,10 @@ export class FakeServer extends ChatServer {
     return Promise.resolve(Result.ok(true));
   }
 
+  signOut() {
+    return Promise.resolve(Result.ok(true));
+  }
+
   // (시연) 친구 둘이 차례로 내 스토리에 좋아요
   publishStory(storyAt) {
     this.users

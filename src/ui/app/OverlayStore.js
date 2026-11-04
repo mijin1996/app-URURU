@@ -10,7 +10,7 @@
    원본                                   →  React
    layers.add("scrim", html)                 overlays.open({ kind: "scrim", render })
    layers.close(".scrim, .pview, #chat")     overlays.closeKinds(["scrim", "pview", "chat"])
-   (없음)                                    overlays.closeTop()  ← 토스·안드로이드 뒤로 버튼이 씀 (nav.back)
+   (없음)                                    overlays.closeTop()  ← 안드로이드 뒤로 버튼이 씀 (nav.back)
    ========================================================= */
 
 import { Observable } from './Observable.js';

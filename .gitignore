@@ -1,8 +1,6 @@
 node_modules/
 dist/
-dist-toss/
 dist-admin/
-*.ait
 .env
 .env.*
 !.env.example
@@ -17,3 +15,9 @@ dist-web-android/
 .firebase/
 *.log
 .claude/settings.local.json
+
+# 내 컴퓨터에서만 쓰는 것 (맥 폴더 정보 · Claude 미리보기 설정 · 에디터)
+.DS_Store
+.claude/launch.json
+.vscode/
+.idea/

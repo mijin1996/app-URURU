@@ -9,7 +9,7 @@ import { t } from '../../core/i18n/index.js';
 
 const DEFAULT_PHOTO_ANGLE = 160;
 
-// 거리 글자. 위치가 없는 빌드(토스)와 위치를 안 받은 서버 사용자는 거리가 없어서 빈 글자
+// 거리 글자. 위치가 없는 빌드와 위치를 안 받은 서버 사용자는 거리가 없어서 빈 글자
 export const kmText = (user) => (user.km == null ? '' : `${user.km}km`);
 
 // "a · b · c" — 빈 칸은 빼고 이어 붙여요 (동네·거리가 없을 때 " · "만 남지 않게)

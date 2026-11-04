@@ -1,9 +1,11 @@
 {
-  "name": "moyeo-functions",
+  "name": "ururu-functions",
   "private": true,
   "type": "module",
   "main": "index.js",
-  "engines": { "node": "22" },
+  "engines": {
+    "node": "22"
+  },
   "scripts": {
     "deploy": "firebase deploy --only functions"
   },

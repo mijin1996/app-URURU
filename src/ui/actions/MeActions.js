@@ -45,7 +45,7 @@ export class MeActions {
 
   // 위치 (2026-11-03 미미): 위치 공유를 켠 사람만, 앱을 쓰는 동안만
   //   지금 지역을 찾아 → 내 프로필 글자(이 기기에서만) + 서버 locations(친구에게 시·도, 결제한 친구에게 동)
-  //   위치를 끈 빌드(토스)·공유를 끈 사람·한국 밖·앱이 화면에 없을 때는 서버에서 지워요
+  //   위치를 끈 빌드·공유를 끈 사람·한국 밖·앱이 화면에 없을 때는 서버에서 지워요
   // serverEvents가 앱을 켤 때 · 화면으로 돌아올 때 · 5분마다 불러요
   async refreshRegion() {
     const { users, server, features } = this.ctx;

@@ -1,7 +1,6 @@
 # 설치 · 빌드 결과물 (만들어지는 것)
 node_modules/
 dist/
-dist-toss/
 dist-admin/
 dist-web-android/
 functions/node_modules/

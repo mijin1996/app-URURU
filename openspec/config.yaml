@@ -6,7 +6,7 @@ context: |
   All artifacts must be written in Korean.
   Keep OpenSpec structural headings and SHALL/MUST keywords in English.
 
-  프로젝트: 우르르(옛 이름 모여) — 가까운 친구와 가볍게 모이는 위치 기반 채팅 앱 (참고: Yubo, Snapchat, Instagram)
+  프로젝트: 우르르(ururu) — 가까운 친구와 가볍게 모이는 위치 기반 채팅 앱 (참고: Yubo, Snapchat, Instagram)
   대상: PC 브라우저 · Android · iOS 세 곳에서 같은 화면, 같은 동작
   읽는 사람: 초보 개발자. 전문 용어를 줄이고 쉬운 한국어(해요체)로 짧게 쓴다.
 
@@ -19,7 +19,7 @@ context: |
   - docs/explanation/architecture.md   계층 · SOLID · 디자인 패턴이 어느 파일에 있는지
 
   지금 상태: React 19 버전. .env가 있으면 진짜 서버(Firebase RealServer), 없으면 FakeServer 시연 모드. 홈 지도는 카카오 지도.
-  출시: 구글 플레이 (앱인토스는 안 씀). 폰 앱(Capacitor)은 아직 (add-mobile-apps).
+  출시: 구글 플레이. 폰 앱(Capacitor)은 아직 (add-mobile-apps).
   작업 지침: CLAUDE.md (파일을 새로 만들지 말고 원래 파일을 고친다)
   폴더: src/core(공통) → src/data(저장·규칙·서버) → src/ui(화면). 반대 방향 import 금지.
 

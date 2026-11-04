@@ -43,7 +43,7 @@ export const TAP_EDGE_RATIO = 0.35; // 사진 왼쪽/오른쪽 35%를 누르면 
 export const MAX_NAME_LENGTH = 12; // 닉네임 (화면에 보이는 이름, 바꿀 수 있음)
 export const MIN_HANDLE_LENGTH = 4; // 아이디 (친구 찾기용, 사람마다 하나뿐, 못 바꿈)
 export const MAX_HANDLE_LENGTH = 15;
-export const MIN_AGE = 19; // 가입 가능한 최소 나이 (모든 빌드 만 19세 — 앱인토스 기준)
+export const MIN_AGE = 19; // 가입 가능한 최소 나이 (모든 빌드 만 19세)
 export const MAX_PHOTOS = 10; // 프로필 사진 최대 장수
 export const MAX_VOICE_SEC = 59; // 음성 메시지 최대 길이
 export const MAX_STORY_TEXT = 40; // 글 스토리 최대 글자 수
@@ -100,8 +100,8 @@ export const DEMO = {
 /* ---------- 소리 파일 ----------
    내 소리 파일이 생기면 주소만 넣으면 돼요. 비워두면 임시 소리가 나요. */
 export const SOUND_FILES = {
-  notification: '', // 예: "assets/sounds/moyeo-ding.mp3"
-  bubble: '', // 예: "assets/sounds/moyeo-bubble.mp3"
+  notification: '', // 예: "assets/sounds/ururu-ding.mp3"
+  bubble: '', // 예: "assets/sounds/ururu-bubble.mp3"
 };
 
 /* ---------- 문구 ---------- */

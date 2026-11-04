@@ -10,10 +10,27 @@ import { Result } from '../core/result.js';
 import { t } from '../core/i18n/index.js';
 
 export class ProfileRepository {
-  constructor(storageKey) {
+  // oldKey: 이름을 ururu로 바꾸기 전(moyeo.*)에 저장된 값이 있으면 새 칸으로 한 번 옮겨요
+  //         (안 옮기면 이미 가입한 사람이 가입 화면부터 다시 보게 돼요)
+  constructor(storageKey, oldKey = '') {
     this.storageKey = storageKey;
     // 브라우저 저장소를 못 쓰는 환경(비밀 창 등)을 위한 예비 보관함
     this.memoryCopy = null;
+    if (oldKey) {
+      this.moveFrom(oldKey);
+    }
+  }
+
+  moveFrom(oldKey) {
+    try {
+      const old = localStorage.getItem(oldKey);
+      if (old !== null && localStorage.getItem(this.storageKey) === null) {
+        localStorage.setItem(this.storageKey, old);
+      }
+      localStorage.removeItem(oldKey);
+    } catch (error) {
+      // 저장소를 못 쓰면 옮길 것도 없어요
+    }
   }
 
   // 저장 파일이 없는 건 흔한 일(처음 쓰는 사람)이라 Result로 알려줘요

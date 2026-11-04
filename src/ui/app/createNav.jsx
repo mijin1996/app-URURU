@@ -105,7 +105,7 @@ export function createNav(ctx) {
     openBlock: (userId) => openBlockDialog(ctx, userId),
     openUnfriend: (userId) => openUnfriendDialog(ctx, userId),
 
-    // 토스 뒤로가기·안드로이드 뒤로 버튼: 맨 위 창을 닫아요. 닫을 창이 없으면 false (부르는 쪽이 앱을 나가요)
+    // 안드로이드 뒤로 버튼: 맨 위 창을 닫아요. 닫을 창이 없으면 false (부르는 쪽이 앱을 나가요)
     // 이용정지 안내·가입 화면·로고는 뒤로 버튼으로 닫히지 않아요
     back() {
       const isClosed = overlays.closeTop(['ban', 'signup', 'splash']);
@@ -125,6 +125,15 @@ export function createNav(ctx) {
     // 서버에서 못 지웠으면 이유를 보여주고 그대로 둬요 (다시 누를 수 있게)
     async withdraw() {
       const result = await ctx.account.withdraw();
+      if (!result.isOk) {
+        ctx.toast.show(result.reason);
+        return;
+      }
+      window.location.reload();
+    },
+
+    async signOut() {
+      const result = await ctx.account.signOut();
       if (!result.isOk) {
         ctx.toast.show(result.reason);
         return;

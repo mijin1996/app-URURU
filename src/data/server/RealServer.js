@@ -13,7 +13,7 @@
    - 인터넷이 끊기면 "offline" 소식. 보낸 메시지는 기억했다가 다시 연결되면 보내요 (SYNC-03)
 
    아직 안 한 것 (add-real-server tasks):
-   - 친구 위치(locations): 지도는 add-google-map 뒤에 (토스 첫 출시는 위치 끔)
+   - 친구 위치(locations)
    - 소리 울리기 받기: 보내기만 서버에 기록 (받는 화면은 CLAUDE.md 8번 진행 6 질문 뒤에)
    ========================================================= */
 
@@ -51,6 +51,9 @@ const REPORT_NOTE_MAX = 500; // 신고 자세한 내용 최대 글자 수 (fires
 const REPORT_PHOTO_MAX = 390000; // 신고 첨부 사진 최대 길이 (firestore.rules 400000보다 조금 작게)
 
 const TYPING_SHOW_MS = 3000; // 상대가 마지막으로 글자를 친 뒤 "입력 중"을 보여주는 시간
+// 구글 로그인 직후에는 Firestore가 새 로그인을 아직 몰라서 첫 읽기를 "권한 없음"으로 거절할 때가 있어요.
+// 그때 이만큼 기다렸다가 한 번 더 읽어요 (그래서 [구글로 계속하기]를 두 번 눌러야 들어가던 문제)
+const AUTH_SETTLE_MS = 800;
 const TYPING_SEND_MS = 1000; // "입력 중"을 서버에 알리는 간격 (글자마다 쓰면 요금이 늘어서)
 const OFFLINE = t('server.offline');
 const SAVE_FAILED = t('server.saveFailed');
@@ -98,12 +101,18 @@ export class RealServer extends ChatServer {
     this.uid = login.value;
     this.rememberEmail();
     try {
-      const { getDoc, updateDoc } = this.sdk.firestore;
-      const [publicDoc, privateDoc, moderationDoc] = await Promise.all([
-        getDoc(this.myDoc()),
-        getDoc(this.myPrivateDoc()),
-        getDoc(this.sdk.firestore.doc(this.fb.db, C.moderation, this.uid)),
-      ]);
+      const { updateDoc } = this.sdk.firestore;
+      const [publicDoc, privateDoc, moderationDoc] = await this.readMyStartDocs().catch(
+        async (error) => {
+          if (error.code !== 'permission-denied') {
+            throw error;
+          }
+          await new Promise((resolve) => {
+            setTimeout(resolve, AUTH_SETTLE_MS);
+          });
+          return this.readMyStartDocs();
+        },
+      );
       // 경고·이용 제한은 서버 기록이 정답 (탈퇴했다 다시 가입해도 남아 있어요)
       this.moderation.applyServer(moderationDoc.exists() ? moderationDoc.data() : {});
       if (!publicDoc.exists()) {
@@ -117,6 +126,26 @@ export class RealServer extends ChatServer {
         updateDoc(this.myDoc(), { age }).catch(() => {});
       }
       return Result.ok({ isLocal: false, profile });
+    } catch (error) {
+      console.warn('[RealServer] 로그인 뒤 내 정보를 읽지 못했어요', error.code || error);
+      return Result.fail(OFFLINE);
+    }
+  }
+
+  readMyStartDocs() {
+    const { doc, getDoc } = this.sdk.firestore;
+    return Promise.all([
+      getDoc(this.myDoc()),
+      getDoc(this.myPrivateDoc()),
+      getDoc(doc(this.fb.db, C.moderation, this.uid)),
+    ]);
+  }
+
+  async signOut() {
+    try {
+      const { signOut } = await import('firebase/auth');
+      await signOut(this.fb.auth);
+      return Result.ok(true);
     } catch (error) {
       return Result.fail(OFFLINE);
     }
@@ -199,7 +228,10 @@ export class RealServer extends ChatServer {
   setRegion(region, country) {
     if (this.uid) {
       this.write(
-        this.sdk.firestore.updateDoc(this.myDoc(), country ? { region: '', country } : { region: '' }),
+        this.sdk.firestore.updateDoc(
+          this.myDoc(),
+          country ? { region: '', country } : { region: '' },
+        ),
       );
     }
   }

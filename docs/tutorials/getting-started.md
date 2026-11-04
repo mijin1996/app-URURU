@@ -47,7 +47,7 @@ npm run test
 npm run build:single
 ```
 
-`dist/moyeo.html` 이 생겨요. 더블클릭하면 서버 없이 PC·폰 브라우저에서 바로 열려요. `src/`나 `styles/`를 고쳤으면 이 파일도 다시 만들어요 (`CLAUDE.md` 2번).
+`dist/ururu.html` 이 생겨요. 더블클릭하면 서버 없이 PC·폰 브라우저에서 바로 열려요. `src/`나 `styles/`를 고쳤으면 이 파일도 다시 만들어요 (`CLAUDE.md` 2번).
 
 ## 다음에 볼 것
 

@@ -161,19 +161,17 @@ describe('RealServer 받은 소식을 맞는 친구에게', () => {
   it('친구 소식(feeds)은 정보와 스토리를 같이 넣는다', () => {
     // Given
     const { world, fake } = createServer();
-    fake
-      .find(`feeds/${ME}/friends`)
-      .onNext(
-        changes([
-          {
-            id: 'newfriend',
-            data: {
-              profile: { handle: 'newbie', name: '새친구', age: 25 },
-              story: { text: 'hi', at: START },
-            },
+    fake.find(`feeds/${ME}/friends`).onNext(
+      changes([
+        {
+          id: 'newfriend',
+          data: {
+            profile: { handle: 'newbie', name: '새친구', age: 25 },
+            story: { text: 'hi', at: START },
           },
-        ]),
-      );
+        },
+      ]),
+    );
     const user = world.users.user('newfriend');
 
     // When · Then

@@ -1,7 +1,7 @@
 /* =========================================================
    [Admin] AdminApp.jsx — 운영자 사이트 화면
    ---------------------------------------------------------
-   들어오기 전: [로그인 | 처음 등록] (아이디 12자리) — 총관리자 첫 설정은 구글로 딱 한 번
+   들어오기 전: [로그인 | 처음 등록] (아이디 12자리) — 총관리자 첫 설정([총관리자 로그인])은 구글로 딱 한 번
    들어오면: [신고 목록 | 회원 관리 | 운영자 관리(총관리자만)]
    - 회원 관리: 회원 목록·검색, 정보 보기, 회원 삭제(총관리자만, Firestore 데이터가 바로 지워짐) + 삭제 기록
    - 신고 목록: 새 신고가 맨 위. 날짜·시간, 사유, 첨부(메시지·자세한 내용·사진),
@@ -11,10 +11,10 @@
    글자는 adminText.js, 모양은 styles/admin.css, 서버 일은 AdminService.js
    ========================================================= */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { countryLabel } from '../core/countries.js';
-import { ageOf } from '../core/time.js';
-import { isAdminIdShape, ID_LENGTH } from './AdminService.js';
+import { ageOf, isRealDate } from '../core/time.js';
+import { isAdminIdShape, isAdminNicknameShape, ID_LENGTH, NICKNAME_MAX } from './AdminService.js';
 import { TEXT } from './adminText.js';
 
 const FILTERS = [
@@ -23,6 +23,10 @@ const FILTERS = [
   { id: 'done', label: TEXT.filterDone },
 ];
 
+// 이용자 앱 주소: 내 컴퓨터(npm run dev:admin)에서는 개발용 앱, 그 밖에서는 Cloudflare 사용자 앱
+const USER_APP_URL = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ? 'http://localhost:5173'
+  : 'https://app-ururu.pages.dev';
 const EMAIL_SHAPE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; // 운영자 연락용 이메일 (a@b.c)
 
 // 1792500000000 → "2026. 10. 21. 오후 3:20"
@@ -54,11 +58,16 @@ export function AdminApp({ service }) {
     );
   }
   if (state.kind === 'out') {
-    return <Entrance service={service} />;
+    return <Entrance service={service} notice={state.notice ? TEXT[state.notice] : ''} />;
   }
   if (state.kind === 'bootstrap') {
     return (
-      <Shell badge={TEXT.owner} who={service.user ? service.user.email : ''} onSignOut={signOut}>
+      <Shell
+        service={service}
+        badge={TEXT.owner}
+        who={service.user ? service.user.email : ''}
+        onSignOut={signOut}
+      >
         <div className="ad-card">
           <h2>{TEXT.bootstrapTitle}</h2>
           <p className="ad-note">{TEXT.bootstrapHint}</p>
@@ -69,7 +78,7 @@ export function AdminApp({ service }) {
   }
   if (state.kind === 'unknown') {
     return (
-      <Shell onSignOut={signOut}>
+      <Shell service={service} onSignOut={signOut}>
         <div className="ad-card">
           <p className="ad-msg">{TEXT.notAdmin}</p>
         </div>
@@ -80,8 +89,9 @@ export function AdminApp({ service }) {
   const isOwner = me.role === 'owner';
   return (
     <Shell
+      service={service}
       badge={isOwner ? TEXT.owner : TEXT.admin}
-      who={`${me.name} (${me.nickname}) · ${me.idMask}`}
+      who={me.email || me.nickname}
       onSignOut={signOut}
       tabs={
         <nav className="ad-tabs">
@@ -107,9 +117,16 @@ export function AdminApp({ service }) {
 }
 
 /* ---------- 틀 ---------- */
-function Shell({ badge = '', who = '', onSignOut = null, tabs = null, children }) {
+// 로그인한 뒤에도 로그인 창(EntryCard)은 사라지지 않고 오른쪽 옆 창에 남아요 (< > 로 열고 닫기, 2026-11-04 미미)
+function Shell({ service = null, badge = '', who = '', onSignOut = null, tabs = null, children }) {
+  const [isSideOpen, setIsSideOpen] = useState(readSideOpen);
+  const [isWhoShown, setIsWhoShown] = useState(false); // 로그인한 계정 이메일: 처음엔 ****@**** 로, 누를 때마다 보이기 ↔ 가리기
+  const toggleSide = () => {
+    setIsSideOpen(!isSideOpen);
+    saveSideOpen(!isSideOpen);
+  };
   return (
-    <div className="ad-page">
+    <div className={service && isSideOpen ? 'ad-page side-open' : 'ad-page'}>
       <header className="ad-top">
         <div className="ad-brand">
           <b>{TEXT.siteTitle}</b>
@@ -118,7 +135,16 @@ function Shell({ badge = '', who = '', onSignOut = null, tabs = null, children }
         {onSignOut ? (
           <div className="ad-who">
             {badge ? <span className="ad-badge owner">{badge}</span> : null}
-            {who ? <span className="ad-email">{who}</span> : null}
+            {who ? (
+              <button
+                type="button"
+                className="ad-email"
+                aria-pressed={isWhoShown}
+                onClick={() => setIsWhoShown(!isWhoShown)}
+              >
+                {isWhoShown ? who : maskEmail(who)}
+              </button>
+            ) : null}
             <button className="ad-btn ghost" onClick={onSignOut}>
               {TEXT.signOut}
             </button>
@@ -127,37 +153,135 @@ function Shell({ badge = '', who = '', onSignOut = null, tabs = null, children }
       </header>
       {tabs}
       <main className="ad-main">{children}</main>
+      {service ? (
+        <aside className={isSideOpen ? 'ad-side open' : 'ad-side'}>
+          <button
+            type="button"
+            className="ad-side-toggle"
+            aria-expanded={isSideOpen}
+            onClick={toggleSide}
+          >
+            {isSideOpen ? '>' : '<'}
+          </button>
+          <div className="ad-side-body">
+            <EntryCard service={service} />
+          </div>
+        </aside>
+      ) : null}
     </div>
   );
 }
 
+// 옆 창을 열어 둘지 닫아 둘지 이 브라우저에 기억해요 (처음에는 열림)
+// "mimi@gmail.com" → "****@*********": 글자 수는 그대로, @만 남기고 가려요 (화면을 남이 봐도 누구 계정인지 모르게)
+function maskEmail(text) {
+  return text.replace(/[^@]/g, '*');
+}
+const SIDE_OPEN_KEY = 'ururu.admin.sideOpen';
+function readSideOpen() {
+  try {
+    return localStorage.getItem(SIDE_OPEN_KEY) !== 'false';
+  } catch (error) {
+    return true;
+  }
+}
+function saveSideOpen(isOpen) {
+  try {
+    localStorage.setItem(SIDE_OPEN_KEY, String(isOpen));
+  } catch (error) {
+    // 저장 못 해도 이번 화면에서는 그대로 동작
+  }
+}
+
 /* ---------- 들어오기 전: 로그인 / 처음 등록 ---------- */
-function Entrance({ service }) {
-  const [mode, setMode] = useState('login');
+function Entrance({ service, notice = '' }) {
   return (
     <div className="ad-landing">
       <div className="ad-hero">
         <div className="ad-logo">우르르</div>
         <h1>{TEXT.siteTitle}</h1>
         <p>{TEXT.intro}</p>
-        <div className="ad-card ad-entry">
-          <div className="ad-filters">
-            <button className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>
-              {TEXT.tabLogin}
-            </button>
-            <button className={mode === 'register' ? 'on' : ''} onClick={() => setMode('register')}>
-              {TEXT.tabRegister}
-            </button>
-          </div>
-          {mode === 'login' ? <LoginForm service={service} /> : <RegisterForm service={service} />}
+        <EntryCard service={service} />
+        {notice ? <p className="ad-msg ad-notice">{notice}</p> : null}
+      </div>
+    </div>
+  );
+}
+
+// 운영자 / 최초 등록 카드 + 아래 링크. 첫 화면 가운데와 로그인 뒤 오른쪽 옆 창이 같이 써요
+function EntryCard({ service }) {
+  const [mode, setMode] = useState('login');
+  return (
+    <>
+      <div className="ad-card ad-entry">
+        <div className="ad-filters">
+          <button className={mode === 'login' ? 'on' : ''} onClick={() => setMode('login')}>
+            {TEXT.tabLogin}
+          </button>
+          <button className={mode === 'register' ? 'on' : ''} onClick={() => setMode('register')}>
+            {TEXT.tabRegister}
+          </button>
         </div>
-        {/* 첫 총관리자 아이디를 만들 때만 쓰는 구글 로그인. 통과하는 이메일은 firestore.rules의 isBootstrapOwner() */}
+        {mode === 'login' ? <LoginForm service={service} /> : <RegisterForm service={service} />}
+      </div>
+      <div className="ad-links">
+        <a className="ad-link" href={USER_APP_URL}>
+          {TEXT.userApp}
+        </a>
+        {/* 첫 총관리자 아이디를 만들 때만 쓰는 구글 로그인. 통과하는 계정은 Firestore config/bootstrap의 emails (콘솔에서만) */}
         <button className="ad-link" onClick={() => service.signInBootstrap().catch(() => {})}>
           {TEXT.bootstrapLink}
         </button>
       </div>
+    </>
+  );
+}
+
+// 생년월일: 키보드로 숫자를 치면 "2000-01-31" 모양으로 맞춰 주고, 옆 달력 아이콘으로 고를 수도 있어요
+function BirthDateInput({ value, onChange }) {
+  const calendar = useRef(null);
+  const type = (raw) => {
+    const digits = raw.replace(/\D/g, '').slice(0, 8);
+    onChange(
+      [digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].filter(Boolean).join('-'),
+    );
+  };
+  return (
+    <div className="ad-daterow">
+      <input
+        className="ad-input"
+        inputMode="numeric"
+        maxLength={10}
+        value={value}
+        onChange={(e) => type(e.target.value)}
+      />
+      <button
+        type="button"
+        className="ad-calbtn"
+        aria-label={TEXT.birthDate}
+        onClick={() => calendar.current.showPicker?.()}
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 10h18M8 3v4M16 3v4" />
+        </svg>
+      </button>
+      <input
+        ref={calendar}
+        className="ad-calpick"
+        type="date"
+        tabIndex={-1}
+        aria-hidden="true"
+        value={isBirthDate(value) ? value : ''}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
+}
+
+// 생년월일: 달력에 있는 날짜 · 1900년부터 · 오늘까지 (날짜 확인은 앱과 같은 core/time.js)
+function isBirthDate(text) {
+  return isRealDate(text) && Number(text.slice(0, 4)) >= 1900 && new Date(text) <= new Date();
 }
 
 function IdInput({ value, onChange }) {
@@ -185,22 +309,44 @@ function IdInput({ value, onChange }) {
   );
 }
 
+// 로그인: 닉네임 + 성명 (처음 등록한 그대로)
 function LoginForm({ service }) {
-  const [id, setId] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const submit = async (event) => {
     event.preventDefault();
-    if (!isAdminIdShape(id)) {
-      setMessage(TEXT.idWrongShape);
+    if (!nickname.trim() || !name.trim()) {
+      setMessage(TEXT.needAll);
       return;
     }
     setMessage(TEXT.checking);
-    const result = await service.signIn(id);
+    const result = await service.signIn(nickname.trim(), name.trim());
     setMessage(result.isOk ? '' : TEXT.loginFailed);
   };
   return (
     <form onSubmit={submit}>
-      <IdInput value={id} onChange={setId} />
+      <label className="ad-field">
+        <span>{TEXT.nickname}</span>
+        <input
+          className="ad-input"
+          maxLength={NICKNAME_MAX}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck="false"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
+        />
+      </label>
+      <label className="ad-field">
+        <span>{TEXT.name}</span>
+        <input
+          className="ad-input"
+          maxLength={20}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
       <button type="submit" className="ad-btn primary wide">
         {TEXT.loginBtn}
       </button>
@@ -220,6 +366,14 @@ function RegisterForm({ service }) {
     const email = form.email.trim();
     if (!name || !nickname || !form.birthDate || !email || !form.id) {
       setMessage(TEXT.needAll);
+      return;
+    }
+    if (!isBirthDate(form.birthDate)) {
+      setMessage(TEXT.birthWrong);
+      return;
+    }
+    if (!isAdminNicknameShape(nickname)) {
+      setMessage(TEXT.nicknameWrong);
       return;
     }
     if (!EMAIL_SHAPE.test(email)) {
@@ -242,9 +396,11 @@ function RegisterForm({ service }) {
       setMessage(
         result.reason === 'already'
           ? TEXT.registerAlready
-          : result.reason === 'notIssued'
-            ? TEXT.registerNotIssued
-            : TEXT.registerFailed,
+          : result.reason === 'nicknameTaken'
+            ? TEXT.nicknameTaken
+            : result.reason === 'notIssued'
+              ? TEXT.registerNotIssued
+              : TEXT.registerFailed,
       );
     }
   };
@@ -263,19 +419,16 @@ function RegisterForm({ service }) {
         <span>{TEXT.nickname}</span>
         <input
           className="ad-input"
-          maxLength={20}
+          maxLength={NICKNAME_MAX}
+          autoCapitalize="none"
+          spellCheck="false"
           value={form.nickname}
           onChange={(e) => set('nickname')(e.target.value)}
         />
       </label>
       <label className="ad-field">
         <span>{TEXT.birthDate}</span>
-        <input
-          className="ad-input"
-          type="date"
-          value={form.birthDate}
-          onChange={(e) => set('birthDate')(e.target.value)}
-        />
+        <BirthDateInput value={form.birthDate} onChange={set('birthDate')} />
       </label>
       <label className="ad-field">
         <span>{TEXT.email}</span>

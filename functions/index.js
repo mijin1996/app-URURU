@@ -3,7 +3,6 @@
    ---------------------------------------------------------
    앱이 할 수 없는 일, 앱이 꺼져 있어도 해야 하는 일을 서버에서 해요. (add-real-server D5)
 
-   tossLogin      토스 일회용 코드 → 토스 파트너 API(mTLS)로 anonKey 받기 → Firebase 맞춤 토큰
    deleteAccount  회원탈퇴: 그 사람의 모든 데이터와 계정 삭제 (ACC-S4)
    adminDeleteUser 운영자 사이트 회원 삭제 (총관리자만, deleteAccount와 같은 것을 지움)
    cleanup        매시간: 24시간 지난 메시지(저장 안 한 것)·스토리·사진 삭제 (SYNC-23, 42)
@@ -20,13 +19,10 @@
    이 코드는 관리자 권한이라 firestore.rules를 거치지 않아요. 그래서 "누가 불렀는지"를 꼭 확인해요.
    ========================================================= */
 
-import { createHash } from 'node:crypto';
-import { request as httpsRequest } from 'node:https';
 import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { defineSecret } from 'firebase-functions/params';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import {
   onDocumentCreated,
@@ -47,72 +43,6 @@ const STORY_LIFETIME_MS = 24 * HOUR_MS; // src/core/config.js STORY_LIFETIME과 
 const BATCH_SIZE = 400; // Firestore는 한 번에 500개까지 지울 수 있어요
 const KEEP_AFTER_DELETE_MS = 30 * 24 * HOUR_MS; // 탈퇴 뒤 신고·경고 기록 보관 한 달 (docs/policy/privacy.md 4번 · terms.md 제8조)
 const RULE_KINDS = ['contact', 'gambling', 'profanity']; // messageFilter.js의 종류 이름
-
-/* ---------- 토스 로그인 (익명 사용자 키) ---------- */
-// 앱인토스 콘솔에서 받은 mTLS 인증서·키 (PEM 글자 그대로). 앱인토스용이라 구글 플레이 빌드에서는 안 씀 (docs/explanation/progress.md 0-5)
-const TOSS_MTLS_CERT = defineSecret('TOSS_MTLS_CERT');
-const TOSS_MTLS_KEY = defineSecret('TOSS_MTLS_KEY');
-const TOSS_EXCHANGE_URL =
-  'https://apps-in-toss-api.toss.im/api-partner/v1/apps-in-toss/users/anon-key/exchange';
-
-export const tossLogin = onCall({ secrets: [TOSS_MTLS_CERT, TOSS_MTLS_KEY] }, async (request) => {
-  const code = request.data && request.data.code;
-  if (typeof code !== 'string' || !code) {
-    throw new HttpsError('invalid-argument', 'code가 없어요');
-  }
-  const response = await postJson(
-    TOSS_EXCHANGE_URL,
-    { code },
-    { cert: TOSS_MTLS_CERT.value(), key: TOSS_MTLS_KEY.value() },
-  );
-  if (response.resultType !== 'SUCCESS' || !response.success || !response.success.anonKey) {
-    const errorCode = response.error ? response.error.errorCode : 'unknown';
-    throw new HttpsError(
-      errorCode === '4095' ? 'resource-exhausted' : 'unauthenticated',
-      `토스 확인 실패 (${errorCode})`,
-    );
-  }
-  // anonKey를 그대로 uid로 쓰지 않고 해시로 바꿔요 (uid에 "_"가 없어야 하고, 토스 키가 밖에 드러나지 않게)
-  const uid = `toss${createHash('sha256').update(response.success.anonKey).digest('hex').slice(0, 40)}`;
-  const token = await getAuth().createCustomToken(uid);
-  return { token };
-});
-
-// mTLS로 JSON 보내기 (토스 파트너 API)
-function postJson(url, body, { cert, key }) {
-  return new Promise((resolve, reject) => {
-    const text = JSON.stringify(body);
-    const req = httpsRequest(
-      url,
-      {
-        method: 'POST',
-        cert,
-        key,
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(text) },
-        timeout: 10000,
-      },
-      (res) => {
-        let raw = '';
-        res.on('data', (chunk) => {
-          raw += chunk;
-        });
-        res.on('end', () => {
-          try {
-            resolve(JSON.parse(raw));
-          } catch (error) {
-            reject(
-              new HttpsError('unavailable', `토스 응답을 읽지 못했어요 (HTTP ${res.statusCode})`),
-            );
-          }
-        });
-      },
-    );
-    req.on('timeout', () => req.destroy(new Error('timeout')));
-    req.on('error', () => reject(new HttpsError('unavailable', '토스 서버에 연결하지 못했어요')));
-    req.write(text);
-    req.end();
-  });
-}
 
 /* ---------- 회원탈퇴 (ACC-S4) ---------- */
 // 계정, 프로필, 사진, 메시지, 스토리, 좋아요, 위치, 친구, 차단을 모두 지우고 아이디를 풀어줘요.
@@ -183,8 +113,7 @@ async function purgeUser(uid) {
     db.recursiveDelete(userRef),
     user.exists ? db.doc(`handles/${user.get('handle')}`).delete() : Promise.resolve(),
   ]);
-  // moderation/{uid}(경고·이용 제한)와 신고 기록은 바로 지우지 않고 한 달 보관 (탈퇴 후 다시 가입해서 제한을 피하지 못하게,
-  // 토스는 같은 사람이면 같은 uid). 탈퇴한 날을 적어 두면 cleanup이 한 달 뒤에 지워요
+  // moderation/{uid}(경고·이용 제한)와 신고 기록은 바로 지우지 않고 한 달 보관 (탈퇴 후 다시 가입해서 제한을 피하지 못하게). 탈퇴한 날을 적어 두면 cleanup이 한 달 뒤에 지워요
   const deletedAt = Date.now();
   await db.doc(`moderation/${uid}`).set({ deletedAt }, { merge: true });
   const [reportsFrom, reportsAbout] = await Promise.all([

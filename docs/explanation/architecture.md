@@ -45,7 +45,7 @@
 | 원칙 | 뜻 | 우르르에서 | 근거 파일 |
 |---|---|---|---|
 | **S** 단일 책임 | 클래스 하나 = 일 하나 | Store마다 데이터 하나 (사람 · 채팅 · 스토리 · 좋아요 · 제재), Actions도 행동 묶음별로 나눔 | `data/UserStore.js` · `ChatStore.js` …, `ui/actions/ChatActions.js` · `SafetyActions.js` … |
-| **O** 개방-폐쇄 | 새 기능은 고치지 말고 더하기 | 빌드마다 다른 기능을 `if (toss) …` 대신 **표 한 줄**로 켜고 끔. 로그인 방법은 새 파일 하나만 더하면 됨 | `platform/features.js`, `data/login/` |
+| **O** 개방-폐쇄 | 새 기능은 고치지 말고 더하기 | 빌드마다 다른 기능을 `if (android) …` 대신 **표 한 줄**로 켜고 끔. 로그인 방법은 새 파일 하나만 더하면 됨 | `platform/features.js`, `data/login/` |
 | **L** 리스코프 치환 | 자식은 부모 자리에 그대로 | `FakeServer` ↔ `RealServer`를 바꿔 끼워도 화면 코드는 그대로. `NotificationSound` · `BubbleSound`는 `Sound` 자리에 | `server/ChatServer.js`, `core/sound/Sound.js` |
 | **I** 인터페이스 분리 | 안 쓰는 기능 억지로 만들지 않기 | 로그인 약속은 `signIn` 하나뿐. 저장소는 저장 · 불러오기 · 지우기만 | `login/LoginProvider.js`, `ProfileRepository.js` |
 | **D** 의존 역전 + 주입 | 구체 클래스 말고 약속에 기대기, 밖에서 만들어 넣기 | 모든 부품을 `main.jsx` **한 곳**에서 만들어 생성자로 넣음. 다른 곳에서 서버를 `new` 하는 곳 0곳 | `src/main.jsx` (Composition Root) |
@@ -57,7 +57,7 @@
 | 패턴 | 왜 썼나 | 파일 |
 |---|---|---|
 | **옵저버 (Observer)** | 데이터가 바뀌면 그 주제를 구독한 화면만 다시 그림 (친구가 많아져도 빠르게) | `core/ChangeNotifier.js`, `core/topics.js`, `ui/app/ChangeHub.js`, `ui/app/Observable.js`, `ui/hooks/useChanges.js` |
-| **전략 (Strategy)** | 상황에 따라 바꿔 끼우기 — 서버(가짜/진짜), 로그인 방법(구글/익명 키/익명) | `server/FakeServer.js` · `RealServer.js`, `login/GoogleLogin.js` · `AnonKeyLogin.js` · `DemoLogin.js` |
+| **전략 (Strategy)** | 상황에 따라 바꿔 끼우기 — 서버(가짜/진짜), 로그인 방법(구글) | `server/FakeServer.js` · `RealServer.js`, `login/GoogleLogin.js` |
 | **템플릿 메서드 (Template Method)** | "파일 있으면 파일, 없으면 임시 소리" 순서는 부모가, 소리 모양만 자식이 | `core/sound/Sound.js` → `NotificationSound`, `BubbleSound` |
 | **저장소 (Repository)** | 어디에 저장하는지 숨김 → 나중에 서버로 바꿔도 쓰는 코드는 그대로 | `data/ProfileRepository.js`, `server/ChatServer.js` |
 | **매퍼 (Mapper)** | 서버 문서 모양과 화면 데이터 모양을 한 곳에서 바꿈 | `server/firebase/userMapper.js` |

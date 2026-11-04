@@ -746,7 +746,7 @@ svg[viewBox='0 0 24 24'] {
 }
 
 /* 언어 바 [KR | EN] (LanguageSwitch.jsx): 가입 화면 오른쪽 위 · 나 탭 설정이 모두 이 한 규칙
-   고른 언어만 보라 바탕, 나머지는 회색 글자 */
+   고른 언어만 보라 바탕, 나머지는 회색 글자. 스토리 폰트 모양 [가 | 가](.fontswitch)도 같은 모양 */
 .langswitch {
   display: inline-flex;
   flex: none;

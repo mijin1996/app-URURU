@@ -65,12 +65,15 @@ service cloud.firestore {
     function isOwnerAdmin() {
       return isAdmin() && get(docPath('admins', me())).data.role == 'owner';
     }
-    // 첫 총관리자 아이디를 만들 때 쓰는 구글 계정 (여러 개 적어도 돼요. 첫 아이디를 발급한 뒤에는 비워도 돼요)
+    // 첫 총관리자 아이디를 만들 수 있는 구글 계정: 코드가 아니라 Firestore 문서 config/bootstrap의 emails 목록
+    // (Firebase 콘솔에서만 넣고 고쳐요. 앱 · 운영자 사이트는 이 문서를 읽거나 바꿀 수 없어요 — 아래 match /config)
+    // 문서가 없거나 목록에 없는 구글 계정은 아무것도 못 해요 (2026-11-04: 이메일을 git에 남기지 않게)
     function isBootstrapOwner() {
       return request.auth != null
         && request.auth.token.firebase.sign_in_provider == 'google.com'
         && request.auth.token.email_verified == true
-        && request.auth.token.email in ['unidevpeer@gmail.com'];
+        && exists(docPath('config', 'bootstrap'))
+        && request.auth.token.email in get(docPath('config', 'bootstrap')).data.emails;
     }
     // 회원 삭제는 총관리자만 (되돌릴 수 없어서)
     function canPurge() {
@@ -341,11 +344,25 @@ service cloud.firestore {
         && request.auth.token.email == request.resource.data.idHash + '@admin.ururu.app'
         && request.resource.data.keys().hasOnly(['name', 'nickname', 'birthDate', 'email', 'idHash', 'idMask', 'role', 'createdAt'])
         && request.resource.data.name is string && request.resource.data.name.size() >= 1 && request.resource.data.name.size() <= 20
-        && request.resource.data.nickname is string && request.resource.data.nickname.size() >= 1 && request.resource.data.nickname.size() <= 20
+        && request.resource.data.nickname is string && request.resource.data.nickname.matches('^[A-Za-z!@#$%^&*._~-]{1,10}$')
         && request.resource.data.birthDate is string
         && request.resource.data.email is string && request.resource.data.email.size() <= 100 && request.resource.data.email.matches('^[^@ ]+@[^@ ]+[.][^@ ]+$')
         && getAfter(docPath('adminIds', request.resource.data.idHash)).data.usedBy == me()
         && request.resource.data.role == get(docPath('adminIds', request.resource.data.idHash)).data.role;
+      allow update: if false;
+    }
+    // 운영자 로그인용: 닉네임(소문자) → 그 운영자의 idHash. 로그인 전에 읽어야 해서 한 칸씩은 누구나 읽어요 (목록은 못 봐요)
+    // 닉네임마다 문서가 하나뿐이라 운영자 닉네임이 겹치지 않아요 (2026-11-04)
+    match /adminLogins/{nick} {
+      allow get: if true;
+      allow list, delete: if canIssueIds();
+      allow create: if request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'password'
+        && request.auth.token.email == request.resource.data.idHash + '@admin.ururu.app'
+        && request.resource.data.keys().hasOnly(['idHash', 'uid'])
+        && request.resource.data.uid == me()
+        && nick.matches('^[a-z!@#$%^&*._~-]{1,10}$') && nick.matches('.*[a-z].*')
+        && getAfter(docPath('admins', me())).data.nickname.lower() == nick;
       allow update: if false;
     }
 
@@ -367,6 +384,11 @@ service cloud.firestore {
         && request.resource.data.at is int
         && signedBy(request.resource.data.by);
       allow update, delete: if false;
+    }
+
+    // 설정 문서 (config/bootstrap 등): Firebase 콘솔에서만 바꿔요. 앱 · 운영자 사이트에서는 읽기 · 쓰기 모두 안 돼요
+    match /config/{docId} {
+      allow read, write: if false;
     }
   }
 }

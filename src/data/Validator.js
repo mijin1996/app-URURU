@@ -12,7 +12,7 @@ import {
   MIN_HANDLE_LENGTH,
 } from '../core/config.js';
 import { Result } from '../core/result.js';
-import { ageOf } from '../core/time.js';
+import { ageOf, isRealDate } from '../core/time.js';
 import { isCountryCode } from '../core/countries.js';
 import { t } from '../core/i18n/index.js';
 
@@ -53,12 +53,11 @@ export const Validator = {
 
   // 생년월일 "YYYY-MM-DD" (달력에서 고르니까 모양은 맞지만, 나이 제한은 여기서 확인)
   birthDate(raw) {
-    const isFormatOk = /^\d{4}-\d{2}-\d{2}$/.test(raw || '');
-    if (!isFormatOk) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(raw || '')) {
       return Result.fail(t('check.chooseBirthday'));
     }
     const year = Number(raw.slice(0, 4));
-    if (year < OLDEST_YEAR || new Date(raw) > new Date()) {
+    if (!isRealDate(raw) || year < OLDEST_YEAR || new Date(raw) > new Date()) {
       return Result.fail(t('check.checkBirthday'));
     }
     if (ageOf(raw) < MIN_AGE) {

@@ -172,21 +172,21 @@ describe('storyTextStyle (STO-50~53)', () => {
     expect(style.textShadow).toBe('none');
     expect(style.background).toBeUndefined();
   });
+
+  it('폰트 모양을 고르면 기울이고, 예전 스토리(모양 없음)는 일반 폰트다', () => {
+    // Given · When
+    const italic = storyTextStyle({ text: '안녕', fontStyle: 'italic' });
+    const old = storyTextStyle({ text: '안녕' });
+
+    // Then
+    expect(italic.fontStyle).toBe('italic');
+    expect(old.fontStyle).toBe('normal');
+  });
 });
 
 describe('features (빌드 대상별 기능)', () => {
-  it('앱인토스는 스와이프와 위치가 꺼져 있고, 나머지는 켜져 있다', () => {
+  it('안드로이드·웹은 스와이프와 위치가 켜져 있고, 모르는 값은 웹과 같다', () => {
     // When · Then
-    expect(featuresFor('toss')).toEqual({
-      canTryAnonymous: false,
-      canSwipe: false,
-      canShareLocation: false,
-      canSendPhoto: false,
-      filterMessages: true,
-      askPingOnStart: false,
-      lightThemeOnly: true,
-      ownBackButtons: false,
-    });
     expect(featuresFor('android')).toMatchObject({
       askPingOnStart: true,
       lightThemeOnly: false,
@@ -198,7 +198,7 @@ describe('features (빌드 대상별 기능)', () => {
   });
 });
 
-describe('OverlayStore.closeTop (토스·안드로이드 뒤로 버튼)', () => {
+describe('OverlayStore.closeTop (안드로이드 뒤로 버튼)', () => {
   it('맨 위 창을 닫고, 닫을 창이 없으면 false', () => {
     // Given
     const overlays = new OverlayStore();

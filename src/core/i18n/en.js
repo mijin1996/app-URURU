@@ -64,7 +64,6 @@ export default {
   'server.anonExpired': 'Anonymous accounts last one day. Please continue with Google',
   'server.otherMethod':
     'This email is already registered with another method. Please contact us by email',
-  'server.tossTooOld': 'Please update the Toss app to the latest version',
   'server.offline': 'Please check your internet connection',
   'server.saveFailed': "Couldn't save to the server. Please try again",
   'server.withdrawFailed': "Couldn't delete your account. Please try again later",
@@ -130,7 +129,6 @@ export default {
   'story.agoViewProfile': '{at} ago · View profile',
   'story.viewProfileOf': "View {name}'s profile",
   'story.likeStory': 'Like story',
-  'story.noLikesYet': 'No likes yet',
   'story.likedBy': '{names} liked this',
   'story.storyGone': 'This story is gone',
   'story.storyPosted': 'Story posted',
@@ -259,6 +257,9 @@ export default {
   'me.backgroundSize': 'Background size',
   'me.font': 'Font',
   'me.fontSize': 'Font size',
+  'me.fontNormal': 'Regular',
+  'me.fontItalic': 'Italic',
+  'me.fontSample': 'Aa',
   'me.outline': 'Outline',
   'me.textOutline': 'Text outline',
   'me.outlineWidth': 'Outline width',
@@ -277,6 +278,7 @@ export default {
   'me.policies': 'Policies',
   'me.terms': 'Terms of Service',
   'me.privacy': 'Privacy Policy',
+  'me.signOut': 'Log out',
   'me.withdraw': 'Delete account',
   'me.withdrawConfirm': 'Delete your account?',
   'me.withdrawNotice':

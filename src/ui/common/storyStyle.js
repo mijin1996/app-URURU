@@ -9,7 +9,8 @@
    { text, img,
      bg, bgSize,              // 폰트 배경 상자 색("" = 없음)과 크기
      textColor, textSize,     // 폰트 색과 크기
-     stroke, strokeWidth }    // 폰트 테두리 색("" = 없음)과 두께
+     stroke, strokeWidth,     // 폰트 테두리 색("" = 없음)과 두께
+     fontStyle }              // 'normal' | 'italic' (없으면 normal — 예전 스토리)
    ========================================================= */
 
 import { STORY_TEXT } from '../../core/config.js';
@@ -45,6 +46,7 @@ export function storyTextStyle(story, scale = 1) {
     color: story.textColor || DEFAULT_TEXT_COLOR,
     fontSize: `${size.toFixed(1)}px`,
     textShadow: outlineShadow(story.stroke, (story.strokeWidth || 0) * scale),
+    fontStyle: story.fontStyle === 'italic' ? 'italic' : 'normal',
   };
   if (story.bg) {
     const pad = (story.bgSize || 0) * scale;

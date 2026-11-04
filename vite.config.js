@@ -3,8 +3,7 @@
    ---------------------------------------------------------
    npm run dev          개발 서버 (http://localhost:5173)
    npm run build        dist/            폰 앱·웹 서버용
-   npm run build:single dist/moyeo.html  더블클릭으로 여는 HTML 한 장 (원래 있던 그 파일을 덮어써요)
-   npm run build:toss   dist-toss/       앱인토스용 (친구 채팅만, src/platform/features.js)
+   npm run build:single dist/ururu.html  더블클릭으로 여는 HTML 한 장 (원래 있던 그 파일을 덮어써요)
    npm run dev:admin    운영자 사이트 개발 서버 (http://localhost:5180/admin.html)
    npm run build:admin  dist-admin/      운영자 사이트 (앱과 주소를 나눔, 주소는 docs/how-to/operate-admin-site.md 1번)
    어떤 빌드인지는 --mode 값으로 정해지고, 앱 안에서는 src/platform/target.js가 읽어요.
@@ -18,7 +17,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 
 const DEV_PORT = 5173; // npm run dev 주소 (dev:admin은 package.json에서 5180)
 
-const OUT_DIRS = { toss: 'dist-toss', admin: 'dist-admin' };
+const OUT_DIRS = { admin: 'dist-admin' };
 
 // 빌드 결과 폴더마다 "이 폴더가 무엇인지" 적은 설명 파일 (빌드할 때마다 다시 써요)
 const FOLDER_GUIDES = {
@@ -29,28 +28,12 @@ const FOLDER_GUIDES = {
       '',
       '만드는 명령',
       '  npm run build          → index.html + assets/ (웹·안드로이드 앱에 들어가는 파일)',
-      '  npm run build:single   → moyeo.html (더블클릭으로 화면만 보는 한 장짜리 HTML)',
+      '  npm run build:single   → ururu.html (더블클릭으로 화면만 보는 한 장짜리 HTML)',
       '  웹에 올리기            → GitHub에 push하면 Cloudflare Pages가 빌드해서 올려요',
       '',
       '들어 있는 것',
-      '  index.html, assets/    웹·안드로이드 앱 (전체 기능: 스와이프·지도·구글/페이스북 로그인)',
-      '  moyeo.html             시연용 한 장짜리 (구글·페이스북 팝업은 여기서 안 됨)',
-      '  forServer.html         예전에 만든 index.html 복사본 (지금은 안 씀)',
-      '',
-      '직접 고치지 마세요. src/·styles/를 고치고 다시 빌드하면 바뀌어요.',
-    ].join('\r\n'),
-  },
-  'dist-toss': {
-    name: '_이_폴더는_앱인토스용_빌드결과물.txt',
-    text: [
-      'dist-toss/ — 앱인토스(토스 미니앱)용 빌드 결과물',
-      '',
-      '만드는 명령',
-      '  npm run build:toss   → 이 폴더 (빌드할 때마다 비우고 새로 만들어요)',
-      '  npm run build:ait    → 이 폴더로 ururu.ait 만들기 (앱인토스 콘솔에 올리는 파일)',
-      '',
-      'dist/와 다른 점 (src/platform/features.js)',
-      '  토스 로그인만, 스와이프·지도·익명 버튼 없음, 친구 채팅 위주, 밝은 화면만',
+      '  index.html, assets/    웹·안드로이드 앱 (전체 기능: 스와이프·지도·구글 로그인)',
+      '  ururu.html             시연용 한 장짜리 (구글 로그인 팝업은 여기서 안 됨)',
       '',
       '직접 고치지 마세요. src/·styles/를 고치고 다시 빌드하면 바뀌어요.',
     ].join('\r\n'),
@@ -75,7 +58,7 @@ const FOLDER_GUIDES = {
 
 function writeFolderGuide(outDir) {
   return {
-    name: 'moyeo-folder-guide',
+    name: 'ururu-folder-guide',
     apply: 'build',
     async closeBundle() {
       const guide = FOLDER_GUIDES[outDir];
@@ -85,7 +68,7 @@ function writeFolderGuide(outDir) {
     },
   };
 }
-// 운영자 사이트를 Cloudflare Pages에 올릴 때 필요한 것 (firebase.json의 admin 설정과 같은 일)
+// 운영자 사이트를 Cloudflare Pages에 올릴 때 필요한 것
 //   - 첫 주소(/)와 모르는 주소: Cloudflare는 index.html을 보여줘서, admin.html을 index.html로도 복사
 //     (_redirects의 /* 규칙은 assets/ 파일까지 바꿔치기해서 쓰지 않아요)
 //   - _headers: 검색엔진 차단, 다른 사이트에 끼워 넣기 금지, 주소 안 넘기기
@@ -99,7 +82,7 @@ const ADMIN_HEADERS = [
 
 function writeAdminHosting(outDir) {
   return {
-    name: 'moyeo-admin-hosting',
+    name: 'ururu-admin-hosting',
     apply: 'build',
     async closeBundle() {
       if (outDir !== OUT_DIRS.admin) {
@@ -110,13 +93,12 @@ function writeAdminHosting(outDir) {
     },
   };
 }
-const TOSS_SDK = '@apps-in-toss/web-framework'; // 토스 앱 안에서만 쓰는 SDK (src/platform/tossSdk.js)
-const SINGLE_FILE_NAME = 'moyeo.html';
+const SINGLE_FILE_NAME = 'ururu.html';
 
-// 한 장짜리 HTML은 v13 때부터 쓰던 dist/moyeo.html 자리에 그대로 (새 파일·새 폴더를 만들지 않게)
+// 한 장짜리 HTML은 dist/ururu.html 한 자리에 덮어써요 (새 파일·새 폴더를 만들지 않게. 2026-11-04 전 이름 moyeo.html)
 function renameSingleHtml(outDir) {
   return {
-    name: 'moyeo-rename-single-html',
+    name: 'ururu-rename-single-html',
     apply: 'build',
     async closeBundle() {
       await rename(resolve(outDir, 'index.html'), resolve(outDir, SINGLE_FILE_NAME));
@@ -131,18 +113,20 @@ export default defineConfig(({ mode }) => {
   const pages = mode === 'admin' ? { admin: resolve('admin.html') } : undefined;
   return {
     base: './', // 폰 앱(파일로 열림)과 더블클릭 HTML 모두 상대 경로여야 해서
+    // 더블클릭 HTML은 언제나 가짜 서버(시연)로: .env가 있어도 VITE_ 값을 읽지 않아요
+    // (파일로 연 화면에서는 구글 로그인 창이 안 열려서 진짜 서버로는 들어갈 수 없어요)
+    envPrefix: isSingle ? 'SINGLE_HTML_NO_ENV_' : 'VITE_',
     plugins: [
       react(),
       ...(isSingle ? [viteSingleFile(), renameSingleHtml(outDir)] : []),
       writeFolderGuide(outDir),
       writeAdminHosting(outDir),
     ],
-    // dist/에는 build 결과와 moyeo.html이 같이 있어서, 한쪽을 만들 때 다른 쪽을 지우지 않게 해요
-    // 토스 빌드가 아니면 토스 SDK를 묶지 않아요 (설치 전에도 web·single 빌드가 되게, 어차피 부르지 않음)
+    // dist/에는 build 결과와 ururu.html이 같이 있어서, 한쪽을 만들 때 다른 쪽을 지우지 않게 해요
     build: {
       outDir,
       emptyOutDir: outDir !== 'dist',
-      rollupOptions: { input: pages, external: mode === 'toss' ? [] : [TOSS_SDK] },
+      rollupOptions: { input: pages },
     },
     // 개발 주소를 http://localhost:5173 하나로 고정 (카카오 SDK 도메인 · Firebase 승인 도메인에 이 주소만 등록).
     // 5173을 다른 프로그램이 쓰고 있으면 5174·5175로 몰래 넘어가지 않고 오류로 멈춰요 → 그 프로그램을 끄고 다시 실행

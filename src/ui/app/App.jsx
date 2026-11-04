@@ -46,7 +46,7 @@ export function App() {
       if (nav.showBan()) {
         return;
       }
-      tabState.set(tabs[0].id); // 첫 탭 (앱인토스처럼 홈이 꺼진 빌드는 채팅)
+      tabState.set(tabs[0].id); // 첫 탭 (홈이 꺼진 빌드는 채팅)
       setHasStarted(true);
       if (account.needsPingQuestion && ctx.features.askPingOnStart) {
         setTimeout(() => nav.askPing(), PING_QUESTION_DELAY_MS);
@@ -89,7 +89,7 @@ export function App() {
 
   const tab = tabs.find((t) => t.id === ctx.tabs.current) || tabs[0];
   const isFixed = hasStarted && tab.isFixed;
-  // CSS는 탭 5칸 기준이라, 꺼진 탭이 있는 빌드(앱인토스)만 칸 수를 맞춰요
+  // CSS는 탭 5칸 기준이라, 꺼진 탭이 있는 빌드만 칸 수를 맞춰요
   const navStyle =
     tabs.length === TABS.length ? undefined : { gridTemplateColumns: `repeat(${tabs.length},1fr)` };
   return (

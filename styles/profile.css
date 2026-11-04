@@ -113,8 +113,12 @@
   gap: 6px;
   flex-wrap: wrap;
 }
+.pvinfo .chips + .chips {
+  margin-top: 6px;
+}
 .pvinfo .chips .tag {
   font-size: var(--fs-profile);
+  font-style: italic;
 }
 /* ➤ 나라·지역: 태그와 같은 네모 모양, 사진 위에서 어두운 바탕 + 흰 테두리 */
 .pvinfo .chips span.km {

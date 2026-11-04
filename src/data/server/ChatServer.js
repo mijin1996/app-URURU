@@ -116,6 +116,9 @@ export class ChatServer {
   deleteAccount(handle) {
     notImplemented('deleteAccount');
   }
+  signOut() {
+    notImplemented('signOut');
+  }
   findUserByHandle(handle) {
     notImplemented('findUserByHandle');
   }

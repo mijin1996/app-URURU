@@ -3,7 +3,7 @@
    ---------------------------------------------------------
    - 보는 순간 그 친구 테두리는 회색으로 (nav.openStory가 markSeen)
    - 위쪽 프로필을 누르면 그 사람의 프로필로
-   - 친구 스토리: 아래 하트로 좋아요 / 내 스토리: 누가 좋아했는지
+   - 친구 스토리: 아래 하트로 좋아요 / 내 스토리: 받은 좋아요가 있을 때만 누가 좋아했는지
    ========================================================= */
 
 import { useEffect, useState } from 'react';
@@ -95,17 +95,12 @@ function StoryLikeButton({ user }) {
   );
 }
 
-// 내 스토리 아래: "Teo, 서연님이 좋아해요"
+// 내 스토리 아래: 좋아요를 받았을 때만 빨간 하트 + "Teo, 서연님이 좋아해요" (없으면 아무것도 안 그려요)
 function MyLikers() {
   const { likes, users } = useCtx();
   const likers = likes.myStoryLikes();
   if (!likers.length) {
-    return (
-      <div className="likers">
-        <Icon name="heart" />
-        <span>{t('story.noLikesYet')}</span>
-      </div>
-    );
+    return null;
   }
   const names = likers.map((like) => users.user(like.from).name).join(', ');
   return (

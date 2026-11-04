@@ -6,49 +6,6 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "hosting": [
-    {
-      "target": "app",
-      "public": "dist",
-      "ignore": ["firebase.json", "**/.*", "moyeo.html", "forServer.html", "_*.txt"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "admin",
-      "public": "dist-admin",
-      "ignore": ["firebase.json", "**/.*", "_*.txt"],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/admin.html"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "X-Robots-Tag",
-              "value": "noindex, nofollow"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer"
-            }
-          ]
-        }
-      ]
-    }
-  ],
   "functions": [
     {
       "source": "functions",

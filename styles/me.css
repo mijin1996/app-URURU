@@ -347,3 +347,10 @@
   font-size: var(--fs-small);
   font-weight: 700;
 }
+#signOut {
+  margin-bottom: 0;
+}
+/* 폰트 모양 [가 | 가]: 글 입력 칸 아래 왼쪽 */
+.editor .fontswitch {
+  align-self: flex-start;
+}

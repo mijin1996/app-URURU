@@ -14,10 +14,23 @@ import { Validator } from './Validator.js';
 import { t } from '../core/i18n/index.js';
 
 export class AccountService {
-  constructor(users, profiles, server) {
+  // device: "이 기기에서 가입·로그인한 적 있는지" 표시 (로그아웃해도 남아요, 탈퇴하면 지워요)
+  //         있으면 가입 화면이 칸 없이 구글 버튼만 보여요 (2026-11-04 미미)
+  constructor(users, profiles, server, device = null) {
     this.users = users;
     this.profiles = profiles;
     this.server = server; // 아이디 중복 확인은 전체 사용자를 아는 서버에 물어봐야 해서
+    this.device = device;
+  }
+
+  get hasSignedUpHere() {
+    return !!this.device && this.device.load().isOk;
+  }
+
+  rememberDevice() {
+    if (this.device && !this.hasSignedUpHere) {
+      this.device.save({ at: Date.now() });
+    }
   }
 
   /* ---------- 가입 ---------- */
@@ -62,6 +75,7 @@ export class AccountService {
       return saved;
     }
     this.profiles.save(profile);
+    this.rememberDevice();
     return Result.ok(profile);
   }
 
@@ -81,11 +95,15 @@ export class AccountService {
         return Result.fail(t('check.noAccount'));
       }
       this.profiles.save(profile);
+      this.rememberDevice();
       return Result.ok(profile);
     }
     const saved = this.profiles.load();
     if (saved.isOk && !saved.value.handle) {
       return Result.fail(t('check.oldAccount'));
+    }
+    if (saved.isOk) {
+      this.rememberDevice();
     }
     return saved;
   }
@@ -142,8 +160,20 @@ export class AccountService {
     const deleted = await this.server.deleteAccount(this.users.me.handle);
     if (deleted.isOk) {
       this.profiles.clear();
+      if (this.device) {
+        this.device.clear();
+      }
     }
     return deleted;
+  }
+
+  // 로그아웃: 계정은 그대로 두고 이 기기에서만 나가요. 다시 로그인하면 서버의 가입 정보를 불러와요
+  async signOut() {
+    const signedOut = await this.server.signOut();
+    if (signedOut.isOk) {
+      this.profiles.clear();
+    }
+    return signedOut;
   }
 
   // 이 기기에 저장 + 서버에 알리기 (닉네임, 관심사, 소리 받기 권한)

@@ -20,6 +20,15 @@ export function ageOf(birthDate) {
 // 그 달이 며칠까지 있는지 (2월 29일 같은 윤년도 자동으로)
 export const daysInMonth = (year, month) => new Date(year, month, 0).getDate();
 
+// "2001-03-15"처럼 달력에 실제로 있는 날짜인지 (new Date("2001-02-30")은 3월 2일로 넘어가서 따로 확인해요)
+export function isRealDate(text) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(text || '')) {
+    return false;
+  }
+  const [year, month, day] = text.split('-').map(Number);
+  return month >= 1 && month <= 12 && day >= 1 && day <= daysInMonth(year, month);
+}
+
 // 배열 정렬용: 최근 것이 앞으로
 export const byNewest = (a, b) => b.at - a.at;
 

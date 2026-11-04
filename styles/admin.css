@@ -72,7 +72,18 @@ input {
   flex-wrap: wrap;
 }
 .ad-email {
+  border: 0;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
   font-weight: 700;
+  color: inherit;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+.ad-email:hover {
+  background: var(--ad-accent-soft);
 }
 .ad-tabs {
   display: flex;
@@ -127,6 +138,7 @@ input {
 .ad-hero p {
   color: var(--ad-muted);
   line-height: 1.6;
+  white-space: pre-line;
 }
 
 /* ---------- 공통 부품 ---------- */
@@ -399,6 +411,13 @@ input {
   margin-top: 18px;
   text-align: left;
 }
+/* 로그인 · 처음 등록: 안내가 나와도 카드 크기가 바뀌지 않게 한 줄 높이로 고정 */
+.ad-entry .ad-msg {
+  height: 1.4em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .ad-field {
   display: block;
   margin-top: 10px;
@@ -421,6 +440,16 @@ input {
 .ad-input.narrow {
   flex: none;
   width: auto;
+}
+.ad-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  margin-top: 14px;
+}
+.ad-links .ad-link {
+  margin-top: 0;
 }
 .ad-link {
   margin-top: 14px;
@@ -508,5 +537,105 @@ input {
   }
   .ad-mrow > span:nth-of-type(n + 2) {
     display: none;
+  }
+}
+
+/* ---------- 생년월일: 키보드 입력 + 달력 아이콘 ---------- */
+.ad-daterow {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.ad-daterow .ad-input {
+  width: 100%;
+  padding-right: 44px;
+}
+.ad-calbtn {
+  position: absolute;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ad-muted);
+  cursor: pointer;
+}
+.ad-calbtn:hover {
+  color: var(--ad-accent);
+}
+.ad-calbtn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+/* 달력 창만 빌려 쓰는 숨은 날짜 칸 (아이콘 자리에 겹쳐 둬서 달력이 그 아래에 열려요) */
+.ad-calpick {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  width: 32px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+  padding: 0;
+}
+
+/* ---------- 로그인 뒤 오른쪽 옆 창 (운영자 / 최초 등록) ---------- */
+.ad-side {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  height: 100vh;
+  width: min(380px, 100vw);
+  background: var(--ad-bg);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+}
+.ad-side.open {
+  transform: translateX(0);
+}
+.ad-side-body {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+}
+.ad-side-body .ad-entry {
+  margin-top: 0;
+}
+.ad-side-body .ad-links {
+  text-align: center;
+}
+/* < > 손잡이: 창 왼쪽 바깥에 붙어 있어서 닫혀도 보여요 */
+.ad-side-toggle {
+  position: absolute;
+  top: 50%;
+  left: -28px;
+  width: 28px;
+  height: 56px;
+  transform: translateY(-50%);
+  border: 0;
+  border-radius: 10px 0 0 10px;
+  background: var(--ad-accent);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+}
+/* 넓은 화면: 옆 창이 열려 있으면 본문이 그 폭만큼 비켜요 */
+@media (min-width: 900px) {
+  .ad-page.side-open {
+    padding-right: 380px;
+  }
+  .ad-page.side-open .ad-top {
+    padding-right: 16px;
   }
 }

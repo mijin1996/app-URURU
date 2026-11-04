@@ -4,6 +4,7 @@
    - 편집 줄: 왼쪽 미리보기, 오른쪽 글 입력 + [사진 그림 = 사진 추가](왼쪽) [올리기 그림 = 스토리 올리기](오른쪽)
        · [사진 추가]는 미리보기 바탕에 사진을 넣기만 해요. 올리는 건 [스토리 올리기]로만
        · 글만, 사진만, 사진 위에 글 모두 올릴 수 있어요
+       · 글 입력 칸 아래 폰트 모양 [가 | 가(기울임)]: 미리보기 · 입력 칸 · 올린 스토리에 똑같이
    - 그 아래 크기 막대, 그 아래 색 칸 3개 (배경 / 폰트 / 테두리)
        · 색: 칸을 누르면 팔레트가 열림 (배경과 테두리는 "없음" 선택 가능)
        · 크기: 막대는 하나. 고른 칸에 따라 그 크기를 조절하도록 바뀜
@@ -19,7 +20,14 @@ import { Icon } from '../../common/Icon.jsx';
 import { storyCanvasStyle } from '../../common/storyStyle.js';
 import { StoryText } from '../../common/StoryText.jsx';
 import { useKept } from '../../hooks/useKept.js';
-import { DEFAULT_DRAFT, findPart, FIRST_PART_KEY, isSizeOff, STYLE_PARTS } from './storyParts.js';
+import {
+  DEFAULT_DRAFT,
+  findPart,
+  FIRST_PART_KEY,
+  FONT_STYLES,
+  isSizeOff,
+  STYLE_PARTS,
+} from './storyParts.js';
 import { t } from '../../../core/i18n/index.js';
 
 const PREVIEW_PLACEHOLDER = t('me.preview');
@@ -85,8 +93,10 @@ export function StoryEditor() {
             placeholder={t('me.storyPlaceholder')}
             maxLength={MAX_STORY_TEXT}
             value={draft.text}
+            style={{ fontStyle: draft.fontStyle }}
             onChange={(event) => update({ text: event.target.value })}
           />
+          <FontStyleSwitch current={draft.fontStyle} onPick={(key) => update({ fontStyle: key })} />
           <div className="btnline">
             <button
               className="smallbtn ghost"
@@ -136,6 +146,28 @@ export function StoryEditor() {
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+// 폰트 모양 고르기: 모양은 언어 바와 같은 .langswitch
+function FontStyleSwitch({ current, onPick }) {
+  return (
+    <div className="langswitch fontswitch" id="fontStyle" role="group" aria-label={t('me.font')}>
+      {FONT_STYLES.map((style) => (
+        <button
+          key={style.key}
+          type="button"
+          className={style.key === current ? 'on' : ''}
+          data-font-style={style.key}
+          aria-pressed={style.key === current}
+          aria-label={style.label}
+          style={{ fontStyle: style.key }}
+          onClick={() => onPick(style.key)}
+        >
+          {t('me.fontSample')}
+        </button>
+      ))}
     </div>
   );
 }

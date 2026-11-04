@@ -41,6 +41,12 @@ export const STYLE_PARTS = [
   },
 ];
 
+// 폰트 모양: 일반 / 기울임. 버튼에는 같은 글자를 그 모양으로 보여줘요 (설명 글 없이)
+export const FONT_STYLES = [
+  { key: 'normal', label: t('me.fontNormal') },
+  { key: 'italic', label: t('me.fontItalic') },
+];
+
 export const FIRST_PART_KEY = 'textColor'; // 처음엔 "폰트" 칸이 골라져 있어요
 
 export const DEFAULT_DRAFT = {
@@ -52,6 +58,7 @@ export const DEFAULT_DRAFT = {
   textSize: STORY_TEXT.defaultSize,
   stroke: '#131218',
   strokeWidth: STORY_TEXT.defaultStroke,
+  fontStyle: 'normal',
 };
 
 export const findPart = (colorKey) => STYLE_PARTS.find((part) => part.colorKey === colorKey);
