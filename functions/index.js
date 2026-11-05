@@ -55,7 +55,7 @@ export const deleteAccount = onCall(async (request) => {
   return { ok: true };
 });
 
-/* ---------- 운영자 사이트 회원 삭제 (총관리자만) ---------- */
+/* ---------- 운영자 사이트 회원 삭제 (운영자 · 총관리자) ---------- */
 // 회원탈퇴와 똑같이 지우고 deletions/{uid}에 누가 지웠는지 남겨요 (src/admin/AdminService.js deleteMember)
 export const adminDeleteUser = onCall(async (request) => {
   const auth = request.auth;
@@ -64,8 +64,8 @@ export const adminDeleteUser = onCall(async (request) => {
   }
   const db = getFirestore();
   const admin = await db.doc(`admins/${auth.uid}`).get();
-  if (!admin.exists || admin.get('role') !== 'owner') {
-    throw new HttpsError('permission-denied', '총관리자만 회원을 삭제할 수 있어요');
+  if (!admin.exists || !['admin', 'owner'].includes(admin.get('role'))) {
+    throw new HttpsError('permission-denied', '운영자만 회원을 삭제할 수 있어요');
   }
   const uid = request.data && request.data.uid;
   const record = (request.data && request.data.record) || {};

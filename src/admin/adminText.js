@@ -135,7 +135,6 @@ export const TEXT = {
   deleteConfirmBtn: '영구 삭제',
   deleted: '삭제했어요',
   deleteFailed: '삭제하지 못했어요',
-  ownerOnly: '회원 삭제는 총관리자만 할 수 있어요',
   deletionsTitle: '삭제 기록',
   noDeletions: '삭제 기록이 없어요',
   colDeletedAt: '삭제한 때',

@@ -110,7 +110,7 @@ export function AdminApp({ service }) {
       }
     >
       {tab === 'reports' ? <Reports service={service} /> : null}
-      {tab === 'members' ? <Members service={service} isOwner={isOwner} /> : null}
+      {tab === 'members' ? <Members service={service} /> : null}
       {isOwner && tab === 'admins' ? <Admins service={service} /> : null}
     </Shell>
   );
@@ -927,7 +927,7 @@ function Admins({ service }) {
 }
 
 /* ---------- 회원 관리 ---------- */
-function Members({ service, isOwner }) {
+function Members({ service }) {
   const [members, setMembers] = useState(null);
   const [last, setLast] = useState(null); // 더 보기 기준 (null이면 끝)
   const [word, setWord] = useState('');
@@ -1019,12 +1019,8 @@ function Members({ service, isOwner }) {
               {openUid === m.uid ? (
                 <div className="ad-mdetail">
                   <Person service={service} uid={m.uid} title={TEXT.colMember} />
-                  {/* 화면에서 숨기는 건 편의일 뿐, 실제로 막는 건 firestore.rules의 canPurge() */}
-                  {isOwner ? (
-                    <DeleteMember service={service} member={m} onDeleted={onDeleted} />
-                  ) : (
-                    <p className="ad-muted small">{TEXT.ownerOnly}</p>
-                  )}
+                  {/* 회원 삭제는 운영자 모두 (실제로 막는 건 firestore.rules의 canPurge()) */}
+                  <DeleteMember service={service} member={m} onDeleted={onDeleted} />
                 </div>
               ) : null}
             </div>

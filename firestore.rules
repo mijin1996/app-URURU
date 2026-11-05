@@ -75,9 +75,9 @@ service cloud.firestore {
         && exists(docPath('config', 'bootstrap'))
         && request.auth.token.email in get(docPath('config', 'bootstrap')).data.emails;
     }
-    // 회원 삭제는 총관리자만 (되돌릴 수 없어서)
+    // 회원 삭제: 운영자 모두 (총관리자 포함). 운영자(직원) 계정 관리는 총관리자만 (canIssueIds) — 2026-11-06
     function canPurge() {
-      return isOwnerAdmin();
+      return isAdmin();
     }
     function canIssueIds() {
       return isOwnerAdmin() || isBootstrapOwner();
@@ -112,7 +112,7 @@ service cloud.firestore {
         && request.resource.data.get('region', '').size() <= 40
         && request.resource.data.get('country', '').size() <= 2;
       allow delete: if signedIn() && uid == me();   // 무료 모드 회원탈퇴 (서버 함수 모드는 deleteAccount)
-      // 운영자 사이트 회원 관리: 목록은 운영자 모두, 삭제는 총관리자만
+      // 운영자 사이트 회원 관리: 목록 · 삭제 모두 운영자 (총관리자 포함)
       allow list: if isAdmin();
       allow delete: if canPurge();
 
@@ -189,7 +189,7 @@ service cloud.firestore {
         && (request.resource.data.type != 'text' || (request.resource.data.text is string && request.resource.data.text.size() <= 1000));
       // 두 사람 다 "저장"만 바꿀 수 있어요 (SYNC-22)
       allow update: if signedIn() && inPair(pair) && isFriend(otherIn(pair)) && onlyChanges(['isSaved']);
-      allow delete: if canPurge();   // 24시간 정리는 서버 함수, 회원 삭제는 총관리자
+      allow delete: if canPurge();   // 24시간 정리는 서버 함수, 회원 삭제는 운영자
     }
 
     // 모든 대화 한 번에 구독 (collectionGroup "messages", where members array-contains 나)
