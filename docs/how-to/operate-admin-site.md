@@ -23,8 +23,6 @@
 - 권한은 화면이 아니라 서버 규칙(`firestore.rules`)이 막아요. 화면을 고쳐도 등급 밖의 일은 서버가 거절해요.
 - 지금 코드의 등급은 **운영자 · 총관리자 2개**예요. 최종관리자와 2단계 승인은 `admin-roles.md`대로 만들 예정.
 
-> **2026-11-05: Cloudflare 안 씀. 화면도 Firebase Hosting으로 되돌림.** 사용자 앱 `npm run deploy:web` → https://ururu-6164b.web.app , 운영자 `npm run deploy:admin` → https://ururu-6164b-admin.web.app . 아래 Cloudflare 내용은 옛 기록이에요.
-
 ### 주소 한눈에 (서버는 Firebase 프로젝트 `ururu-6164b` 하나, 화면은 Cloudflare Pages)
 
 | 화면 | 내 컴퓨터 (개발) | 인터넷 (Cloudflare Pages) |

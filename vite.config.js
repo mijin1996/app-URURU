@@ -9,7 +9,7 @@
    어떤 빌드인지는 --mode 값으로 정해지고, 앱 안에서는 src/platform/target.js가 읽어요.
    ========================================================= */
 
-import { rename, writeFile } from 'node:fs/promises';
+import { copyFile, rename, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -24,12 +24,12 @@ const FOLDER_GUIDES = {
   dist: {
     name: '_이_폴더는_웹·구글플레이용_빌드결과물.txt',
     text: [
-      'dist/ — 웹(Firebase Hosting)·구글 플레이(안드로이드 앱)용 빌드 결과물',
+      'dist/ — 웹(Cloudflare Pages)·구글 플레이(안드로이드 앱)용 빌드 결과물',
       '',
       '만드는 명령',
       '  npm run build          → index.html + assets/ (웹·안드로이드 앱에 들어가는 파일)',
       '  npm run build:single   → ururu.html (더블클릭으로 화면만 보는 한 장짜리 HTML)',
-      '  npm run deploy:web     → 빌드 + https://ururu-6164b.web.app 에 올리기',
+      '  웹에 올리기            → GitHub에 push하면 Cloudflare Pages가 빌드해서 올려요',
       '',
       '들어 있는 것',
       '  index.html, assets/    웹·안드로이드 앱 (전체 기능: 스와이프·지도·구글 로그인)',
@@ -45,10 +45,11 @@ const FOLDER_GUIDES = {
       '',
       '만드는 명령',
       '  npm run build:admin    → 이 폴더 (빌드할 때마다 비우고 새로 만들어요)',
-      '  npm run deploy:admin   → 빌드 + https://ururu-6164b-admin.web.app 에 올리기',
+      '  운영자 사이트 올리기   → GitHub에 push하면 Cloudflare Pages(운영자 프로젝트)가 빌드해서 올려요',
       '',
       '들어 있는 것',
       '  admin.html, assets/    신고 확인·제재, 운영자 아이디 발급 (src/admin/)',
+      '  index.html, _headers   Cloudflare Pages용 (admin.html 복사본, 보안 헤더)',
       '',
       '직접 고치지 마세요. src/admin/·styles/admin.css를 고치고 다시 빌드하면 바뀌어요.',
     ].join('\r\n'),
@@ -64,6 +65,31 @@ function writeFolderGuide(outDir) {
       if (guide) {
         await writeFile(resolve(outDir, guide.name), guide.text, 'utf8');
       }
+    },
+  };
+}
+// 운영자 사이트를 Cloudflare Pages에 올릴 때 필요한 것
+//   - 첫 주소(/)와 모르는 주소: Cloudflare는 index.html을 보여줘서, admin.html을 index.html로도 복사
+//     (_redirects의 /* 규칙은 assets/ 파일까지 바꿔치기해서 쓰지 않아요)
+//   - _headers: 검색엔진 차단, 다른 사이트에 끼워 넣기 금지, 주소 안 넘기기
+const ADMIN_HEADERS = [
+  '/*',
+  '  X-Robots-Tag: noindex, nofollow',
+  '  X-Frame-Options: DENY',
+  '  Referrer-Policy: no-referrer',
+  '',
+].join('\n');
+
+function writeAdminHosting(outDir) {
+  return {
+    name: 'ururu-admin-hosting',
+    apply: 'build',
+    async closeBundle() {
+      if (outDir !== OUT_DIRS.admin) {
+        return;
+      }
+      await copyFile(resolve(outDir, 'admin.html'), resolve(outDir, 'index.html'));
+      await writeFile(resolve(outDir, '_headers'), ADMIN_HEADERS, 'utf8');
     },
   };
 }
@@ -94,6 +120,7 @@ export default defineConfig(({ mode }) => {
       react(),
       ...(isSingle ? [viteSingleFile(), renameSingleHtml(outDir)] : []),
       writeFolderGuide(outDir),
+      writeAdminHosting(outDir),
     ],
     // dist/에는 build 결과와 ururu.html이 같이 있어서, 한쪽을 만들 때 다른 쪽을 지우지 않게 해요
     build: {

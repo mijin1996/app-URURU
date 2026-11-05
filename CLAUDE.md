@@ -127,7 +127,7 @@ if (result.isOk) {
 
 - 앱 이름: **우르르** (영어 Ururu), 구글 플레이 앱 이름도 우르르. 패키지 이름(applicationId)은 Capacitor 설치 때 정하고, 플레이에 한 번 올리면 못 바꿈. 화면 로고·탭 제목·소리 설정 경로 글자도 "우르르"로 바꿈. `package.json` 이름은 **`ururu`** (2026-11-03 미미). **모든 파일·안 보이는 이름도 `ururu`로 통일** (2026-11-04 미미): 한 장 HTML `dist/ururu.html`, 저장소 키 `ururu.*`(예전 `moyeo.*` 값은 앱이 처음 켤 때 한 번 옮김, `ProfileRepository`), 서버 함수 패키지 `ururu-functions`. 새로 만드는 이름에 `moyeo`를 쓰지 않음
 - 출시: **구글 플레이** (2026-10-30)
-- 서버: **Firebase 프로젝트 하나** (`ururu-6164b`) — 데이터 · 로그인 · 서버 함수 · 보안 규칙 · 화면(Hosting) 전부. 사용자 앱 `ururu-6164b.web.app`(`npm run deploy:web`), 운영자 사이트 `ururu-6164b-admin.web.app`(`npm run deploy:admin`). Cloudflare · Render 안 씀 (2026-11-05)
+- 서버: **Firebase 프로젝트 하나** (`ururu-6164b`) — 데이터 · 로그인 · 서버 함수 · 보안 규칙. 화면 파일은 **Cloudflare Pages**에 올림: 사용자 앱 · 운영자 사이트 프로젝트 2개, GitHub push하면 저절로 배포 (2026-11-03, 무료 상업 이용 · 트래픽 무제한이라서. Firebase Hosting · Render는 안 씀)
 - 지도: **카카오 지도로 계속** (2026-11-03, 구글 지도 `add-google-map`은 하지 않음)
 - 플레이 빌드: 지도 · 스와이프 · 위치 공유 켬 (`features.js` android). 위치는 동의 창 · 위치기반서비스사업 신고 뒤 공개
 - 로그인: **구글만** (2026-11-03). 페이스북 · 익명 버튼 없앰. 가입 순서(아이디 · 닉네임 · 생년월일 · 국가)는 그대로

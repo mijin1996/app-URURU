@@ -15,8 +15,6 @@
     "emulators": "node tools/copy-shared.mjs && firebase emulators:start",
     "dev:admin": "vite --port 5180 --strictPort --open /admin.html",
     "build:admin": "vite build --mode admin",
-    "deploy:web": "vite build && firebase deploy --only hosting:app",
-    "deploy:admin": "vite build --mode admin && firebase deploy --only hosting:admin",
     "deploy:server": "node tools/copy-shared.mjs && firebase deploy --only firestore,storage,functions",
     "store:images": "node tools/store-images/make-store-images.mjs",
     "format": "npx --yes prettier@3.3.3 --write \"src/**/*.{js,jsx}\" \"styles/**/*.css\" \"tests/**/*.js\" \"tools/**/*.{js,mjs,html}\" \"functions/index.js\" \"*.{js,ts,html,json}\"",

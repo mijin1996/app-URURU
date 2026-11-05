@@ -23,10 +23,10 @@ const FILTERS = [
   { id: 'done', label: TEXT.filterDone },
 ];
 
-// 이용자 앱 주소: 내 컴퓨터(npm run dev:admin)에서는 개발용 앱, 그 밖에서는 Firebase Hosting 사용자 앱
+// 이용자 앱 주소: 내 컴퓨터(npm run dev:admin)에서는 개발용 앱, 그 밖에서는 Cloudflare 사용자 앱
 const USER_APP_URL = ['localhost', '127.0.0.1'].includes(window.location.hostname)
   ? 'http://localhost:5173'
-  : 'https://ururu-6164b.web.app';
+  : 'https://app-ururu.pages.dev';
 const EMAIL_SHAPE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/; // 운영자 연락용 이메일 (a@b.c)
 
 // 1792500000000 → "2026. 10. 21. 오후 3:20"
