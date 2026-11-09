@@ -46,17 +46,13 @@ const SCENES = [
     steps: [type('#suHandle', 'teo24'), type('#suName', '미미'), tap('#suGoogle')],
   },
   { name: 'datepicker', profile: null, startMs: 2400, steps: [tap('#suBirth')] },
-  { name: 'home' },
   { name: 'chat', steps: [tab('messages')] },
   { name: 'swipe', steps: [tab('swipe')] },
   { name: 'friends', steps: [tab('likes')] },
   { name: 'me', steps: [tab('me')] },
   { name: 'chatroom', steps: [tab('messages'), tap('[data-chat="andy"]')] },
   { name: 'profile-stranger', steps: [tab('likes'), tap('[data-profile="ibrahim"]')] },
-  { name: 'profile-home', steps: [tap('.pin[data-id="seoyeon"]')] },
-  { name: 'story', steps: [tap('.pin[data-id="teo"]')] },
   { name: 'report', steps: [tab('messages'), tap('[data-chat="teo"]'), tap('#cReport')] },
-  { name: 'palette', steps: [tab('me'), tap('[data-part="bg"]')] },
   { name: 'friend-list', steps: [tab('likes'), tap('#friendsBtn')] },
   { name: 'ping-guide', steps: [tab('me'), tap('#swPing')] },
   { name: 'ping-ask', profile: { ...SAVED_PROFILE, pingPermission: 'unknown' }, startMs: 3000 },
@@ -84,11 +80,6 @@ const SCENES = [
     steps: [tab('messages'), tap('[data-chat="teo"]'), tap('#cCall'), wait(4000)],
   },
   { name: 'new-message-banner', movingPins: true, startMs: 8200 },
-  {
-    name: 'story-likes',
-    movingPins: true,
-    steps: [tab('me'), type('#storyText', '안녕'), tap('#storyPost'), wait(7000), tab('likes')],
-  },
 ];
 
 async function openApp(page, appFile, scene) {

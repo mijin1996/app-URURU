@@ -11,7 +11,7 @@
 
    서버에서 오는 소식은 두 종류예요.
    - onMessage(fn): 새 메시지 도착
-   - onEvent(fn):  그 밖의 소식 ("accepted" 친구 수락, "storyLike" 내 스토리 좋아요,
+   - onEvent(fn):  그 밖의 소식 ("accepted" 친구 수락,
                    "offline" 인터넷 끊김, "error" 서버가 거절함 — 이 둘은 userId 대신 이유 글)
    ========================================================= */
 
@@ -121,15 +121,6 @@ export class ChatServer {
   }
   findUserByHandle(handle) {
     notImplemented('findUserByHandle');
-  }
-  publishStory(storyAt) {
-    notImplemented('publishStory');
-  }
-  deleteStory() {
-    notImplemented('deleteStory');
-  }
-  sendStoryLike(userId, storyAt, isLiked) {
-    notImplemented('sendStoryLike');
   }
   startLocationUpdates(onMove) {
     notImplemented('startLocationUpdates');

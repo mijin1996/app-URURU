@@ -85,9 +85,4 @@ export const Validator = {
     }
     return Result.ok(tag);
   },
-
-  storyText(raw) {
-    const text = raw.trim();
-    return text ? Result.ok(text) : Result.fail(t('check.storyEmpty'));
-  },
 };

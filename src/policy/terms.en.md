@@ -4,8 +4,8 @@
 These terms set out the rights, duties and rules of use between users and the operator.
 
 ## Article 2 (Service)
-1. The service lets people who became friends by ID exchange messages, voice messages and stories.
-2. Messages and stories are **automatically deleted 24 hours after they are sent.** (Saved messages are an exception.)
+1. The service lets people who became friends by ID exchange messages and voice messages.
+2. Messages are **automatically deleted 24 hours after they are sent.** (Saved messages are an exception.)
 3. The service includes finding users and sharing your location.
 
 ## Article 3 (Joining)
@@ -40,13 +40,13 @@ Users must not do any of the following. Violations will restrict your use under 
 5. Violation and suspension records are kept for 1 month after you delete your account (to prevent avoiding sanctions by re-joining).
 
 ## Article 7 (Content)
-1. Users are responsible for the messages and stories they send.
+1. Users are responsible for the messages they send.
 2. If reported content violates Article 4, the operator suspends it, keeps it for 1 month and then deletes it.
 
 ## Article 8 (Deleting your account)
 1. You can delete your account at any time from the "Me" tab → Delete account. If you request deletion by contacting us, we'll handle it within 7 days after verification.
 2. When you delete your account, your account and profile are **kept for 7 days and then deleted**, after which they can't be restored. Your ID can be used by someone else.
-2-1. Member information such as photos, messages, stories, likes and friends is reviewed by the operator and **permanently deleted within 1 month** of deletion.
+2-1. Member information such as photos, messages, likes and friends is reviewed by the operator and **permanently deleted within 1 month** of deletion.
 3. Report records and violation/suspension records are kept for 1 month after deletion to protect other users, and are then permanently deleted along with your member information.
 
 ## Article 9 (Changes and interruptions)

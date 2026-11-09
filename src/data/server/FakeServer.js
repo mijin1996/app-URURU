@@ -4,7 +4,6 @@
    진짜 서버 없이도 앱을 눌러볼 수 있게, 상대방이 하는 일을 흉내 내요.
    - 메시지를 보내면 잠시 "입력 중"이었다가 자동 답장
    - 좋아요를 보내면 잠시 뒤 상대가 수락
-   - 스토리를 올리면 친구가 좋아요
    - 친구 위치가 3초마다 조금씩 움직임
    ========================================================= */
 
@@ -23,7 +22,6 @@ const AUTO_REPLIES = [
   t('demo.reply6'),
   t('demo.reply7'),
 ];
-const STORY_LIKERS = 2; // 내 스토리에 좋아요를 누를 친구 수
 const MAP_BOUNDS = { minX: 12, maxX: 88, minY: 18, maxY: 78 }; // 지도 밖으로 안 나가게 (%)
 const MOVE_STEP = 4; // 한 번에 움직이는 최대 거리 (%)
 
@@ -62,8 +60,6 @@ export class FakeServer extends ChatServer {
   report(userId, reason, message = null, extra = {}) {}
   block(userId) {}
   unblock(userId) {}
-  deleteStory() {}
-  sendStoryLike(userId, storyAt, isLiked) {}
 
   // 진짜 앱: 서버와 실시간 연결 시작 / 시연: 잠시 뒤 Teo에게서 첫 메시지가 와요
   connect() {
@@ -110,34 +106,13 @@ export class FakeServer extends ChatServer {
     return Promise.resolve(this.users.findByHandle(handle));
   }
 
-  // 회원탈퇴. 진짜 앱에서는 서버가 계정·사진·스토리를 지우고 아이디를 다시 쓸 수 있게 풀어줘요
+  // 회원탈퇴. 진짜 앱에서는 서버가 계정·사진을 지우고 아이디를 다시 쓸 수 있게 풀어줘요
   deleteAccount(handle) {
     return Promise.resolve(Result.ok(true));
   }
 
   signOut() {
     return Promise.resolve(Result.ok(true));
-  }
-
-  // (시연) 친구 둘이 차례로 내 스토리에 좋아요
-  publishStory(storyAt) {
-    this.users
-      .friends()
-      .slice(0, STORY_LIKERS)
-      .forEach((friend, i) => {
-        setTimeout(
-          () => {
-            const story = this.users.me.story;
-            const isSameStory = story && story.at === storyAt; // 그사이 지웠거나 새로 올렸으면 무시
-            if (!isSameStory) {
-              return;
-            }
-            this.likes.receive(friend.id, 'story', storyAt);
-            this.emitEvent('storyLike', friend.id);
-          },
-          DEMO.storyLikeMs * (i + 1),
-        );
-      });
   }
 
   // 진짜 앱: 친구 폰의 GPS 좌표를 서버가 실시간으로 보내줌

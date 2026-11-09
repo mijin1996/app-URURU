@@ -10,7 +10,6 @@ import {
   MINUTE,
   PING_COOLDOWN_MS,
   SECOND,
-  STORY_LIFETIME,
   SWIPE_LIMIT,
   SWIPE_WINDOW_MS,
 } from '../src/core/config.js';
@@ -339,23 +338,13 @@ describe('LikeStore (SWP·FRD: 좋아요와 친구)', () => {
     expect(world.likes.nextReturnAt()).toBe(0);
   });
 
-  it('하트 숫자 = 기다리는 좋아요 + 안 본 스토리 좋아요', () => {
+  it('하트 숫자 = 기다리는 좋아요', () => {
     // Given
     setNow(START);
     const world = createWorld();
 
     // When · Then
     expect(world.likes.badgeCount()).toBe(2);
-
-    // When
-    const storyAt = world.stories.publishMine({ text: '안녕' });
-    world.likes.receive('teo', 'story', storyAt);
-
-    // Then
-    expect(world.likes.badgeCount()).toBe(3);
-    expect(world.likes.markStoryLikesSeen()).toBe(true);
-    expect(world.likes.badgeCount()).toBe(2);
-    expect(world.likes.markStoryLikesSeen()).toBe(false);
   });
 });
 
@@ -535,63 +524,6 @@ describe('ChatStore (CHAT: 24시간·안 읽은 수·저장)', () => {
   });
 });
 
-describe('StoryStore (STO: 24시간·본 것·좋아요)', () => {
-  it('남은 비율은 시간이 갈수록 줄고, 24시간이면 사라진다', () => {
-    // Given
-    setNow(START);
-    const world = createWorld(START);
-
-    // When
-    world.stories.publishMine({ text: '안녕' });
-
-    // Then
-    expect(world.stories.leftRatio(world.users.me)).toBe(1);
-
-    // When
-    setNow(START + STORY_LIFETIME / 2);
-
-    // Then
-    expect(world.stories.leftRatio(world.users.me)).toBe(0.5);
-
-    // When
-    setNow(START + STORY_LIFETIME + 1);
-
-    // Then
-    expect(world.stories.removeExpired()).toBe(true);
-    expect(world.users.me.story).toBe(null);
-  });
-
-  it('새 스토리를 올리면 다시 안 본 것이 된다', () => {
-    // Given
-    setNow(START);
-    const world = createWorld(START);
-    const teo = world.users.user('teo');
-
-    // When
-    world.stories.markSeen(teo);
-
-    // Then
-    expect(world.stories.isSeen(teo)).toBe(true);
-
-    // When
-    teo.story = { ...teo.story, at: START };
-
-    // Then
-    expect(world.stories.isSeen(teo)).toBe(false);
-  });
-
-  it('좋아요는 켜고 끌 수 있다', () => {
-    // Given
-    setNow(START);
-    const world = createWorld(START);
-    const teo = world.users.user('teo');
-
-    // When · Then
-    expect(world.stories.toggleLike(teo).value).toBe(true);
-    expect(world.stories.toggleLike(teo).value).toBe(false);
-  });
-});
-
 describe('PingService (PNG: 소리 울리기)', () => {
   it('친구만, 30초에 한 번, 허용했으면 isLoud', () => {
     // Given
@@ -648,7 +580,7 @@ describe('진짜 서버 준비 (add-real-server)', () => {
     expect(toProfile(publicDoc, { birthDate: profile.birthDate })).toEqual(profile);
   });
 
-  it('서버 사람은 거리·동네가 없고, 스토리 칸을 덮어쓰지 않는다', () => {
+  it('서버 사람은 거리·동네가 없다', () => {
     // Given · When
     const user = toStoreUser(
       'abc',
@@ -660,7 +592,6 @@ describe('진짜 서버 준비 (add-real-server)', () => {
     expect(user.km).toBeNull();
     expect(user.home).toBe('');
     expect(user.photos).toEqual([{ src: 'https://x/1.jpg' }]);
-    expect('story' in user).toBe(false);
     // 프로필 문서에 예전 지역이 남아 있어도 보여주지 않아요 (위치는 앱을 쓰는 동안만 locations에)
     expect(
       toStoreUser('abc', { handle: 'teo24', name: 'Teo', region: '경기도 평택시' }, false).home,
@@ -688,13 +619,13 @@ describe('진짜 서버 준비 (add-real-server)', () => {
     const before = world.likes.pendingLikes().length;
 
     // When
-    world.likes.receive('ibrahim', 'friend');
+    world.likes.receive('ibrahim');
 
     // Then
     expect(world.likes.pendingLikes().length).toBe(before);
 
     // When
-    world.likes.removeReceived('ibrahim', 'friend');
+    world.likes.removeReceived('ibrahim');
 
     // Then
     expect(world.likes.pendingLikes().length).toBe(before - 1);

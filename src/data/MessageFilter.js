@@ -4,7 +4,7 @@
    우르르 대화 규칙: 도박, 개인정보 공유, 욕설은 금지.
    - 걸린 부분은 "****"로 바꿔서 보내요. 받는 사람에게는 원래 글이 아예 가지 않아요
    - 무엇에 걸렸는지(violations)를 돌려줘서, 보낸 사람의 위반 횟수를 1 올려요 (ModerationStore)
-   - 위반 횟수에 따른 제재(경고 → 7일 정지 → 영구정지)는 sanctionRules.js (docs/policy/chat-rules.md 5장, terms.md)
+   - 위반 횟수에 따른 제재(경고 → 7일 정지 → 영구정지)는 sanctionRules.js (src/policy/chat-rules.md 5장, terms.md)
    - 켜고 끄기: src/platform/features.js 의 filterMessages
    - 서버 함수도 같은 규칙으로 다시 검사해요. 원본은 이 파일 하나이고,
      tools/copy-shared.mjs가 functions/shared/로 복사해요 (복사본은 고치지 않기)

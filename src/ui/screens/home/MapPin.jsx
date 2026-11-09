@@ -6,64 +6,45 @@
    ========================================================= */
 
 import { useCtx } from '../../app/AppContext.jsx';
-import { StoryRing } from '../../common/StoryRing.jsx';
 import { Avatar, joinDots, kmText } from '../../common/views.jsx';
 import { useStore } from '../../hooks/useStore.js';
 import { t } from '../../../core/i18n/index.js';
 
 const ME_SIZE = 58;
 const FRIEND_SIZE = 46;
-const FROM_HOME = { source: 'home' }; // 프로필/스토리에 "홈에서 열었음"을 알려줌
+const FROM_HOME = { source: 'home' }; // 프로필에 "홈에서 열었음"을 알려줌 (소리 울리기 버튼)
 
 const position = (user) => ({ left: `${user.x}%`, top: `${user.y}%` });
 
 // 친구 핀: 46px 프로필 + "이름 · 거리"
 export function MapPin({ user }) {
-  const { locationTick, stories, nav } = useCtx();
+  const { locationTick, nav } = useCtx();
   useStore(locationTick);
-  const open = () => {
-    if (stories.hasActive(user)) {
-      nav.openStory(user.id, FROM_HOME);
-    } else {
-      nav.openProfile(user.id, FROM_HOME);
-    }
-  };
   return (
     <button
       className="pin"
       data-id={user.id}
       style={position(user)}
       aria-label={user.name}
-      onClick={open}
+      onClick={() => nav.openProfile(user.id, FROM_HOME)}
     >
-      <StoryRing user={user}>
-        <Avatar user={user} size={FRIEND_SIZE} />
-      </StoryRing>
+      <Avatar user={user} size={FRIEND_SIZE} />
       <span className="tag">{joinDots(user.name, kmText(user))}</span>
     </button>
   );
 }
 
 export function MyPin() {
-  const { users, stories, nav, toast } = useCtx();
+  const { users, nav } = useCtx();
   const { me } = users;
-  const open = () => {
-    if (stories.hasActive(me)) {
-      nav.openStory('me');
-    } else {
-      toast.show(t('map.postStoryHint'));
-    }
-  };
   return (
     <button
       className={`pin me ${me.isSharing ? '' : 'ghost'}`}
       style={position(me)}
       aria-label={t('app.me')}
-      onClick={open}
+      onClick={() => nav.openProfile('me')}
     >
-      <StoryRing user={me}>
-        <Avatar user={me} size={ME_SIZE} />
-      </StoryRing>
+      <Avatar user={me} size={ME_SIZE} />
       <span className="tag">{t('map.mePin', { name: me.name })}</span>
     </button>
   );

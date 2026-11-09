@@ -138,7 +138,7 @@ describe('SafetyActions (신고 · 차단 · 풀기)', () => {
   });
 });
 
-describe('MeActions (설정 토글 · 스토리)', () => {
+describe('MeActions (설정 토글)', () => {
   it("알림음 토글은 의미 있는 메서드로 바뀌고 '톡' 소리", () => {
     // Given
     const ctx = createCtx();
@@ -149,27 +149,6 @@ describe('MeActions (설정 토글 · 스토리)', () => {
     // Then
     expect(ctx.sounds.notification.isEnabled).toBe(false);
     expect(ctx.sounds.toggle.play).toHaveBeenCalledWith(false);
-  });
-
-  it('스토리 올리기·지우기는 Store와 서버에 같이', () => {
-    // Given
-    setNow(START);
-    const ctx = createCtx();
-    const publish = vi.spyOn(ctx.server, 'publishStory');
-    const remove = vi.spyOn(ctx.server, 'deleteStory');
-    const actions = new MeActions(ctx);
-
-    // When
-    actions.publishStory({ text: '안녕', img: '' });
-
-    // Then
-    expect(publish).toHaveBeenCalledWith(START);
-
-    // When
-    actions.deleteStory();
-
-    // Then
-    expect(remove).toHaveBeenCalled();
   });
 });
 

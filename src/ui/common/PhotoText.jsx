@@ -1,18 +1,16 @@
 /* =========================================================
-   [UI] StoryText.jsx — 글 스토리 글자 한 덩어리
-   ---------------------------------------------------------
-   "나" 탭 미리보기, 내 스토리 작은 그림, 스토리 보기 화면이 같은 모양이라 함께 써요. (DRY)
+   [UI] PhotoText.jsx — 사진 편집기 미리보기의 글자 한 덩어리
    ========================================================= */
 
-import { storyTextStyle } from './storyStyle.js';
+import { photoTextStyle } from './photoTextStyle.js';
 
-export function StoryText({ story, scale = 1 }) {
-  if (!story.text) {
+export function PhotoText({ look, scale = 1 }) {
+  if (!look.text) {
     return null;
   }
   return (
-    <span className="stext" style={storyTextStyle(story, scale)}>
-      {story.text}
+    <span className="ptext" style={photoTextStyle(look, scale)}>
+      {look.text}
     </span>
   );
 }

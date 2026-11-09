@@ -1,7 +1,7 @@
 /* =========================================================
-   [UI] PolicyText.jsx — 정책 문서(docs/policy/*.md)를 앱 화면에 그리기
+   [UI] PolicyText.jsx — 정책 문서(src/policy/*.md)를 앱 화면에 그리기
    ---------------------------------------------------------
-   글의 원본은 docs/policy/ 한 곳이에요. 앱은 그 .md를 그대로 읽어서 보여줘요 (?raw).
+   글의 원본은 src/policy/ 한 곳이에요. 앱은 그 .md를 그대로 읽어서 보여줘요 (?raw).
    영어 화면은 같은 이름의 .en.md (terms.en.md, chat-rules.en.md, privacy.en.md)를 보여줘요. 한국어판을 고치면 영어판도 같이 고쳐요.
    그래서 이용약관·채팅 이용 수칙을 고칠 때는 .md만 고치고 다시 빌드하면 앱 화면도 같이 바뀌어요.
 
@@ -10,12 +10,12 @@
    [이용약관](terms.md)처럼 다른 정책 문서로 가는 링크는 누르면 그 문서가 열려요 (onOpenDoc)
    ========================================================= */
 
-import chatRules from '../../../docs/policy/chat-rules.md?raw';
-import chatRulesEn from '../../../docs/policy/chat-rules.en.md?raw';
-import terms from '../../../docs/policy/terms.md?raw';
-import termsEn from '../../../docs/policy/terms.en.md?raw';
-import privacy from '../../../docs/policy/privacy.md?raw';
-import privacyEn from '../../../docs/policy/privacy.en.md?raw';
+import chatRules from '../../policy/chat-rules.md?raw';
+import chatRulesEn from '../../policy/chat-rules.en.md?raw';
+import terms from '../../policy/terms.md?raw';
+import termsEn from '../../policy/terms.en.md?raw';
+import privacy from '../../policy/privacy.md?raw';
+import privacyEn from '../../policy/privacy.en.md?raw';
 import { getLanguage, t } from '../../core/i18n/index.js';
 
 // 영어 화면이면 .en.md (영어판), 아니면 원래 .md (다국어). 링크 이름(file)은 언어와 상관없이 같아요

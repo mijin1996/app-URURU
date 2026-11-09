@@ -1,5 +1,5 @@
 /* =========================================================
-   [UI·Controller] ChatActions.js — 채팅 "행동" 모음 (보내기 / 입력 중 / 저장 / 스토리 좋아요)
+   [UI·Controller] ChatActions.js — 채팅 "행동" 모음 (보내기 / 입력 중 / 저장)
    ---------------------------------------------------------
    화면(View)은 입력만 넘기고, 여기서 데이터(Store)를 바꾸고 서버에 알려요. (MVC의 Controller)
    하는 일 순서: 검사 → Store 바꾸기 → 서버에 알리기 → 결과(Result·true/false)를 화면에 돌려주기
@@ -89,16 +89,6 @@ export class ChatActions {
     const result = chats.toggleSave(userId, messageId);
     if (result.isOk) {
       server.setMessageSaved(userId, messageId, result.value);
-    }
-    return result;
-  }
-
-  // 친구 스토리 좋아요 누르기/풀기 → Result<좋아요 상태>
-  toggleStoryLike(user) {
-    const { stories, server } = this.ctx;
-    const result = stories.toggleLike(user);
-    if (result.isOk) {
-      server.sendStoryLike(user.id, user.story.at, result.value);
     }
     return result;
   }

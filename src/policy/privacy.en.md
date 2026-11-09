@@ -9,7 +9,7 @@ Ururu (the "service") values your personal information and follows Korea's Perso
 | Sign-in | Google account ID (uid), email address | Required |
 | Sign-up | Username, nickname, date of birth, country | Required |
 | Profile | Profile photos (up to 10), interests | Optional |
-| Using the service | Friendships, likes, messages and voice messages, stories, block list | When used |
+| Using the service | Friendships, likes, messages and voice messages, block list | When used |
 | Reports | Reporter and reported user, reason, description (up to 500 characters), 1 attached photo | When reporting |
 | Safety | Violation count, warning and suspension records | When a violation occurs |
 | Location sharing | Approximate area (see section 3) | **Only if you turn sharing on** |
@@ -21,7 +21,7 @@ Ururu (the "service") values your personal information and follows Korea's Perso
 ## 2. Why we use it
 
 1. Identifying members, handling sign-up and account deletion, confirming you are 19 or older
-2. Finding friends, sending messages and stories, showing the friend map
+2. Finding friends, sending messages, showing the friend map
 3. Handling reports, checking rule violations and restricting use, preventing people from re-joining to avoid sanctions
 4. Answering inquiries, finding and fixing errors
 
@@ -42,7 +42,7 @@ Ururu (the "service") values your personal information and follows Korea's Perso
 
 | Information | Retention |
 |---|---|
-| Messages and stories | Deleted automatically **24 hours** after sending (messages you save stay while the chat exists) |
+| Messages | Deleted automatically **24 hours** after sending (messages you save stay while the chat exists) |
 | Shared area | Only while you use the app (deleted when you leave the screen, at most within 10 minutes) |
 | Account and profile | Kept for **7 days** after account deletion, then deleted (no longer visible in the service) |
 | Member information such as photos, friendships, likes | Reviewed by the operator and permanently deleted from the server **within 1 month** of account deletion |

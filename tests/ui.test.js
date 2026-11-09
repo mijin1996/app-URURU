@@ -1,6 +1,6 @@
 /* =========================================================
    tests/ui.test.js — React 없이 시험할 수 있는 UI 규칙
-   (덮개 창 목록, 알림 배너, 스와이프 빈 화면 문구, 스토리 글자 모양, 빌드별 기능 표)
+   (덮개 창 목록, 알림 배너, 스와이프 빈 화면 문구, 사진 위 글 모양, 빌드별 기능 표)
    ========================================================= */
 
 import { existsSync, readFileSync } from 'node:fs';
@@ -10,7 +10,7 @@ import { MINUTE } from '../src/core/config.js';
 import { featuresFor } from '../src/platform/features.js';
 import { Observable } from '../src/ui/app/Observable.js';
 import { OverlayStore } from '../src/ui/app/OverlayStore.js';
-import { storyTextStyle } from '../src/ui/common/storyStyle.js';
+import { photoTextStyle, scaleFor } from '../src/ui/common/photoTextStyle.js';
 import { ToastStore } from '../src/ui/common/ToastStore.js';
 import { swipeEmptyText } from '../src/ui/screens/swipe/SwipeEmpty.jsx';
 import { START } from './helpers.js';
@@ -63,11 +63,11 @@ describe('OverlayStore (SHELL-40~43)', () => {
     // Given
     const store = new OverlayStore();
     open(store, 'chat');
-    open(store, 'story');
+    open(store, 'call');
     open(store, 'pview');
 
     // When
-    store.closeKinds(['story', 'pview']);
+    store.closeKinds(['call', 'pview']);
 
     // Then
     expect(store.items.map((item) => item.kind)).toEqual(['chat']);
@@ -141,10 +141,10 @@ describe('swipeEmptyText (SWP-41~43)', () => {
   });
 });
 
-describe('storyTextStyle (STO-50~53)', () => {
+describe('photoTextStyle (사진 위 글 모양)', () => {
   it('배경 상자·폰트 크기·테두리 그림자를 원본과 같은 값으로 계산한다', () => {
     // Given · When
-    const style = storyTextStyle(
+    const style = photoTextStyle(
       {
         text: '안녕',
         bg: '#ff8a3d',
@@ -166,21 +166,27 @@ describe('storyTextStyle (STO-50~53)', () => {
   });
   it('테두리·배경이 없으면 그림자 none, 상자 없음', () => {
     // Given · When
-    const style = storyTextStyle({ text: '안녕', bg: '', stroke: '', strokeWidth: 0 });
+    const style = photoTextStyle({ text: '안녕', bg: '', stroke: '', strokeWidth: 0 });
 
     // Then
     expect(style.textShadow).toBe('none');
     expect(style.background).toBeUndefined();
   });
 
-  it('폰트 모양을 고르면 기울이고, 예전 스토리(모양 없음)는 일반 폰트다', () => {
+  it('폰트 모양을 고르면 기울이고, 모양이 없으면 일반 폰트다', () => {
     // Given · When
-    const italic = storyTextStyle({ text: '안녕', fontStyle: 'italic' });
-    const old = storyTextStyle({ text: '안녕' });
+    const italic = photoTextStyle({ text: '안녕', fontStyle: 'italic' });
+    const old = photoTextStyle({ text: '안녕' });
 
     // Then
     expect(italic.fontStyle).toBe('italic');
     expect(old.fontStyle).toBe('normal');
+  });
+
+  it('글자 배율은 사진 폭 / 기준 폭(390px)', () => {
+    // When · Then
+    expect(scaleFor(390)).toBe(1);
+    expect(scaleFor(1170)).toBe(3);
   });
 });
 
@@ -227,10 +233,10 @@ describe('OverlayStore.closeTop (안드로이드 뒤로 버튼)', () => {
   });
 });
 
-describe('채팅 이용 수칙 (docs/policy/chat-rules.md)', () => {
+describe('채팅 이용 수칙 (src/policy/chat-rules.md)', () => {
   // 시험은 프로젝트 폴더에서 돌아서(npm test) 그 기준으로 찾아요.
   // import.meta.url은 jsdom 환경에서 file: 주소가 아닐 수 있어 readFileSync가 못 읽어요 (Windows · vitest 5)
-  const POLICY_DIR = resolve(process.cwd(), 'docs/policy');
+  const POLICY_DIR = resolve(process.cwd(), 'src/policy');
   const text = readFileSync(resolve(POLICY_DIR, 'chat-rules.md'), 'utf8');
 
   it('미미가 정한 다섯 항목과 신고·차단 경로가 들어 있다', () => {

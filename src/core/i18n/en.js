@@ -52,7 +52,6 @@ export default {
   'check.tagLength': 'Interests can be up to {MAX_TAG_LENGTH} characters',
   'check.tagExists': 'You already have this interest',
   'check.tagLimit': 'You can add up to {MAX_TAGS} interests',
-  'check.storyEmpty': 'Please write something for your story',
   'check.handleTaken': "'{handle}' is already taken. Please choose another ID",
   'check.handleNotFound': "Couldn't find '{handle}'",
   'check.ownHandle': "That's your own ID",
@@ -90,7 +89,6 @@ export default {
   'map.demoArea': 'Sinjang-dong, Osan',
   'map.notRealMap': 'This is not a real map.',
   'map.mePin': 'Me · {name}',
-  'map.postStoryHint': "Post a story from the 'Me' tab",
 
   /* ---------- 채팅 ---------- */
   'chat.disappearNotice': 'Messages disappear after 24 hours',
@@ -123,20 +121,10 @@ export default {
   'chat.callEnded': 'Call ended',
   'chat.endCall': 'End call',
 
-  /* ---------- 스토리 ---------- */
-  'story.myStory': 'My story',
-  'story.storyOf': "{name}'s story",
-  'story.agoViewProfile': '{at} ago · View profile',
-  'story.viewProfileOf': "View {name}'s profile",
-  'story.likeStory': 'Like story',
-  'story.likedBy': '{names} liked this',
-  'story.storyGone': 'This story is gone',
-  'story.storyPosted': 'Story posted',
-  'story.justNow': 'a moment',
-  'story.minutes': '{min}m',
-  'story.hours': '{n}h',
-  'story.minutesLeft': '{min}m left',
-  'story.hoursLeft': '{n}h left',
+  /* ---------- 시간 ---------- */
+  'time.justNow': 'a moment',
+  'time.minutes': '{min}m',
+  'time.hours': '{n}h',
 
   /* ---------- 스와이프 ---------- */
   'common.like': 'Like',
@@ -159,9 +147,6 @@ export default {
   'friends.listCount': 'Friends · {n}',
   'friends.likesReceived': 'Likes received',
   'friends.noLikesYet': 'No likes yet.',
-  'friends.storyLikes': 'Story likes',
-  'friends.noStoryLikes': 'No one has liked your story yet.',
-  'friends.likedMyStoryAt': 'Liked your story · {at}',
   'friends.profileOf': "{name}'s profile",
   'friends.declineOf': 'Decline {name}',
   'friends.remove': 'Remove friend',
@@ -173,8 +158,6 @@ export default {
   'friends.removedToast': 'Removed {name} from friends',
   'friends.nowFriends': 'You and {name} are now friends',
   'friends.acceptedHint': "They tapped 'Be friends?' on your like",
-  'friends.likedMyStory': '{name} liked your story',
-  'friends.tapToSee': 'Tap to see',
 
   /* ---------- 소리 울리기 ---------- */
   'ring.ring': 'Ring',
@@ -247,11 +230,11 @@ export default {
   'me.keyword': 'Keyword',
   'me.addInterest': 'Add interest',
   'me.removeTag': 'Remove {tag}',
-  'me.viewMyStory': 'View my story',
-  'common.delete': 'Delete',
-  'me.storyPlaceholder': 'Share your day',
-  'me.postStory': 'Post story',
-  'me.preview': 'Preview',
+  'me.editPhotoN': 'Edit photo {n}',
+  'me.previewProfile': 'Preview my profile',
+  'me.editPhoto': 'Edit photo',
+  'me.uploadPhoto': 'Upload photo',
+  'me.photoTextPlaceholder': 'Write on photo',
   'me.background': 'Background',
   'me.textBackground': 'Text background',
   'me.backgroundSize': 'Background size',
@@ -282,7 +265,7 @@ export default {
   'me.withdraw': 'Delete account',
   'me.withdrawConfirm': 'Delete your account?',
   'me.withdrawNotice':
-    "Your ID, photos, stories and friends will be deleted. This can't be undone.",
+    "Your ID, photos and friends will be deleted. This can't be undone.",
   'me.withdrawButton': 'Delete',
 
   /* ---------- 시연용 가짜 친구 대답 (가짜 서버) ---------- */

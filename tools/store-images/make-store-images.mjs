@@ -43,12 +43,12 @@ const HIDE_TOAST = '.toast{display:none!important}';
 // 장면: 어떤 탭을 누르고 어디를 누를지 (id·클래스는 tools/compare와 같아요)
 const tab = (id) => ({ click: `.nav button[data-tab="${id}"]` });
 const PLAY_SCENES = [
-  { file: 'phone-1.jpg', steps: [] },
-  { file: 'phone-2.jpg', steps: [tab('messages')] },
-  { file: 'phone-3.jpg', steps: [tab('messages'), { click: '[data-chat="teo"]' }] },
-  { file: 'phone-4.jpg', steps: [tab('swipe')] },
-  { file: 'phone-5.jpg', steps: [tab('likes')] },
-  { file: 'phone-6.jpg', steps: [{ click: '.pin[data-id="teo"]' }, { wait: 600 }] },
+  { file: 'phone-1.jpg', steps: [tab('messages')] },
+  { file: 'phone-2.jpg', steps: [tab('messages'), { click: '[data-chat="teo"]' }] },
+  { file: 'phone-3.jpg', steps: [tab('swipe')] },
+  { file: 'phone-4.jpg', steps: [tab('likes')] },
+  { file: 'phone-5.jpg', steps: [tab('likes'), { click: '[data-profile="ibrahim"]' }] },
+  { file: 'phone-6.jpg', steps: [tab('me')] },
 ];
 
 async function openApp(browser, html, viewport, scale) {

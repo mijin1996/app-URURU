@@ -53,7 +53,6 @@ export default {
   'check.tagLength': '관심사는 {MAX_TAG_LENGTH}자까지 쓸 수 있어요',
   'check.tagExists': '이미 있는 관심사예요',
   'check.tagLimit': '관심사는 최대 {MAX_TAGS}개까지 넣을 수 있어요',
-  'check.storyEmpty': '스토리에 쓸 글을 입력하세요',
   'check.handleTaken': "'{handle}'은(는) 이미 존재하는 아이디예요. 다른 아이디를 써주세요",
   'check.handleNotFound': "'{handle}' 아이디를 찾을 수 없어요",
   'check.ownHandle': '내 아이디예요',
@@ -90,7 +89,6 @@ export default {
   'map.demoArea': '오산시 신장동',
   'map.notRealMap': '지금 지도는 실제 지도가 아닙니다.',
   'map.mePin': '나 · {name}',
-  'map.postStoryHint': "'나' 탭에서 스토리를 올려보세요",
 
   /* ---------- 채팅 ---------- */
   'chat.disappearNotice': '메시지는 24시간 뒤 사라져요',
@@ -123,20 +121,10 @@ export default {
   'chat.callEnded': '통화가 끝났어요',
   'chat.endCall': '통화 종료',
 
-  /* ---------- 스토리 ---------- */
-  'story.myStory': '내 스토리',
-  'story.storyOf': '{name} 스토리',
-  'story.agoViewProfile': '{at} 전 · 프로필 보기',
-  'story.viewProfileOf': '{name} 프로필 보기',
-  'story.likeStory': '스토리 좋아요',
-  'story.likedBy': '{names}님이 좋아해요',
-  'story.storyGone': '스토리가 이미 사라졌어요',
-  'story.storyPosted': '스토리를 올렸어요',
-  'story.justNow': '방금',
-  'story.minutes': '{min}분',
-  'story.hours': '{n}시간',
-  'story.minutesLeft': '{min}분 남음',
-  'story.hoursLeft': '{n}시간 남음',
+  /* ---------- 시간 ---------- */
+  'time.justNow': '방금',
+  'time.minutes': '{min}분',
+  'time.hours': '{n}시간',
 
   /* ---------- 스와이프 ---------- */
   'common.like': '좋아요',
@@ -159,9 +147,6 @@ export default {
   'friends.listCount': '친구 목록 · {n}명',
   'friends.likesReceived': '받은 좋아요',
   'friends.noLikesYet': '아직 받은 좋아요가 없어요.',
-  'friends.storyLikes': '좋아요를 받았어요',
-  'friends.noStoryLikes': '아직 내 스토리에 좋아요가 없어요.',
-  'friends.likedMyStoryAt': '내 스토리를 좋아해요 · {at}',
   'friends.profileOf': '{name} 프로필',
   'friends.declineOf': '{name} 거절',
   'friends.remove': '친구 삭제',
@@ -173,8 +158,6 @@ export default {
   'friends.removedToast': '{name}님을 친구에서 삭제했어요',
   'friends.nowFriends': '{name}님과 친구가 됐어요',
   'friends.acceptedHint': "내 좋아요에 '친구할까요?'를 눌렀어요",
-  'friends.likedMyStory': '{name}님이 내 스토리를 좋아해요',
-  'friends.tapToSee': '눌러서 확인하기',
 
   /* ---------- 소리 울리기 ---------- */
   'ring.ring': '소리 울리기',
@@ -247,11 +230,11 @@ export default {
   'me.keyword': '키워드',
   'me.addInterest': '관심사 추가',
   'me.removeTag': '{tag} 지우기',
-  'me.viewMyStory': '내 스토리 보기',
-  'common.delete': '삭제',
-  'me.storyPlaceholder': '일상을 스토리로',
-  'me.postStory': '스토리 올리기',
-  'me.preview': '미리보기',
+  'me.editPhotoN': '사진 {n} 편집',
+  'me.previewProfile': '내 프로필 미리보기',
+  'me.editPhoto': '사진 편집',
+  'me.uploadPhoto': '사진 올리기',
+  'me.photoTextPlaceholder': '사진에 글 쓰기',
   'me.background': '배경',
   'me.textBackground': '폰트 배경',
   'me.backgroundSize': '배경 크기',
@@ -281,7 +264,7 @@ export default {
   'me.signOut': '로그아웃',
   'me.withdraw': '회원탈퇴',
   'me.withdrawConfirm': '정말 탈퇴할까요?',
-  'me.withdrawNotice': '아이디, 사진, 스토리, 친구 목록이 모두 지워지고 되돌릴 수 없어요.',
+  'me.withdrawNotice': '아이디, 사진, 친구 목록이 모두 지워지고 되돌릴 수 없어요.',
   'me.withdrawButton': '탈퇴하기',
 
   /* ---------- 시연용 가짜 친구 대답 (가짜 서버) ---------- */

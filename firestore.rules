@@ -52,7 +52,7 @@ service cloud.firestore {
     }
     // 이용정지(위반 2회 7일, 3회 이상 영구) 중이면 아무것도 보내거나 올릴 수 없어요
     // 기준은 src/data/sanctionRules.js, 기록은 서버 함수 moderateMessage나 운영자가 써요
-    // ---------- 운영자 (운영자 사이트 admin.html, 주소·사용법은 docs/how-to/operate-admin-site.md) ----------
+    // ---------- 운영자 (운영자 사이트 admin.html) ----------
     // 운영자는 구글이 아니라 "발급받은 12자리 아이디"로 로그인해요 (속으로는 이메일/비밀번호 로그인:
     //   이메일 = 아이디를 알아볼 수 없게 바꾼 값(idHash) + ADMIN_EMAIL_DOMAIN, 비밀번호 = 아이디)
     // 운영자: 아이디로 로그인했고(password) + 운영자 명단(admins/{uid})에 있을 때만
@@ -199,11 +199,6 @@ service cloud.firestore {
       allow list: if canPurge();   // 회원 삭제: 그 사람이 주고받은 메시지 찾기
     }
 
-    // 회원 삭제: 그 사람이 친구 스토리에 누른 좋아요 찾기 (stories/{uid}/likes/{그 사람 uid})
-    match /{path=**}/likes/{likeId} {
-      allow list: if canPurge();
-    }
-
     // ---------- 입력 중 (받는 사람마다 문서 하나: typing/{받는 사람 uid}) ----------
     // 나는 내 문서만 읽고, 친구는 내 문서의 "자기 uid 칸"에만 시각을 써요
     match /typing/{uid} {
@@ -221,21 +216,6 @@ service cloud.firestore {
     match /feeds/{uid}/friends/{friendUid} {
       allow read: if signedIn() && uid == me();
       allow write: if false;
-    }
-
-    // ---------- 스토리 (친구만 보기, SYNC-40~42) ----------
-    match /stories/{uid} {
-      allow read: if signedIn() && (uid == me() || (isFriend(uid) && !isBlocked(uid)));
-      allow create, update: if signedIn() && uid == me() && !isBanned();
-      allow delete: if signedIn() && uid == me();
-      allow delete: if canPurge();
-
-      match /likes/{fromUid} {
-        allow read: if signedIn() && (uid == me() || fromUid == me());
-        allow create, update: if signedIn() && fromUid == me() && isFriend(uid) && isNowish(request.resource.data.at);
-        allow delete: if signedIn() && fromUid == me();
-        allow read, delete: if canPurge();
-      }
     }
 
     // ---------- 위치 (켠 사람만, 앱을 쓰는 동안만 — 2026-11-03) ----------

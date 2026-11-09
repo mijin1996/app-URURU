@@ -19,7 +19,6 @@ import {
   createSampleLikes,
   createSampleUsers,
 } from '../src/data/sampleData.js';
-import { StoryStore } from '../src/data/StoryStore.js';
 import { UserStore } from '../src/data/UserStore.js';
 import { FakeServer } from '../src/data/server/FakeServer.js';
 
@@ -58,7 +57,6 @@ export function createWorld(now = START) {
   users.me.name = '미미';
   users.me.birthDate = '2001-03-15';
   const chats = new ChatStore(notifier, users, createSampleChats(now), { seoyeon: 1 });
-  const stories = new StoryStore(notifier, users);
   const likes = new LikeStore(notifier, users, createSampleLikes(now));
   const server = new FakeServer(users, chats, likes);
   const profiles = memoryProfiles();
@@ -66,7 +64,6 @@ export function createWorld(now = START) {
     notifier,
     users,
     chats,
-    stories,
     likes,
     server,
     profiles,

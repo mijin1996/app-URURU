@@ -6,7 +6,7 @@
 
    canSwipe          스와이프 탭 (모르는 사람 카드)
    canShareLocation  홈 지도 탭 + 나 탭 "친구와 위치 공유" (위치는 민감정보라 동의 창과
-                     위치기반서비스사업 신고를 마친 뒤 켜요)
+                     위치기반서비스사업 신고를 마친 뒤 켜요). 2026-11-09 미미: 지도는 나중에 → 모든 빌드 false
    canTryAnonymous   가입 화면 [익명으로 계속하기] — 시험용. 익명 계정은 만든 지 하루(24시간)가 지나면 못 써요
                      (앱: GoogleLogin.js, 서버: firestore.rules·storage.rules의 anonExpired).
                      2026-11-03 미미: 로그인은 구글만 → 모든 빌드 false
@@ -25,7 +25,7 @@ const FEATURES_BY_TARGET = {
   web: {
     canTryAnonymous: false,
     canSwipe: true,
-    canShareLocation: true,
+    canShareLocation: false,
     canSendPhoto: false,
     filterMessages: true,
     askPingOnStart: true,
@@ -35,7 +35,7 @@ const FEATURES_BY_TARGET = {
   android: {
     canTryAnonymous: false,
     canSwipe: true,
-    canShareLocation: true,
+    canShareLocation: false,
     canSendPhoto: false,
     filterMessages: true,
     askPingOnStart: true,

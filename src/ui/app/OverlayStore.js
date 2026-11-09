@@ -1,11 +1,11 @@
 /* =========================================================
    [UI] OverlayStore.js — 덮개 창 목록 (원본 Layers.js 대신)
    ---------------------------------------------------------
-   덮개 창 = 화면 위에 덮이는 창 (채팅방, 프로필, 스토리, 팝업, 로고, 가입 화면 …)
+   덮개 창 = 화면 위에 덮이는 창 (채팅방, 프로필, 팝업, 로고, 가입 화면 …)
    열린 순서대로 배열에 들고 있고, OverlayHost가 그 순서대로 그려요 (나중에 연 창이 위).
 
    kind는 원본의 CSS 클래스 / ID와 1:1로 맞춰요:
-   splash, signup, chat, friendList, pview, story, call, scrim
+   splash, signup, chat, friendList, pview, call, scrim
 
    원본                                   →  React
    layers.add("scrim", html)                 overlays.open({ kind: "scrim", render })

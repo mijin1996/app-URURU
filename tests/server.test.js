@@ -3,7 +3,7 @@
    ---------------------------------------------------------
    친구가 1명이든 300명이든 구독 수가 같은지 (2026-10-20 성능),
    한 질문으로 받은 메시지·입력 중·친구 소식이 맞는 친구에게 들어가는지 확인해요.
-   (보안 규칙 자체는 미미 PC의 에뮬레이터로 확인: npm run emulators, docs/reference/commands.md)
+   (보안 규칙 자체는 미미 PC의 에뮬레이터로 확인: npm run emulators)
    ========================================================= */
 
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -95,9 +95,9 @@ describe('RealServer 구독 수 (친구 수와 상관없이 같게)', () => {
     expect(await listenersAdded(FUNCTIONS_ENV)).toBe(0);
   });
 
-  it('무료 모드(VITE_SERVER_FUNCTIONS 없음): 친구 한 명당 정보·스토리 구독 2개', async () => {
+  it('무료 모드(VITE_SERVER_FUNCTIONS 없음): 친구 한 명당 정보 구독 1개', async () => {
     // When · Then
-    expect(await listenersAdded({})).toBe(600);
+    expect(await listenersAdded({})).toBe(300);
   });
 
   it('모든 대화는 질문 하나(members), 입력 중은 내 문서 하나, 친구 소식은 목록 하나', () => {
@@ -158,7 +158,7 @@ describe('RealServer 받은 소식을 맞는 친구에게', () => {
     expect(world.chats.isTyping('andy')).toBe(false);
   });
 
-  it('친구 소식(feeds)은 정보와 스토리를 같이 넣는다', () => {
+  it('친구 소식(feeds)은 친구 정보를 넣는다', () => {
     // Given
     const { world, fake } = createServer();
     fake.find(`feeds/${ME}/friends`).onNext(
@@ -167,7 +167,6 @@ describe('RealServer 받은 소식을 맞는 친구에게', () => {
           id: 'newfriend',
           data: {
             profile: { handle: 'newbie', name: '새친구', age: 25 },
-            story: { text: 'hi', at: START },
           },
         },
       ]),
@@ -177,7 +176,6 @@ describe('RealServer 받은 소식을 맞는 친구에게', () => {
     // When · Then
     expect(user.name).toBe('새친구');
     expect(user.isFriend).toBe(true);
-    expect(user.story.text).toBe('hi');
   });
 
   it('typingLeftMs: 마지막으로 친 뒤 남은 시간', () => {

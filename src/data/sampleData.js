@@ -30,7 +30,6 @@ export function createMe() {
     home: MY_AREA, // handle = 아이디, name = 닉네임
     c1: '#ff7aa8',
     c2: '#7a5cff', // 사진이 없을 때 쓰는 두 가지 색
-    story: null,
     isSharing: true,
     x: 50,
     y: 50,
@@ -56,16 +55,6 @@ export function createSampleUsers(now) {
       c2: '#ff5e62',
       bio: '오산천 러닝 크루',
       tags: ['러닝', '카페'],
-      story: {
-        text: '오산천 산책 중',
-        bg: '#ff8a3d',
-        bgSize: 10,
-        textColor: '#ffffff',
-        textSize: 30,
-        stroke: '#131218',
-        strokeWidth: 2,
-        at: now - 3 * HOUR,
-      },
     },
     {
       id: 'andy',
@@ -81,7 +70,6 @@ export function createSampleUsers(now) {
       c2: '#185a9d',
       bio: 'Unity 공부 중',
       tags: ['게임', '코딩'],
-      story: null,
     },
     {
       id: 'jakey',
@@ -97,16 +85,6 @@ export function createSampleUsers(now) {
       c2: '#3a1c71',
       bio: '기타 치는 사람',
       tags: ['음악'],
-      story: {
-        text: '오늘 합주 끝!',
-        bg: '',
-        bgSize: 0,
-        textColor: '#ffdd2e',
-        textSize: 36,
-        stroke: '#7a5cff',
-        strokeWidth: 3,
-        at: now - 20 * HOUR,
-      },
     },
     {
       id: 'seoyeon',
@@ -122,7 +100,6 @@ export function createSampleUsers(now) {
       c2: '#ff5858',
       bio: '디저트 탐방',
       tags: ['빵', '사진'],
-      story: null,
     },
     {
       id: 'ibrahim',
@@ -138,7 +115,6 @@ export function createSampleUsers(now) {
       c2: '#94716b',
       bio: 'Learning Korean',
       tags: ['언어교환', '축구'],
-      story: null,
     },
     {
       id: 'gustavo',
@@ -154,7 +130,6 @@ export function createSampleUsers(now) {
       c2: '#7a4a3a',
       bio: 'Coffee & hiking',
       tags: ['등산', '커피'],
-      story: null,
     },
     {
       id: 'kimsta',
@@ -170,7 +145,6 @@ export function createSampleUsers(now) {
       c2: '#29323c',
       bio: '평택 사는 개발자',
       tags: ['React', '게임'],
-      story: null,
     },
     {
       id: 'harin',
@@ -186,7 +160,6 @@ export function createSampleUsers(now) {
       c2: '#a18cd1',
       bio: '그림 그려요',
       tags: ['드로잉', '전시'],
-      story: null,
     },
   ];
   users.forEach((user, i) => {
@@ -240,7 +213,7 @@ export const SAMPLE_UNREAD = { seoyeon: 1 };
 // 두 사람이 이미 나에게 좋아요를 보낸 상태
 export function createSampleLikes(now) {
   return [
-    { from: 'ibrahim', kind: 'friend', at: now - 25 * MINUTE, isSeen: false },
-    { from: 'harin', kind: 'friend', at: now - 2 * HOUR, isSeen: false },
+    { from: 'ibrahim', at: now - 25 * MINUTE },
+    { from: 'harin', at: now - 2 * HOUR },
   ];
 }

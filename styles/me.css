@@ -1,4 +1,4 @@
-/* 나 탭: 내 정보, 사진, 스토리 만들기, 설정 + 소리 받기 안내 창 */
+/* 나 탭: 내 정보, 사진(+ 사진 글 편집기), 설정 + 소리 받기 안내 창 */
 /* 소리 울리기 권한 안내 */
 .guide {
   margin-top: 10px;
@@ -92,55 +92,22 @@
   margin: 0 0 12px;
   font-size: var(--fs);
 }
+/* 상자 제목 줄: 왼쪽 제목, 오른쪽 아이콘 버튼 (My photos의 프로필 미리보기) */
+.boxhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: -6px -8px 6px 0;
+}
+.boxhead h4 {
+  margin: 0;
+}
 .box .hint {
   font-size: var(--fs-small);
   color: var(--muted);
   margin: 10px 0 0;
   line-height: 1.5;
-}
-.storyprev {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 14px;
-}
-.thumb {
-  background: #111;
-  width: 60px;
-  height: 86px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 900;
-  padding: 4px;
-  background-size: cover;
-  background-position: center;
-  flex: none;
-  word-break: break-word;
-  overflow: hidden;
-}
-.editor {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  align-items: start;
-}
-.editor .thumb {
-  width: 96px;
-  height: 150px;
-  font-size: 16px;
-}
-/* 편집 줄 버튼: 왼쪽 [사진 추가], 오른쪽 [스토리 올리기] */
-.editor .btnline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
-}
-.editor .btnline .smallbtn {
-  padding: 0 16px;
 }
 .pickers {
   display: grid;
@@ -312,19 +279,31 @@
   overflow: hidden;
   max-width: 100%;
 }
+.photogrid .edit {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+/* 지우기: 바탕 없이 빨간 X만, 어떤 사진 위에서도 보이게 흰 그림자 */
 .photogrid .del {
   position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
+  top: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
   border: 0;
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
+  background: none;
+  color: var(--alert);
   display: grid;
   place-items: center;
   padding: 0;
+}
+.photogrid .del svg {
+  stroke-width: 3.6;
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(255, 255, 255, 0.9));
 }
 .photogrid .add {
   aspect-ratio: 3/4;
@@ -350,7 +329,58 @@
 #signOut {
   margin-bottom: 0;
 }
-/* 폰트 모양 [가 | 가]: 글 입력 칸 아래 왼쪽 */
-.editor .fontswitch {
+
+/* 사진 글 편집기 (PhotoEditor.jsx): 아래에서 올라오는 판 */
+.photoedit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 92%;
+}
+.photoedit .sheettop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.photoedit .smallbtn {
+  padding: 0 16px;
+}
+.photoedit .fontswitch {
   align-self: flex-start;
+}
+.photoedit .sliderrow {
+  margin-top: 4px;
+}
+.pe-preview {
+  display: flex;
+  justify-content: center;
+}
+.pe-frame {
+  position: relative;
+  max-width: 100%;
+}
+.pe-frame img {
+  display: block;
+  max-width: 100%;
+  max-height: 45vh;
+  border-radius: 12px;
+}
+/* 글 칸: 사진 폭의 88% 안에서 줄바꿈 (drawPhotoText.js의 TEXT_WIDTH_RATIO와 같게) */
+.pe-text {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 0 6%;
+  text-align: center;
+  word-break: break-word;
+  pointer-events: none;
+}
+/* 글자 한 덩어리: 폰트 배경 상자가 줄마다 이어지게 */
+.ptext {
+  display: inline;
+  font-weight: 900;
+  line-height: 1.55;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }

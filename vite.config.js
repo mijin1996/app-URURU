@@ -5,7 +5,7 @@
    npm run build        dist/            폰 앱·웹 서버용
    npm run build:single dist/ururu.html  더블클릭으로 여는 HTML 한 장 (원래 있던 그 파일을 덮어써요)
    npm run dev:admin    운영자 사이트 개발 서버 (http://localhost:5180/admin.html)
-   npm run build:admin  dist-admin/      운영자 사이트 (앱과 주소를 나눔, 주소는 docs/how-to/operate-admin-site.md 1번)
+   npm run build:admin  dist-admin/      운영자 사이트 (앱과 주소를 나눔)
    어떤 빌드인지는 --mode 값으로 정해지고, 앱 안에서는 src/platform/target.js가 읽어요.
    ========================================================= */
 

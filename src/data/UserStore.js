@@ -2,7 +2,7 @@
    [Data] UserStore.js — 사람 정보 보관 (나 + 다른 사용자 + 친구 + 신고)
    ---------------------------------------------------------
    맡은 일: "누가 있고, 누가 친구고, 누구를 신고했는지"
-   메시지, 스토리, 좋아요는 각자 다른 Store가 맡아요. (SRP)
+   메시지, 좋아요는 각자 다른 Store가 맡아요. (SRP)
    ========================================================= */
 
 import { homeLabel } from '../core/countries.js';
@@ -235,15 +235,25 @@ export class UserStore {
   }
 
   // 사진 추가: 10장이 넘는 건 흔히 있을 일이라 예외 대신 Result로 알려줘요
-  addMyPhotos(srcList) {
+  // photos: [{ src, original, look }] — src = 글을 그린 사진, original·look = 다시 고칠 때 쓰는 원본과 글 모양 (글이 없으면 없음)
+  addMyPhotos(photos) {
     const room = MAX_PHOTOS - this.me.photos.length;
     if (room <= 0) {
       return Result.fail(t('me.photoLimit', { MAX_PHOTOS }));
     }
-    const added = srcList.slice(0, room).map((src) => ({ src }));
+    const added = photos.slice(0, room);
     this.me.photos.push(...added);
     this.notifyMe();
-    return Result.ok({ added: added.length, skipped: srcList.length - added.length });
+    return Result.ok({ added: added.length, skipped: photos.length - added.length });
+  }
+
+  // 올린 사진 다시 고치기 (같은 자리에 바꿔 넣기)
+  replaceMyPhoto(index, photo) {
+    if (!this.me.photos[index]) {
+      return;
+    }
+    this.me.photos[index] = photo;
+    this.notifyMe();
   }
 
   addMyTag(tag) {

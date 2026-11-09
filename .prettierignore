@@ -11,13 +11,12 @@ playwright-report/
 package-lock.json
 functions/package-lock.json
 
-# 지울 것 · Claude Code 도구 (OpenSpec이 만듦)
+# 지울 것 · Claude Code 도구
 _to_delete/
 .claude/
 
-# 문서 · 명세 · 정책은 손으로 관리 (앱이 docs/policy/*.md를 그대로 읽어요)
+# 문서 · 정책은 손으로 관리 (앱이 src/policy/*.md를 그대로 읽어요)
 *.md
-openspec/
 
 # 스토어 등록 자료
 UploadPlatform/

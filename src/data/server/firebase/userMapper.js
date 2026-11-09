@@ -49,7 +49,6 @@ export function toStoreUser(id, data, isFriend) {
     tags: data.tags || [],
     pingPermission: data.pingPermission || 'unknown',
     isSharing: !!data.isSharing,
-    // story는 넣지 않아요: 스토리는 따로 구독해서, 여기서 null로 덮어쓰면 안 돼서
   };
 }
 
@@ -82,9 +81,9 @@ export function toProfile(publicData, privateData) {
 }
 
 // 서버 메시지 문서 → 화면 메시지 (내가 보낸 건 from: "me")
-// 친구 소식(feeds) 한 장 → Store에 넣을 사람 (스토리까지 같이: 없으면 null)
+// 친구 소식(feeds) 한 장 → Store에 넣을 사람
 export function feedToStoreUser(id, data) {
-  return { ...toStoreUser(id, data.profile || {}, true), story: data.story || null };
+  return toStoreUser(id, data.profile || {}, true);
 }
 
 // 입력 중 받는 곳(typing/{나}) → 친구마다 "입력 중"을 몇 ms 더 보여줄지 (0이면 안 보여줌)

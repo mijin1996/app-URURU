@@ -14,7 +14,7 @@
 
    아직 안 한 것 (add-real-server tasks):
    - 친구 위치(locations)
-   - 소리 울리기 받기: 보내기만 서버에 기록 (받는 화면은 CLAUDE.md 8번 진행 6 질문 뒤에)
+   - 소리 울리기 받기: 보내기만 서버에 기록 (받는 화면은 아직, docs/todo.md)
    ========================================================= */
 
 import { SWIPE_LOAD_COUNT } from '../../core/config.js';
@@ -73,9 +73,9 @@ export class RealServer extends ChatServer {
     this.uid = null; // 내 Firebase uid
     this.typingTimers = {}; // 친구 uid → "입력 중" 끄는 타이머
     this.lastTypingSentAt = {};
-    this.myPhotoUrls = [];
+    this.myPhotoFiles = []; // 지금 내 사진 · 원본 사진 주소 (빠진 것만 저장소에서 지우려고)
     // 서버 함수(Blaze 요금제)를 쓰는지. .env의 VITE_SERVER_FUNCTIONS=true일 때만 (없으면 무료 모드)
-    //   무료 모드: 친구 정보·스토리를 앱이 직접 읽고, 사진은 작게 줄여 문서에 넣고, 회원탈퇴도 앱이 직접 해요
+    //   무료 모드: 친구 정보를 앱이 직접 읽고, 사진은 작게 줄여 문서에 넣고, 회원탈퇴도 앱이 직접 해요
     //   서버 함수 모드: feeds(fanOut*)·Storage·deleteAccount 서버 함수를 써요 (functions/index.js)
     this.hasFunctions = env.VITE_SERVER_FUNCTIONS === 'true';
     this.friendWatchers = new Map(); // 무료 모드: 친구 uid → 구독 끊기 함수들
@@ -102,7 +102,7 @@ export class RealServer extends ChatServer {
     this.rememberEmail();
     try {
       const { updateDoc } = this.sdk.firestore;
-      const [publicDoc, privateDoc, moderationDoc] = await this.readMyStartDocs().catch(
+      const [publicDoc, privateDoc, moderationDoc, photoEditsDoc] = await this.readMyStartDocs().catch(
         async (error) => {
           if (error.code !== 'permission-denied') {
             throw error;
@@ -119,7 +119,8 @@ export class RealServer extends ChatServer {
         return Result.ok({ isLocal: false, profile: null }); // 로그인은 됐는데 아직 가입 전 (ACC-S1)
       }
       const profile = toProfile(publicDoc.data(), privateDoc.data() || {});
-      this.applyMyServerData(publicDoc.data());
+      const edits = photoEditsDoc && photoEditsDoc.exists() ? photoEditsDoc.data().items : [];
+      this.applyMyServerData(publicDoc.data(), edits || []);
       // 공개 문서에는 생년월일 대신 나이만 있어서, 생일이 지나면 여기서 나이를 고쳐요
       const age = ageOf(profile.birthDate);
       if (publicDoc.data().age !== age) {
@@ -138,6 +139,7 @@ export class RealServer extends ChatServer {
       getDoc(this.myDoc()),
       getDoc(this.myPrivateDoc()),
       getDoc(doc(this.fb.db, C.moderation, this.uid)),
+      getDoc(this.myPhotoEditsDoc()).catch(() => null),
     ]);
   }
 
@@ -193,25 +195,35 @@ export class RealServer extends ChatServer {
   }
 
   // 새로 넣은 사진(data: 주소)은 줄여서 올리고, 뺀 사진은 저장소에서 지워요
+  // 글을 쓴 사진은 원본과 글 모양을 비공개 문서(private/photoEdits)에 남겨서 다른 기기에서도 다시 고칠 수 있어요
+  // (공개 문서 photos와 같은 순서, 글이 없는 사진은 null)
   async updatePhotos(photos) {
     if (!this.uid) {
       return;
     }
+    const uploadIfNew = (url) =>
+      url && url.startsWith('data:')
+        ? this.upload(`users/${this.uid}/photos/${randomName()}.jpg`, url)
+        : url;
     try {
       await Promise.all(
-        photos
-          .filter((photo) => photo.src && photo.src.startsWith('data:'))
-          .map(async (photo) => {
-            photo.src = await this.upload(
-              `users/${this.uid}/photos/${randomName()}.jpg`,
-              photo.src,
-            );
-          }),
+        photos.map(async (photo) => {
+          photo.src = await uploadIfNew(photo.src);
+          if (photo.original) {
+            photo.original = await uploadIfNew(photo.original);
+          }
+        }),
       );
-      const urls = photos.map((photo) => photo.src).filter(Boolean);
-      const removed = this.myPhotoUrls.filter((url) => !urls.includes(url));
-      this.myPhotoUrls = urls;
-      await this.sdk.firestore.updateDoc(this.myDoc(), { photos: urls });
+      const kept = photos.filter((photo) => photo.src);
+      const files = kept.flatMap((photo) => [photo.src, photo.original]).filter(Boolean);
+      const removed = this.myPhotoFiles.filter((url) => !files.includes(url));
+      this.myPhotoFiles = files;
+      await this.sdk.firestore.updateDoc(this.myDoc(), { photos: kept.map((photo) => photo.src) });
+      await this.sdk.firestore.setDoc(this.myPhotoEditsDoc(), {
+        items: kept.map((photo) =>
+          photo.original ? { original: photo.original, look: photo.look } : null,
+        ),
+      });
       removed.forEach((url) => this.removeFile(url));
     } catch (error) {
       this.fail(error);
@@ -270,7 +282,7 @@ export class RealServer extends ChatServer {
   }
 
   // 무료 모드 회원탈퇴: 내 데이터를 앱이 직접 지우고 계정을 지워요 (firestore.rules가 "내 것만" 허락)
-  // 남는 것: 주고받은 메시지(서버 함수 없이 못 지움, 화면에서는 24시간 뒤 안 보임), 상대가 내 스토리에 누른 좋아요
+  // 남는 것: 주고받은 메시지(서버 함수 없이 못 지움, 화면에서는 24시간 뒤 안 보임)
   async deleteAccountWithoutFunctions() {
     const { collection, deleteDoc, doc, getDocs, query, where } = this.sdk.firestore;
     const db = this.fb.db;
@@ -286,8 +298,8 @@ export class RealServer extends ChatServer {
         readOrEmpty(query(collection(db, C.likes), where('to', '==', me))),
       ]);
       await Promise.all([deleteAll(friendships), deleteAll(likesFrom), deleteAll(likesTo)]);
-      await deleteDoc(doc(db, C.stories, me)).catch(() => {});
       await deleteDoc(this.myPrivateDoc()).catch(() => {});
+      await deleteDoc(this.myPhotoEditsDoc()).catch(() => {});
       const handle = this.users.me.handle;
       if (handle) {
         await deleteDoc(doc(db, C.handles, handle)).catch(() => {});
@@ -312,9 +324,9 @@ export class RealServer extends ChatServer {
     const me = this.uid;
 
     // 구독 수는 친구가 몇 명이든 똑같아요 (친구마다 따로 구독하지 않음)
-    //   친구 목록 1 · 친구 소식(정보·스토리) 1 · 모든 대화 1 · 입력 중 1 · 좋아요 2 · 스토리 좋아요 1 · 신고·차단 2 · 제재 1
+    //   친구 목록 1 · 친구 소식(정보) 1 · 모든 대화 1 · 입력 중 1 · 좋아요 2 · 신고·차단 2 · 제재 1
 
-    // 친구 목록: 친구가 생기면 친구 표시 (정보·스토리는 아래 친구 소식이 채워요)
+    // 친구 목록: 친구가 생기면 친구 표시 (정보는 아래 친구 소식이 채워요)
     this.listen(
       query(collection(db, C.friendships), where('users', 'array-contains', me)),
       (change, isFirstLoad) => {
@@ -330,7 +342,7 @@ export class RealServer extends ChatServer {
         if (change.type === 'added') {
           const isAcceptedByOther = !isFirstLoad && change.doc.data().by !== me;
           if (!this.hasFunctions) {
-            this.watchFriend(other); // 무료 모드: 친구 정보·스토리를 직접 구독
+            this.watchFriend(other); // 무료 모드: 친구 정보를 직접 구독
           }
           this.ensureFriend(other).then(() => {
             if (isAcceptedByOther) {
@@ -341,7 +353,7 @@ export class RealServer extends ChatServer {
       },
     );
 
-    // 친구 소식: 서버 함수(fanOut*)가 친구의 공개 정보·스토리를 feeds/{나}/friends/{친구}에 복사해 둬요
+    // 친구 소식: 서버 함수(fanOut*)가 친구의 공개 정보를 feeds/{나}/friends/{친구}에 복사해 둬요
     if (this.hasFunctions) {
       this.listen(collection(db, C.feeds, me, 'friends'), (change) => {
         if (change.type !== 'removed') {
@@ -374,12 +386,12 @@ export class RealServer extends ChatServer {
     this.listen(query(collection(db, C.likes), where('to', '==', me)), (change) => {
       const { from, at } = change.doc.data();
       if (change.type === 'removed') {
-        this.likes.removeReceived(from, 'friend');
+        this.likes.removeReceived(from);
         return;
       }
       if (change.type === 'added') {
         this.fetchUser(from).then(
-          (user) => user && this.likes.receive(from, 'friend', undefined, at),
+          (user) => user && this.likes.receive(from, at),
         );
       }
     });
@@ -387,22 +399,6 @@ export class RealServer extends ChatServer {
     // 내가 보낸 좋아요 (다른 기기에서 보낸 것도 "좋아요 보냄"으로)
     this.listen(query(collection(db, C.likes), where('from', '==', me)), (change) => {
       this.likes.setSent(change.doc.data().to, change.type !== 'removed');
-    });
-
-    // 내 스토리에 온 좋아요 (SYNC-41)
-    this.listen(collection(db, C.stories, me, 'likes'), (change, isFirstLoad) => {
-      const from = change.doc.id;
-      const { storyAt, at } = change.doc.data();
-      if (change.type === 'removed') {
-        this.likes.removeReceived(from, 'story', storyAt);
-        return;
-      }
-      if (change.type === 'added') {
-        this.likes.receive(from, 'story', storyAt, at);
-        if (!isFirstLoad && this.users.user(from)) {
-          this.emitEvent('storyLike', from);
-        }
-      }
     });
 
     // 신고·차단: 나를 신고·차단한 사람은 내 목록에서 숨기고, 풀면 다시 보여요 (SYNC-50, SAFE-02)
@@ -438,7 +434,7 @@ export class RealServer extends ChatServer {
   }
 
   // 친구가 생겼을 때: 아직 정보가 없으면 한 번만 읽어 와요 (서버 함수가 친구 소식을 채우기 전이라도 이름이 보이게)
-  // 무료 모드: 친구 한 명의 공개 정보와 스토리를 직접 구독 (서버 함수 feeds 대신, 친구 수만큼 구독 2개씩)
+  // 무료 모드: 친구 한 명의 공개 정보를 직접 구독 (서버 함수 feeds 대신, 친구 수만큼 구독 1개씩)
   watchFriend(other) {
     if (this.friendWatchers.has(other)) {
       return;
@@ -459,14 +455,7 @@ export class RealServer extends ChatServer {
       },
       () => {},
     );
-    const stopStory = onSnapshot(
-      doc(db, C.stories, other),
-      (snapshot) => {
-        this.users.upsertUser({ id: other, story: snapshot.exists() ? snapshot.data() : null });
-      },
-      () => {},
-    );
-    this.friendWatchers.set(other, [stopProfile, stopStory]);
+    this.friendWatchers.set(other, [stopProfile]);
   }
 
   unwatchFriend(other) {
@@ -678,37 +667,6 @@ export class RealServer extends ChatServer {
     this.write(deleteDoc(doc(this.fb.db, C.blocks, blockId(this.uid, userId))));
   }
 
-  /* ---------- 스토리 ---------- */
-  // 사진 스토리는 사진을 저장소에 올리고 주소만 문서에 써요
-  // (문서에 사진을 통째로 넣으면 1MB 한도에 걸리고, 친구 소식으로 친구 수만큼 복사돼서 무거워져요)
-  async publishStory(storyAt) {
-    const story = this.users.me.story;
-    if (!story || story.at !== storyAt) {
-      return;
-    }
-    const { doc, setDoc } = this.sdk.firestore;
-    try {
-      const data = withoutEmpty({ ...story });
-      if (data.img && data.img.startsWith('data:')) {
-        data.img = await this.upload(`users/${this.uid}/stories/${storyAt}.jpg`, data.img);
-      }
-      await setDoc(doc(this.fb.db, C.stories, this.uid), data);
-    } catch (error) {
-      this.fail(error);
-    }
-  }
-
-  deleteStory() {
-    const { deleteDoc, doc } = this.sdk.firestore;
-    this.write(deleteDoc(doc(this.fb.db, C.stories, this.uid)));
-  }
-
-  sendStoryLike(userId, storyAt, isLiked) {
-    const { deleteDoc, doc, setDoc } = this.sdk.firestore;
-    const ref = doc(this.fb.db, C.stories, userId, 'likes', this.uid);
-    this.write(isLiked ? setDoc(ref, { storyAt, at: Date.now() }) : deleteDoc(ref));
-  }
-
   /* ---------- 위치 (켠 사람만, 앱을 쓰는 동안만 — 2026-11-03 미미) ----------
      locations/{나}        province "경기도"               → 친구 누구나
      locationsDetail/{나}  detail "경기도 평택시 서정동"    → 결제한 친구만 (firestore.rules isPremium)
@@ -858,10 +816,23 @@ export class RealServer extends ChatServer {
     return this.sdk.firestore.doc(this.fb.db, C.users, this.uid, 'private', 'account');
   }
 
+  // 글을 쓴 사진의 원본 · 글 모양 (나만 읽고 씀)
+  myPhotoEditsDoc() {
+    return this.sdk.firestore.doc(this.fb.db, C.users, this.uid, 'private', 'photoEdits');
+  }
+
   // 서버에 있는 내 사진·위치 공유 설정을 내 정보에 넣기 (다른 기기에서 바꾼 것도)
-  applyMyServerData(data) {
-    this.myPhotoUrls = data.photos || [];
-    this.users.me.photos = this.myPhotoUrls.map((src) => ({ src }));
+  // edits: private/photoEdits의 items (사진과 같은 순서일 때만 붙여요. 다르면 그냥 사진만)
+  applyMyServerData(data, edits = []) {
+    const urls = data.photos || [];
+    const hasEdits = edits.length === urls.length;
+    this.users.me.photos = urls.map((src, i) => ({
+      src,
+      ...(hasEdits && edits[i] ? edits[i] : {}),
+    }));
+    this.myPhotoFiles = this.users.me.photos
+      .flatMap((photo) => [photo.src, photo.original])
+      .filter(Boolean);
     this.users.me.isSharing = !!data.isSharing;
     this.users.me.country = data.country || '';
     // 지역은 프로필에 저장하지 않아요 (앱을 쓰는 동안만 locations에). 예전에 저장된 지역이 있으면 지워요
@@ -924,11 +895,6 @@ export class RealServer extends ChatServer {
   fail(error) {
     this.emitEvent('error', navigator.onLine ? SAVE_FAILED : OFFLINE);
   }
-}
-
-// Firestore는 undefined 값을 못 받아서 빼요
-function withoutEmpty(object) {
-  return Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
 }
 
 function randomName() {

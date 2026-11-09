@@ -1,4 +1,4 @@
-/* 지도 */
+/* 홈 탭: 지도 + 핀 + 내 위치 버튼 */
 .map {
   position: relative;
   flex: 1;
@@ -118,12 +118,6 @@
 .pin .av {
   box-shadow: 0 0 0 3px var(--bg);
 }
-.pin .ring .av {
-  box-shadow: none;
-}
-.pin .ring {
-  background: var(--bg);
-}
 .pin.me .tag {
   background: var(--accent);
   color: var(--accent-ink);
@@ -131,6 +125,7 @@
 .pin .tag {
   font-size: var(--fs);
   font-weight: 900;
+  font-style: normal; /* 지도 핀 이름표는 관심사 태그가 아니라서 기울이지 않음 */
   background: var(--bg);
   padding: 2px 8px;
   border-radius: 999px;

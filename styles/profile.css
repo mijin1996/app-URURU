@@ -101,13 +101,6 @@
   gap: 10px;
 }
 /* 이름과 나이는 같은 글꼴·굵기 */
-.pvinfo .loc {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--fs-profile);
-  font-weight: 500;
-}
 .pvinfo .chips {
   display: flex;
   gap: 6px;

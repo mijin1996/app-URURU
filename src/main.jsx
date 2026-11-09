@@ -17,7 +17,6 @@ import '../styles/chat.css';
 import '../styles/swipe.css';
 import '../styles/likes.css';
 import '../styles/profile.css';
-import '../styles/story.css';
 import '../styles/me.css';
 
 import { createRoot } from 'react-dom/client';
@@ -41,7 +40,6 @@ import {
   createSampleUsers,
   SAMPLE_UNREAD,
 } from './data/sampleData.js';
-import { StoryStore } from './data/StoryStore.js';
 import { SwipeLimit } from './data/SwipeLimit.js';
 import { UserStore } from './data/UserStore.js';
 import { FakeServer } from './data/server/FakeServer.js';
@@ -56,6 +54,7 @@ import { ChangeHub } from './ui/app/ChangeHub.js';
 import { Observable } from './ui/app/Observable.js';
 import { OverlayStore } from './ui/app/OverlayStore.js';
 import { TabStore } from './ui/app/TabStore.js';
+import { tabsFor } from './ui/app/tabs.js';
 import { ChatActions } from './ui/actions/ChatActions.js';
 import { FriendActions } from './ui/actions/FriendActions.js';
 import { MeActions } from './ui/actions/MeActions.js';
@@ -88,7 +87,6 @@ function createContext() {
     isRealServer ? {} : createSampleChats(now),
     isRealServer ? {} : { ...SAMPLE_UNREAD },
   );
-  const stories = new StoryStore(notifier, users);
   const likes = new LikeStore(
     notifier,
     users,
@@ -132,7 +130,6 @@ function createContext() {
     notifier,
     users,
     chats,
-    stories,
     likes,
     moderation,
     server,
@@ -145,10 +142,9 @@ function createContext() {
     features,
     changes,
     overlays,
-    tabs: new TabStore('home'),
-    clock: new Observable(), // 1초마다: 스토리 테두리 줄이기
+    tabs: new TabStore(tabsFor(features)[0].id), // 첫 탭 (지도를 끈 빌드는 채팅)
     locationTick: new Observable(), // 3초마다: 친구 핀 옮기기
-    kept: new Map(), // 탭을 옮겨도 남아야 하는 화면 값 (쓰던 스토리 글, 검색칸 글자 …)
+    kept: new Map(), // 탭을 옮겨도 남아야 하는 화면 값 (사진 글 모양, 검색칸 글자 …)
     toast: new ToastStore(),
     // #fileInput은 React가 그린 뒤에 생겨서, 고를 때마다 찾아요 (PhotoPicker는 원본 그대로)
     picker: {
@@ -160,9 +156,9 @@ function createContext() {
     countryPicker: createCountryPicker(overlays), // 가입 화면 국가 돌림판
     nav: null, // 아래에서 넣어줌 (화면 이동 / 창 열기)
     friendActions: null, // 아래에서 넣어줌 (좋아요 / 수락 / 소리 울리기)
-    chatActions: null, // 아래에서 넣어줌 (보내기 / 저장 / 스토리 좋아요) — Controller
+    chatActions: null, // 아래에서 넣어줌 (보내기 / 저장) — Controller
     safetyActions: null, // 아래에서 넣어줌 (신고 / 차단 / 차단 풀기) — Controller
-    meActions: null, // 아래에서 넣어줌 (프로필 사진 / 설정 토글 / 내 스토리) — Controller
+    meActions: null, // 아래에서 넣어줌 (프로필 사진 / 설정 토글) — Controller
   };
   ctx.nav = createNav(ctx);
   ctx.friendActions = new FriendActions(ctx);

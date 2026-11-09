@@ -32,16 +32,6 @@ export function Avatar({ user, size = 48 }) {
   );
 }
 
-// 둥근 네모 프로필 (채팅 탭 스토리 줄). children: 안에 더 넣을 것 (+ 버튼 등)
-export function Square({ user, children }) {
-  return (
-    <span className="sq" style={gradientStyle(user)}>
-      <FaceInner user={user} />
-      {children}
-    </span>
-  );
-}
-
 // 사진 한 장 (진짜 사진 또는 예시용 그라데이션). children: 사진 위에 얹을 글자
 export function Photo({ user, photo, children }) {
   if (photo && photo.src) {

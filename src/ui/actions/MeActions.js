@@ -1,5 +1,5 @@
 /* =========================================================
-   [UI·Controller] MeActions.js — "나" 탭 행동 (프로필 사진 / 설정 토글 / 내 스토리)
+   [UI·Controller] MeActions.js — "나" 탭 행동 (프로필 사진 / 설정 토글)
    ---------------------------------------------------------
    화면은 입력만 넘기고, 여기서 Store를 바꾸고 서버에 알려요. (MVC의 Controller)
    결과 글(배너)이 화면마다 달라서, 실패는 Result로 돌려주고 화면이 배너를 띄워요.
@@ -7,7 +7,6 @@
 
 import { DEFAULT_COUNTRY, defaultCountry } from '../../core/countries.js';
 import { findArea } from '../../platform/region.js';
-import { t } from '../../core/i18n/index.js';
 
 // 앱이 화면에서 내려갔는지 (시험 환경처럼 document가 없으면 화면에 있는 것으로)
 const isHidden = () => typeof document !== 'undefined' && document.hidden;
@@ -24,15 +23,23 @@ export class MeActions {
     nav.refresh();
   }
 
-  // images: 읽은 사진 주소 목록 → Result<{ skipped }> (10장이 넘으면 넘친 수)
-  addPhotos(images) {
+  // photos: 편집기에서 나온 [{ src, original, look }] → Result<{ skipped }> (10장이 넘으면 넘친 수)
+  addPhotos(photos) {
     const { users, server, nav } = this.ctx;
-    const added = users.addMyPhotos(images);
+    const added = users.addMyPhotos(photos);
     if (added.isOk) {
       server.updatePhotos(users.me.photos); // 진짜 서버: 줄여서 올림 / 가짜 서버: 아무 일 없음
       nav.refresh();
     }
     return added;
+  }
+
+  // 올린 사진을 다시 고쳤을 때
+  editPhoto(index, photo) {
+    const { users, server, nav } = this.ctx;
+    users.replaceMyPhoto(index, photo);
+    server.updatePhotos(users.me.photos);
+    nav.refresh();
   }
 
   toggleSharing() {
@@ -80,18 +87,5 @@ export class MeActions {
     const { sounds, nav } = this.ctx;
     sounds.toggle.play(isOn);
     nav.refresh();
-  }
-
-  publishStory(storyData) {
-    const { stories, server, toast } = this.ctx;
-    const storyAt = stories.publishMine(storyData);
-    server.publishStory(storyAt);
-    toast.show(t('story.storyPosted'));
-  }
-
-  deleteStory() {
-    const { stories, server } = this.ctx;
-    stories.deleteMine();
-    server.deleteStory();
   }
 }

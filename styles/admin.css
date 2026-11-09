@@ -190,10 +190,6 @@ input {
   border-color: var(--ad-accent);
   color: #fff;
 }
-.ad-btn.big {
-  padding: 12px 24px;
-  font-size: 16px;
-}
 .ad-btn.ghost {
   background: transparent;
 }
@@ -230,10 +226,6 @@ input {
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 10px;
-}
-.ad-gate {
-  max-width: 560px;
-  margin: 40px auto;
 }
 .ad-badge {
   display: inline-block;

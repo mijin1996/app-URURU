@@ -7,9 +7,8 @@
    (강의의 RouteNames처럼 글자를 한 곳에 모아 오타를 막아요)
 
    큰 주제 (목록·개수가 바뀔 때)            작은 주제 (한 사람만 바뀔 때)
-   users   친구 목록, 신고·차단 목록        user(id)  그 사람 정보·스토리
+   users   친구 목록, 신고·차단 목록        user(id)  그 사람 정보
    chats   대화 순서, 안 읽은 수 합계        chat(id)  그 친구와의 메시지·입력 중·안 읽은 수
-   stories 스토리 있는 친구, 본 것·좋아요
    likes   받은/보낸 좋아요, 스와이프
    me      내 정보 (닉네임, 사진, 관심사, 설정)
    moderation 내 위반 횟수·이용정지
@@ -18,7 +17,6 @@
 export const TOPIC = {
   users: 'users',
   chats: 'chats',
-  stories: 'stories',
   likes: 'likes',
   me: 'me',
   moderation: 'moderation',

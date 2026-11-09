@@ -22,8 +22,8 @@ import { Result } from '../../core/result.js';
 import { LOGIN_FAILED, LoginProvider } from './LoginProvider.js';
 import { t } from '../../core/i18n/index.js';
 
-export const LOGIN_NEEDED = ''; // 화면에 글을 띄우지 않고 로그인 버튼만 보여줘요
-export const ANON_EXPIRED = t('server.anonExpired');
+const LOGIN_NEEDED = ''; // 화면에 글을 띄우지 않고 로그인 버튼만 보여줘요
+const ANON_EXPIRED = t('server.anonExpired');
 export const ANON_LIFETIME_MS = 24 * 60 * 60 * 1000;
 
 function isAnonExpired(user) {

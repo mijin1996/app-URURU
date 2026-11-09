@@ -5,17 +5,16 @@
 
    deleteAccount  회원탈퇴: 그 사람의 모든 데이터와 계정 삭제 (ACC-S4)
    adminDeleteUser 운영자 사이트 회원 삭제 (총관리자만, deleteAccount와 같은 것을 지움)
-   cleanup        매시간: 24시간 지난 메시지(저장 안 한 것)·스토리·사진 삭제 (SYNC-23, 42)
+   cleanup        매시간: 24시간 지난 메시지(저장 안 한 것)·사진 삭제 (SYNC-23)
    fanOutProfile  내 공개 정보가 바뀌면 친구들의 feeds/{친구}/friends/{나}에 복사
-   fanOutStory    내 스토리가 바뀌면(올림·지움) 친구들의 feeds에 복사
-   linkFeeds      친구가 되면 서로의 feeds에 정보·스토리를 넣음
+   linkFeeds      친구가 되면 서로의 feeds에 정보를 넣음
    unlinkFeeds    친구가 끊기면(차단·탈퇴 포함) 서로의 feeds와 입력 중 칸을 지움
                   → 앱은 친구가 몇 명이든 feeds 목록 하나만 구독해요
    moderateMessage 새 메시지마다 대화 규칙 검사: 도박·개인정보 공유·욕설 → 가리고 위반 1회,
                   위반 2회 7일 정지, 3회 이상 영구정지 (sanctionRules.js, moderation/{uid}).
                   앱이 먼저 가려서 보내도 flags로 알려줘서 셀 수 있어요
 
-   서버 함수는 Blaze(종량제) 요금제가 필요해요 (docs/explanation/progress.md 0-4 F).
+   서버 함수는 Blaze(종량제) 요금제가 필요해요.
    이 코드는 관리자 권한이라 firestore.rules를 거치지 않아요. 그래서 "누가 불렀는지"를 꼭 확인해요.
    ========================================================= */
 
@@ -39,14 +38,13 @@ setGlobalOptions({ region: 'asia-northeast3', maxInstances: 10 }); // 서울. �
 
 const HOUR_MS = 60 * 60 * 1000;
 const MESSAGE_LIFETIME_MS = 24 * HOUR_MS; // src/core/config.js MESSAGE_LIFETIME과 같게
-const STORY_LIFETIME_MS = 24 * HOUR_MS; // src/core/config.js STORY_LIFETIME과 같게
 const BATCH_SIZE = 400; // Firestore는 한 번에 500개까지 지울 수 있어요
-const KEEP_AFTER_DELETE_MS = 30 * 24 * HOUR_MS; // 탈퇴 뒤 신고·경고 기록 보관 한 달 (docs/policy/privacy.md 4번 · terms.md 제8조)
+const KEEP_AFTER_DELETE_MS = 30 * 24 * HOUR_MS; // 탈퇴 뒤 신고·경고 기록 보관 한 달 (src/policy/privacy.md 4번 · terms.md 제8조)
 const RULE_KINDS = ['contact', 'gambling', 'profanity']; // messageFilter.js의 종류 이름
 
 /* ---------- 회원탈퇴 (ACC-S4) ---------- */
-// 계정, 프로필, 사진, 메시지, 스토리, 좋아요, 위치, 친구, 차단을 모두 지우고 아이디를 풀어줘요.
-// 신고 기록(reports)은 다른 사용자를 지키려고 남겨요 (개인정보처리방침에 적음: docs/policy/privacy.md)
+// 계정, 프로필, 사진, 메시지, 좋아요, 위치, 친구, 차단을 모두 지우고 아이디를 풀어줘요.
+// 신고 기록(reports)은 다른 사용자를 지키려고 남겨요 (개인정보처리방침에 적음: src/policy/privacy.md)
 export const deleteAccount = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError('unauthenticated', '로그인이 필요해요');
@@ -103,12 +101,10 @@ async function purgeUser(uid) {
   await deleteQuery(db.collection('blocks').where('blocked', '==', uid));
   await deleteQuery(db.collection('pings').where('from', '==', uid));
   await deleteQuery(db.collection('pings').where('to', '==', uid));
-  await deleteQuery(db.collectionGroup('likes').where('storyAt', '>', 0), (doc) => doc.id === uid); // 내가 누른 스토리 좋아요
   await Promise.all([
     ...friendships.docs.map((doc) => doc.ref.delete()),
     db.doc(`typing/${uid}`).delete(), // 내 입력 중 받는 곳 (친구 칸은 friendships 삭제 → unlinkFeeds가 정리)
     db.recursiveDelete(db.doc(`feeds/${uid}`)), // 내 친구 소식 (내가 친구들 feeds에 있는 건 unlinkFeeds가 정리)
-    db.recursiveDelete(db.doc(`stories/${uid}`)),
     db.doc(`locations/${uid}`).delete(),
     db.recursiveDelete(userRef),
     user.exists ? db.doc(`handles/${user.get('handle')}`).delete() : Promise.resolve(),
@@ -195,19 +191,6 @@ export const cleanup = onSchedule(
       },
     );
 
-    // 스토리 (좋아요·사진까지). 지우거나 새로 올린 스토리의 예전 좋아요도 같이 정리
-    // 문서를 지우면 fanOutStory가 친구들의 feeds에서도 스토리를 지워요
-    const oldStories = await db
-      .collection('stories')
-      .where('at', '<', now - STORY_LIFETIME_MS)
-      .get();
-    await Promise.all(
-      oldStories.docs.map((doc) =>
-        Promise.all([db.recursiveDelete(doc.ref), deleteFolder(`users/${doc.id}/stories/`)]),
-      ),
-    );
-    await deleteQuery(db.collectionGroup('likes').where('storyAt', '<', now - STORY_LIFETIME_MS));
-
     // 받은 사람이 확인하지 않은 소리 울리기 기록
     await deleteQuery(db.collection('pings').where('at', '<', now - HOUR_MS));
 
@@ -284,16 +267,7 @@ export const fanOutProfile = onDocumentWritten('users/{uid}', async (event) => {
   });
 });
 
-export const fanOutStory = onDocumentWritten('stories/{uid}', async (event) => {
-  const story = event.data.after.exists ? event.data.after.data() : null;
-  const db = getFirestore();
-  await writeToFriendFeeds(db, event.params.uid, await friendIdsOf(db, event.params.uid), {
-    story,
-    at: Date.now(),
-  });
-});
-
-// 친구가 되면: 서로의 feeds에 상대의 지금 정보·스토리를 넣어요
+// 친구가 되면: 서로의 feeds에 상대의 지금 정보를 넣어요
 export const linkFeeds = onDocumentCreated('friendships/{pair}', async (event) => {
   const [a, b] = event.data.get('users') || [];
   if (!a || !b) {
@@ -301,15 +275,8 @@ export const linkFeeds = onDocumentCreated('friendships/{pair}', async (event) =
   }
   const db = getFirestore();
   const feedOf = async (uid) => {
-    const [user, story] = await Promise.all([
-      db.doc(`users/${uid}`).get(),
-      db.doc(`stories/${uid}`).get(),
-    ]);
-    return {
-      profile: user.exists ? feedProfile(user.data()) : {},
-      story: story.exists ? story.data() : null,
-      at: Date.now(),
-    };
+    const user = await db.doc(`users/${uid}`).get();
+    return { profile: user.exists ? feedProfile(user.data()) : {}, at: Date.now() };
   };
   const [feedA, feedB] = await Promise.all([feedOf(a), feedOf(b)]);
   const batch = db.batch();

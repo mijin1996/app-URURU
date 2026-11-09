@@ -117,12 +117,6 @@
   color: #fff;
   animation: heartpop 0.35s ease;
 }
-/* 제목 아래 "이번 1시간에 n / 5명" 과 빈 화면 안내 */
-.swcount {
-  margin: -4px 16px 8px;
-  font-size: var(--fs-small);
-  color: var(--muted);
-}
 .swempty {
   padding: 40px 24px;
   text-align: center;

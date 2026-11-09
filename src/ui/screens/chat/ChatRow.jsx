@@ -16,7 +16,7 @@ const ROW_AVATAR_SIZE = 56;
 const MESSAGE_LABELS = { photo: t('common.photo'), voice: t('chat.voiceMessage') };
 
 // 마지막 메시지 → "나: 응 방금! · 5분"
-export function lastMessagePreview(last) {
+function lastMessagePreview(last) {
   if (!last) {
     return t('chat.startConversation');
   }

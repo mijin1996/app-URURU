@@ -30,7 +30,7 @@ export class SafetyActions {
     const { users, server, toast } = this.ctx;
     const user = users.user(userId);
     users.block(userId);
-    server.block(userId); // 서버: 서로 메시지·스토리·프로필 못 읽게 + 친구 끊기 (SAFE-02)
+    server.block(userId); // 서버: 서로 메시지·프로필 못 읽게 + 친구 끊기 (SAFE-02)
     this.hideUser(userId);
     toast.show(t('safety.blockedToast', { name: user.name }));
   }

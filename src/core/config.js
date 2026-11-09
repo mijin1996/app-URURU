@@ -16,20 +16,17 @@ export const PASS_RETURN_MS = HOUR; // 스와이프에서 X 한 사람이 다시
 
 /* ---------- 사라지는 시간 ---------- */
 export const MESSAGE_LIFETIME = 24 * HOUR; // 메시지 보관 시간 (저장한 메시지는 예외)
-export const STORY_LIFETIME = 24 * HOUR; // 스토리 보관 시간
 
 /* ---------- 화면 연출 시간 ---------- */
 export const SPLASH_MS = 1600; // 로고 화면 보여주는 시간
-export const STORY_DURATION_MS = 5000; // 스토리 한 장 보여주는 시간
 export const TOAST_MS = 2400; // 그냥 알림 배너가 떠 있는 시간
 export const NOTIFY_MS = 4000; // 누를 수 있는 알림은 조금 더 오래 (눌러볼 시간)
 export const HEART_POP_MS = 350; // 하트가 채워지는 걸 보여준 뒤 넘어가기
 export const FADE_OUT_MS = 400; // 로고 화면이 사라지는 시간
 
 /* ---------- 주기적으로 하는 일 ---------- */
-export const TICK_MS = 1000; // 스토리 테두리가 줄어드는 걸 1초마다 갱신
 export const LOCATION_TICK_MS = 3000; // 친구 위치 갱신
-export const EXPIRE_CHECK_MS = 15000; // 24시간 지난 메시지/스토리 정리
+export const EXPIRE_CHECK_MS = 15000; // 24시간 지난 메시지 정리
 
 /* ---------- 터치 판정 ---------- */
 export const DOUBLE_TAP_MS = 300; // 이 시간 안에 두 번 누르면 "두 번 터치"
@@ -46,12 +43,13 @@ export const MAX_HANDLE_LENGTH = 15;
 export const MIN_AGE = 19; // 가입 가능한 최소 나이 (모든 빌드 만 19세)
 export const MAX_PHOTOS = 10; // 프로필 사진 최대 장수
 export const MAX_VOICE_SEC = 59; // 음성 메시지 최대 길이
-export const MAX_STORY_TEXT = 40; // 글 스토리 최대 글자 수
+export const MAX_PHOTO_TEXT = 40; // 사진 위 글 최대 글자 수
 export const MAX_TAGS = 5; // 관심사 키워드 최대 개수 (프로필·스와이프 카드의 칩)
 export const MAX_TAG_LENGTH = 10; // 관심사 키워드 하나의 최대 글자 수
 
-/* ---------- 글 스토리 꾸미기 (크기는 모두 좌우로 끌어서 조절) ---------- */
-export const STORY_TEXT = {
+/* ---------- 사진 위 글 꾸미기 (크기는 모두 좌우로 끌어서 조절) ---------- */
+export const PHOTO_TEXT = {
+  baseWidth: 390, // 아래 크기(px)는 사진 폭이 390px일 때 기준. 더 큰 사진은 같은 비율로 커져요
   minSize: 16,
   maxSize: 48,
   defaultSize: 28, // 폰트 크기 (px)
@@ -93,7 +91,6 @@ export const DEMO = {
   replyWaitMs: 900, // 상대가 입력을 시작하기까지
   replyTypingMs: 1800, // 상대가 "입력 중"인 시간
   likeAcceptMs: 4000, // 좋아요 보낸 상대가 "친구할까요?"를 누르기까지
-  storyLikeMs: 3000, // 내 스토리에 친구가 좋아요 누르기까지
   firstMessageMs: 3500, // 앱을 켜고 첫 메시지가 오기까지
 };
 

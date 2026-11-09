@@ -4,7 +4,6 @@ rules_version = '2';
 // storage.rules — 사진 저장소 보안 규칙 (add-real-server)
 // ---------------------------------------------------------
 // users/{uid}/photos/…   내 프로필 사진: 나만 올리고 지움, 로그인한 사람은 볼 수 있음
-// users/{uid}/stories/…  사진 스토리: 위와 같음 (24시간 뒤 지움)
 // chats/{pair}/…         대화 사진: 그 두 사람만, 친구일 때만
 // 사진만, 5MB까지 (앱이 올리기 전에 1280px로 줄여요: firebase/shrinkImage.js)
 // =========================================================
@@ -24,13 +23,6 @@ service firebase.storage {
     }
 
     match /users/{uid}/photos/{file} {
-      allow read: if signedIn();
-      allow create, update: if signedIn() && request.auth.uid == uid && isImage();
-      allow delete: if signedIn() && request.auth.uid == uid;
-    }
-
-    // 사진 스토리: 나만 올리고 지움, 로그인한 사람은 볼 수 있음 (24시간 뒤 서버 함수 cleanup이 지움)
-    match /users/{uid}/stories/{file} {
       allow read: if signedIn();
       allow create, update: if signedIn() && request.auth.uid == uid && isImage();
       allow delete: if signedIn() && request.auth.uid == uid;

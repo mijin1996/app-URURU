@@ -5,7 +5,6 @@
 import { useState } from 'react';
 import { useCtx } from '../app/AppContext.jsx';
 import { Icon } from '../common/Icon.jsx';
-import { StoryRing } from '../common/StoryRing.jsx';
 import { Avatar, joinDots } from '../common/views.jsx';
 import { t } from '../../core/i18n/index.js';
 
@@ -34,9 +33,7 @@ export function FriendList({ close }) {
             data-fprofile={friend.id}
             onClick={() => nav.openProfile(friend.id)}
           >
-            <StoryRing user={friend}>
-              <Avatar user={friend} size={AVATAR_SIZE} />
-            </StoryRing>
+            <Avatar user={friend} size={AVATAR_SIZE} />
             <span className="mid">
               <span className="nm">{friend.name}</span>
               <span className="pv">{joinDots(`@${friend.handle}`, friend.home)}</span>

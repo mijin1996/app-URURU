@@ -2,7 +2,7 @@
    [Core] time.js — 시간과 나이를 사람이 읽기 좋은 글자로 바꾸기
    ========================================================= */
 
-import { MINUTE, MESSAGE_LIFETIME } from './config.js';
+import { MINUTE } from './config.js';
 import { t } from './i18n/index.js';
 
 // 7 → "07" (시계처럼 두 자리로 맞추기)
@@ -36,19 +36,10 @@ export const byNewest = (a, b) => b.at - a.at;
 export function ago(time) {
   const min = Math.floor((Date.now() - time) / MINUTE);
   if (min < 1) {
-    return t('story.justNow');
+    return t('time.justNow');
   }
   if (min < 60) {
-    return t('story.minutes', { min });
+    return t('time.minutes', { min });
   }
-  return t('story.hours', { n: Math.floor(min / 60) });
-}
-
-// 메시지가 사라지기까지 남은 시간: "23시간 남음", "15분 남음"
-export function messageLeftText(sentAt) {
-  const leftMs = MESSAGE_LIFETIME - (Date.now() - sentAt);
-  const min = Math.max(0, Math.floor(leftMs / MINUTE));
-  return min >= 60
-    ? t('story.hoursLeft', { n: Math.floor(min / 60) })
-    : t('story.minutesLeft', { min });
+  return t('time.hours', { n: Math.floor(min / 60) });
 }

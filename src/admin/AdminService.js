@@ -4,7 +4,7 @@
    보안은 서버 규칙(firestore.rules의 isAdmin / isOwnerAdmin / isBootstrapOwner)이 지켜요.
    이 파일은 요청만 보내고, 규칙이 거절하면 실패를 돌려줘요 (화면 코드를 고쳐도 데이터를 볼 수 없어요).
 
-   운영자 로그인 (docs/how-to/operate-admin-site.md)
+   운영자 로그인
    - 처음 등록: 총관리자가 발급한 12자리 아이디로 "발급받은 사람"인지 한 번 확인해요
    - 그다음 로그인: 닉네임 + 성명 (2026-11-04 미미). 닉네임은 영어 · 특수문자 10자 이내, 운영자끼리 겹치면 안 돼요
    - 속으로는 Firebase 이메일/비밀번호 로그인을 써요
@@ -18,7 +18,7 @@
 
    회원 관리
    - 회원 목록 · 검색 (닉네임 / @아이디 / UID) — 운영자 모두
-   - 회원 삭제 — 총관리자만. 지우면 Firestore에서 그 사람 데이터가 바로 지워지고 deletions에 누가 지웠는지 남아요
+   - 회원 삭제 — 운영자 모두. 지우면 Firestore에서 그 사람 데이터가 바로 지워지고 deletions에 누가 지웠는지 남아요
        무료 모드: 이 사이트가 직접 지워요 (로그인 계정 자체는 서버 함수 없이 못 지워서 남아요)
        서버 함수 모드(VITE_SERVER_FUNCTIONS=true): adminDeleteUser 서버 함수가 로그인 계정까지 지워요
    - 경고·정지 기록(moderation)과 신고 기록은 남겨요 (같은 계정으로 다시 가입해도 제재를 피하지 못하게)
@@ -58,7 +58,7 @@ function randomIndex(n) {
   return byte[0] % n;
 }
 
-export function makeAdminId() {
+function makeAdminId() {
   const all = ID_GROUPS.join('');
   const chars = ID_GROUPS.map((group) => group[randomIndex(group.length)]);
   while (chars.length < ID_LENGTH) {
@@ -82,7 +82,7 @@ export function isAdminIdShape(id) {
 }
 
 // "Ab3x!9Qz#k2P" → "Ab3…k2P"
-export function maskId(id) {
+function maskId(id) {
   return `${id.slice(0, 3)}…${id.slice(-3)}`;
 }
 
@@ -491,7 +491,7 @@ export class AdminService {
     return [...found.values()];
   }
 
-  // 회원 삭제 (총관리자만, 되돌릴 수 없음)
+  // 회원 삭제 (운영자 모두, 되돌릴 수 없음)
   async deleteMember(uid) {
     const info = await this.userInfo(uid, true);
     const profile = info.profile || {};
@@ -533,18 +533,13 @@ export class AdminService {
       refsOf(query(collection(db, 'blocks'), where('blocked', '==', uid))),
       refsOf(query(collection(db, 'pings'), where('from', '==', uid))),
       refsOf(query(collection(db, 'pings'), where('to', '==', uid))),
-      refsOf(collection(db, 'stories', uid, 'likes')),
-      // 이 사람이 친구 스토리에 누른 좋아요 (문서 이름이 그 사람 uid)
-      getDocs(query(collectionGroup(db, 'likes'), where('storyAt', '>', 0))).then((snap) =>
-        snap.docs.filter((d) => d.id === uid).map((d) => d.ref),
-      ),
     ]);
     const refs = lists.flat();
     refs.push(
-      doc(db, 'stories', uid),
       doc(db, 'locations', uid),
       doc(db, 'typing', uid),
       doc(db, 'users', uid, 'private', 'account'),
+      doc(db, 'users', uid, 'private', 'photoEdits'),
     );
     if (handle) {
       refs.push(doc(db, 'handles', handle));

@@ -1,19 +1,19 @@
 /* =========================================================
    [UI] serverEvents.js — 서버 연결 + 주기적으로 할 일 (앱이 시작될 때 한 번)
    ---------------------------------------------------------
-   1. 서버 소식(새 메시지, 친구 수락, 스토리 좋아요) → 알림음 + 배너
-   2. 1초마다 스토리 테두리, 3초마다 친구 위치, 15초마다 24시간 정리, 스와이프 사람 목록은 실시간 구독(진짜 서버)
+   1. 서버 소식(새 메시지, 친구 수락) → 알림음 + 배너
+   2. 3초마다 친구 위치, 15초마다 24시간 정리, 스와이프 사람 목록은 실시간 구독(진짜 서버)
    3. 위치는 앱을 쓰는 동안만: 화면에서 내려가면 지우고 돌아오면 다시 올려요
    원본 App.connectOnce / onNewMessage / onServerEvent와 같은 일을 해요.
    ========================================================= */
 
-import { EXPIRE_CHECK_MS, TICK_MS } from '../../core/config.js';
+import { EXPIRE_CHECK_MS } from '../../core/config.js';
 import { t } from '../../core/i18n/index.js';
 
 const LOCATION_REFRESH_MS = 5 * 60 * 1000; // 위치 다시 쓰기 (서버 자동 삭제 10분보다 짧게)
 
 export function connectServer(ctx) {
-  const { server, chats, stories, clock, locationTick, nav } = ctx;
+  const { server, chats, locationTick, nav } = ctx;
   server.onMessage((fromId) => onNewMessage(ctx, fromId));
   server.onEvent((type, userId) => onServerEvent(ctx, type, userId));
   server.connect();
@@ -37,12 +37,8 @@ export function connectServer(ctx) {
   if (ctx.features.canSwipe && server.loadSwipeUsers) {
     server.loadSwipeUsers(); // 실시간 구독 한 번 (새로 가입한 사람은 생기고, 탈퇴한 사람은 사라져요)
   }
-  setInterval(() => clock.emit(), TICK_MS); // 테두리만 다시 그림 (StoryRing이 구독)
   setInterval(() => {
-    // || 대신 둘 다 꼭 실행되게 따로 변수에 담아요 (앞이 true면 뒤를 건너뛰는 걸 막으려고)
-    const hasRemovedMessages = chats.removeExpired();
-    const hasRemovedStories = stories.removeExpired();
-    if (hasRemovedMessages || hasRemovedStories) {
+    if (chats.removeExpired()) {
       nav.refresh();
     }
   }, EXPIRE_CHECK_MS);
@@ -86,7 +82,7 @@ function onServerEvent(ctx, type, userId) {
     return;
   }
   if (ctx.moderation.isBanned()) {
-    return; // 이용 제한 중에는 친구 수락·스토리 좋아요 알림도 띄우지 않아요
+    return; // 이용 제한 중에는 친구 수락 알림도 띄우지 않아요
   }
   const name = users.user(userId).name;
   sounds.notification.play();
@@ -96,11 +92,5 @@ function onServerEvent(ctx, type, userId) {
       onTap: () => nav.openChat(userId),
     });
     nav.refresh();
-  }
-  if (type === 'storyLike') {
-    toast.show(t('friends.likedMyStory', { name }), {
-      sub: t('friends.tapToSee'),
-      onTap: () => nav.goTab('likes'),
-    });
   }
 }
