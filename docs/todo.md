@@ -28,7 +28,7 @@
 - [ ] Firebase에 남은 옛 스토리 데이터 지우기 (콘솔: Firestore `stories` 컬렉션, Storage `users/*/stories/`) — 이제 규칙이 막아서 앱에서는 안 보여요
 
 - [ ] 결제 (구글 플레이 결제 → `entitlements/{uid}.plan = 'premium'`, 친구 위치를 동까지)
-- [ ] 소리 울리기 받는 화면 (지금은 보내기만 서버에 기록)
+- [ ] **소리 울리기 다시 켜기** (지금 꺼 둠, `features.js` `canRing: false`): 받는 쪽 만들기(지금은 보내기만 서버에 기록) + 안드로이드 네이티브 알림(FCM + 알람 채널 · 방해 금지 무시 권한, 플레이 정책 확인). 웹앱·아이폰은 무음을 뚫을 수 없음
 - [ ] 음성 메시지 · 전화 · 영상통화 (지금 `CallScreen` · 녹음은 화면만)
 - [ ] 푸시 알림
 - [ ] Blaze 요금제로 바꾸면: 위치 자동 삭제 TTL(`locations` · `locationsDetail`의 `expiresAt`), 24시간 지난 메시지 실제 삭제(`cleanup`), 로그인 계정까지 삭제(`adminDeleteUser`), 신고 알림 메일

@@ -48,7 +48,7 @@ export function App() {
       }
       tabState.set(tabs[0].id); // 첫 탭 (홈이 꺼진 빌드는 채팅)
       setHasStarted(true);
-      if (account.needsPingQuestion && ctx.features.askPingOnStart) {
+      if (account.needsPingQuestion && ctx.features.canRing && ctx.features.askPingOnStart) {
         setTimeout(() => nav.askPing(), PING_QUESTION_DELAY_MS);
       }
       if (!hasConnected.current) {

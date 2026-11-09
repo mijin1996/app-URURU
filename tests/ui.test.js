@@ -199,6 +199,8 @@ describe('features (빌드 대상별 기능)', () => {
       ownBackButtons: true,
     });
     expect(featuresFor('android').canSwipe).toBe(true);
+    expect(featuresFor('android').canRing).toBe(false);
+    expect(featuresFor('web').canRing).toBe(false);
     expect(featuresFor('web').canSwipe).toBe(true);
     expect(featuresFor('모르는값')).toEqual(featuresFor('web'));
   });

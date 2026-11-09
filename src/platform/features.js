@@ -12,7 +12,10 @@
                      2026-11-03 미미: 로그인은 구글만 → 모든 빌드 false
    (지도에는 어느 빌드든 위치 공유를 켠 친구만 보여서 따로 스위치가 없어요)
 
-   askPingOnStart    가입 직후 "소리 울리기를 받을까요?" 창을 저절로 띄우기
+   canRing           "소리 울리기" 전부: 나 탭 "무음에서도 소리 받기" · 친구 프로필 [울리기] · 가입 직후 묻는 창.
+                     웹앱은 무음을 뚫고 울릴 수 없고 받는 쪽 코드도 아직 없어서 꺼 둠
+                     (안드로이드 네이티브 알림을 붙인 뒤 다시 켜요). 2026-11-09 미미 → 모든 빌드 false
+   askPingOnStart    가입 직후 "소리 울리기를 받을까요?" 창을 저절로 띄우기 (canRing이 켜져 있을 때만)
    lightThemeOnly    폰이 다크 모드여도 밝은 화면만
    ownBackButtons    채팅방·친구 목록 왼쪽 위 뒤로 버튼
    ========================================================= */
@@ -26,6 +29,7 @@ const FEATURES_BY_TARGET = {
     canTryAnonymous: false,
     canSwipe: true,
     canShareLocation: false,
+    canRing: false,
     canSendPhoto: false,
     filterMessages: true,
     askPingOnStart: true,
@@ -36,6 +40,7 @@ const FEATURES_BY_TARGET = {
     canTryAnonymous: false,
     canSwipe: true,
     canShareLocation: false,
+    canRing: false,
     canSendPhoto: false,
     filterMessages: true,
     askPingOnStart: true,

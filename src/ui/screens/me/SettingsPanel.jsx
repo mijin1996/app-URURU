@@ -6,7 +6,7 @@
    - "친구와 위치 공유"가 위치를 켜고 끄는 유일한 곳이에요. 켜면 친구 지도에 내가 보여요
    - 토글을 누를 때마다 "톡" 소리 (켤 때 위로, 끌 때 아래로)
    - "무음에서도 소리 받기"는 앱이 직접 못 바꾸고 폰 설정에서 바꿔야 해서,
-     누르면 설정 경로 안내 창을 띄워요
+     누르면 설정 경로 안내 창을 띄워요 (features.canRing이 꺼져 있으면 줄이 안 보여요)
    ========================================================= */
 
 import { useCtx } from '../../app/AppContext.jsx';
@@ -45,12 +45,14 @@ export function SettingsPanel() {
           isOn={sounds.notification.isEnabled}
           onToggle={() => meActions.toggleSound()}
         />
-        <SwitchRow
-          id="swPing"
-          title={t('me.ringEvenSilent')}
-          isOn={account.isPingAllowed}
-          onToggle={() => nav.openPingGuide()}
-        />
+        {features.canRing && (
+          <SwitchRow
+            id="swPing"
+            title={t('me.ringEvenSilent')}
+            isOn={account.isPingAllowed}
+            onToggle={() => nav.openPingGuide()}
+          />
+        )}
       </div>
       <div className="box">
         <h4>{t('me.reportedUsers')}</h4>
