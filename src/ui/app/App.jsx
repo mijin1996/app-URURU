@@ -8,7 +8,8 @@
 
    그려지는 모양 (원본과 같게):
    <div class="app" id="app">
-     <div class="screen [fixed]" id="screen"> 지금 탭 </div>
+     <div class="topbar"> 밝기 버튼 </div>      (시작한 뒤, lightThemeOnly 빌드는 없음)
+     <div class="screen tab-<탭> [fixed]" id="screen"> 지금 탭 </div>   (tab-<탭>: PC 넓은 화면 배치용)
      <nav class="nav" id="nav"> 탭 버튼들 </nav>
      <input type="file" id="fileInput" accept="image/*" hidden>
      덮개 창들 … 배너
@@ -17,6 +18,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { NavBar } from '../common/NavBar.jsx';
+import { ThemeButton } from '../common/ThemeButton.jsx';
 import { ToastView } from '../common/ToastView.jsx';
 import { useStore } from '../hooks/useStore.js';
 import { SignupScreen } from '../start/SignupScreen.jsx';
@@ -92,9 +94,15 @@ export function App() {
   // CSS는 탭 5칸 기준이라, 꺼진 탭이 있는 빌드만 칸 수를 맞춰요
   const navStyle =
     tabs.length === TABS.length ? undefined : { gridTemplateColumns: `repeat(${tabs.length},1fr)` };
+  const showThemeButton = hasStarted && !ctx.features.lightThemeOnly;
   return (
     <>
-      <div className={`screen${isFixed ? ' fixed' : ''}`} id="screen">
+      {showThemeButton && (
+        <div className="topbar">
+          <ThemeButton />
+        </div>
+      )}
+      <div className={`screen tab-${tab.id}${isFixed ? ' fixed' : ''}`} id="screen">
         {hasStarted && <tab.Screen key={tab.id} />}
       </div>
       <nav className="nav" id="nav" style={navStyle}>

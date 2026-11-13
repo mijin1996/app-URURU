@@ -53,11 +53,6 @@
     translate: 0 0;
   }
 }
-.splash p {
-  margin: 0;
-  font-weight: 700;
-  opacity: 0.85;
-}
 @keyframes logoIn {
   from {
     transform: scale(0.6);
@@ -84,11 +79,14 @@
   gap: 8px;
   padding: 0 24px;
 }
-/* 언어 바: 가입 화면 오른쪽 위 (노치·상태 표시줄을 피해서) */
-.signup #suLang {
+/* 밝기 버튼 + 언어 바: 가입 화면 오른쪽 위 (노치·상태 표시줄을 피해서) */
+.signup .sutop {
   position: absolute;
   top: calc(12px + env(safe-area-inset-top));
   right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .signup h2 {
   margin: 0 0 var(--signup-title-gap);

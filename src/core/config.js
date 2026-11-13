@@ -18,7 +18,7 @@ export const PASS_RETURN_MS = HOUR; // 스와이프에서 X 한 사람이 다시
 export const MESSAGE_LIFETIME = 24 * HOUR; // 메시지 보관 시간 (저장한 메시지는 예외)
 
 /* ---------- 화면 연출 시간 ---------- */
-export const SPLASH_MS = 1600; // 로고 화면 보여주는 시간
+export const SPLASH_MS = 1200; // 로고 화면 보여주는 시간 (로고 글자가 다 자리 잡을 만큼만, 바로 로그인 화면으로)
 export const TOAST_MS = 2400; // 그냥 알림 배너가 떠 있는 시간
 export const NOTIFY_MS = 4000; // 누를 수 있는 알림은 조금 더 오래 (눌러볼 시간)
 export const HEART_POP_MS = 350; // 하트가 채워지는 걸 보여준 뒤 넘어가기
@@ -93,6 +93,10 @@ export const DEMO = {
   likeAcceptMs: 4000, // 좋아요 보낸 상대가 "친구할까요?"를 누르기까지
   firstMessageMs: 3500, // 앱을 켜고 첫 메시지가 오기까지
 };
+
+/* ---------- 화면 ----------
+   이 폭부터 PC 넓은 화면 배치 (왼쪽 세로 탭, 채팅 목록 | 대화방). styles/base.css의 @media와 같은 값이어야 해요 */
+export const WIDE_SCREEN_QUERY = '(min-width: 900px)';
 
 /* ---------- 소리 파일 ----------
    내 소리 파일이 생기면 주소만 넣으면 돼요. 비워두면 임시 소리가 나요. */

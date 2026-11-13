@@ -48,9 +48,7 @@ export class LikeStore {
 
   // "친구할까요?" 목록: 아직 친구 아님 + 내가 거절(또는 X) 안 함 + 신고 안 함
   pendingLikes() {
-    return this.received
-      .filter((like) => this.canShowLikeFrom(like.from))
-      .sort(byNewest);
+    return this.received.filter((like) => this.canShowLikeFrom(like.from)).sort(byNewest);
   }
 
   canShowLikeFrom(id) {

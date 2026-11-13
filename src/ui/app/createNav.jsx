@@ -12,12 +12,20 @@ import { FriendList } from '../overlays/FriendList.jsx';
 import { askPingPermission, openPingGuide } from '../overlays/PingPermission.jsx';
 import { ProfileView } from '../overlays/profile/ProfileView.jsx';
 import { openPolicySheet } from '../overlays/PolicySheet.jsx';
+import { openCreditsSheet } from '../overlays/CreditsSheet.jsx';
 import {
   openBlockDialog,
   openReportDialog,
   openUnfriendDialog,
 } from '../overlays/ReportDialog.jsx';
 import { BanScreen } from '../start/BanScreen.jsx';
+import { WIDE_SCREEN_QUERY } from '../../core/config.js';
+
+// PC 넓은 화면인지 (시험 환경처럼 window가 없으면 폰으로)
+const isWideScreen = () =>
+  typeof window !== 'undefined' && window.matchMedia?.(WIDE_SCREEN_QUERY).matches === true;
+// PC에서 탭을 옮기면 닫는 창: 폰에서는 이 창들이 탭바를 덮어서 탭을 못 누르지만, PC에서는 왼쪽 탭이 늘 보여요
+const WIDE_TAB_OVERLAYS = ['chat', 'pview', 'friendList'];
 
 export function createNav(ctx) {
   const { overlays, tabs, changes } = ctx;
@@ -27,7 +35,12 @@ export function createNav(ctx) {
   const refresh = () => changes.emitAll();
 
   return {
-    goTab: (tabId) => tabs.set(tabId),
+    goTab(tabId) {
+      if (isWideScreen()) {
+        overlays.closeKinds(WIDE_TAB_OVERLAYS);
+      }
+      tabs.set(tabId);
+    },
     currentTab: () => tabs.current,
     refresh,
     refreshNav: refresh,
@@ -37,6 +50,10 @@ export function createNav(ctx) {
 
     openChat(userId) {
       overlays.closeKinds(['scrim', 'pview', 'chat']); // 알림을 눌러 어디서 오든 채팅방만 남게
+      if (isWideScreen()) {
+        overlays.closeKinds(['friendList']);
+        tabs.set('messages'); // PC는 채팅 목록 옆 칸에 대화방이 열려서, 목록 탭으로
+      }
       overlays.open({
         kind: 'chat',
         meta: { userId },
@@ -65,6 +82,9 @@ export function createNav(ctx) {
 
     // 정책 문서 보기 (src/policy/의 파일 이름: "chat-rules.md", "terms.md" …)
     openPolicy: (file) => openPolicySheet(ctx, file),
+
+    // 출처 (글꼴 · 라이브러리, core/credits.js)
+    openCredits: () => openCreditsSheet(ctx),
 
     // 이용 제한 중이면 모든 창을 닫고 제한 안내로 덮어요 (닫을 수 없음). 제한 중이었으면 true
     showBan() {

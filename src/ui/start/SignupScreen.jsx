@@ -1,7 +1,7 @@
 /* =========================================================
    [UI] SignupScreen.jsx — 처음 한 번 보이는 회원가입 화면
    ---------------------------------------------------------
-   오른쪽 위 언어 바 [KR | EN] (LanguageSwitch): 누르면 그 언어로 화면을 새로 불러와요
+   오른쪽 위 밝기 버튼(ThemeButton) + 언어 바 [KR | EN] (LanguageSwitch): 언어를 누르면 그 언어로 화면을 새로 불러와요
    입력 칸 네 개: 아이디 / 닉네임 / 생년월일 (아이폰처럼 굴려서 고르는 달력) / 국가
    - 국가: 전 세계 249개 (core/countries.js, 이름순: 한국어 가나다 / 영어 ABC). 고르기 전에는 빈칸
      누르면 생년월일처럼 아래에서 올라오는 돌림판 (DateWheelPicker.jsx의 countryPicker)
@@ -17,8 +17,7 @@
      구글 버튼은 인증한 뒤에도 늘 보여요. 이미 인증된 계정이면 누를 때 창 없이 바로 가입돼요
      - [익명으로 계속하기]: 시험용 (features.canTryAnonymous). 익명 계정은 만든 지 하루까지만 써요 (GoogleLogin.js)
      칸을 다 채우기 전에 구글을 누르면 구글 버튼이 바르르 떨고 "먼저 입력해 주세요"
-   이 기기에서 가입한 적 있으면(account.hasSignedUpHere, 로그아웃해도 남음) 칸 없이 로고 + 구글 버튼만 (2026-11-04 미미)
-     - 구글로 들어간 계정이 가입돼 있으면 바로 시작, 가입 안 된 계정이면 그때 네 칸을 보여줘요
+   로고 화면 다음에는 언제나 네 칸이 있는 가입 화면 (2026-11-13 미미: 예전 "이 기기에서 가입한 적 있으면 구글 버튼만"은 없앰)
    칸이 모두 빈 채로 구글을 누르면(다른 기기에서 가입한 사람) 먼저 로그인해 보고, 가입 정보가 없을 때만 "먼저 입력해 주세요"
    ========================================================= */
 
@@ -27,6 +26,7 @@ import { MAX_HANDLE_LENGTH, MAX_NAME_LENGTH } from '../../core/config.js';
 import { countryLabel, countryOptions } from '../../core/countries.js';
 import { useCtx } from '../app/AppContext.jsx';
 import { LanguageSwitch } from '../common/LanguageSwitch.jsx';
+import { ThemeButton } from '../common/ThemeButton.jsx';
 import { Logo } from '../common/Logo.jsx';
 import { t } from '../../core/i18n/index.js';
 import { Validator } from '../../data/Validator.js';
@@ -62,7 +62,6 @@ export function SignupScreen({ close, onDone, needsLogin = false, firstError = '
   const [country, setCountry] = useState(''); // "KR" 같은 두 글자 코드. 고르기 전에는 빈칸
   const [isPickingCountry, setIsPickingCountry] = useState(false); // 국가 돌림판이 열려 있는 동안 (칸 이름 보라색)
   const [error, setError] = useState(firstError);
-  const [showFields, setShowFields] = useState(() => !account.hasSignedUpHere);
   const isSubmitting = useRef(false); // 서버 답을 기다리는 동안 두 번 눌러도 한 번만
   const screen = useRef(null);
 
@@ -123,31 +122,24 @@ export function SignupScreen({ close, onDone, needsLogin = false, firstError = '
     isSubmitting.current = false;
   };
 
-  // 칸 없이 로그인만: 가입된 계정이면 바로 시작, 아니면 네 칸을 보여줘요 (needsFields: 칸 화면에서 칸이 빈 경우)
-  const loginOnly = async (method, needsFields) => {
+  // 칸이 모두 빈 채로 구글: 가입된 계정이면 바로 시작, 아니면 "먼저 입력해 주세요"
+  const loginOnly = async (method) => {
     const saved = await account.loadSaved({ interactive: true, method });
     if (saved.isOk) {
       close();
       onDone(saved.value);
     } else if (saved.isLoginError) {
       setError(saved.reason);
-    } else if (needsFields) {
-      block(NEED_FIELDS, method);
     } else {
-      setError('');
-      setShowFields(true);
+      block(NEED_FIELDS, method);
     }
   };
 
   // 처음 가입: 칸을 먼저 채워야 해요. 칸이 모두 비었으면 이미 가입한 사람일 수 있어서 로그인부터
   const loginWith = (method) =>
     once(async () => {
-      if (!showFields) {
-        await loginOnly(method, false);
-        return;
-      }
       if (!handle.trim() && !name.trim() && !birthDate && !country) {
-        await loginOnly(method, true);
+        await loginOnly(method);
         return;
       }
       if (!hasAllFields()) {
@@ -206,70 +198,69 @@ export function SignupScreen({ close, onDone, needsLogin = false, firstError = '
 
   return (
     <div className="signup" ref={screen} onKeyDown={onKeyDown}>
-      <LanguageSwitch id="suLang" />
+      <div className="sutop">
+        <ThemeButton />
+        <LanguageSwitch id="suLang" />
+      </div>
       <Logo />
-      {showFields && (
-        <>
-          <h2>{t('signup.welcome')}</h2>
-          {/* 낮고 긴 칸 한 줄에 [칸 이름 | 입력한 글] (styles/start.css .float) */}
-          <label className={handle ? 'float filled' : 'float'} style={order(0)}>
-            <input
-              className="field"
-              id="suHandle"
-              maxLength={MAX_HANDLE_LENGTH}
-              autoComplete="username"
-              autoCapitalize="none"
-              spellCheck="false"
-              placeholder={t('signup.handleExample')}
-              value={handle}
-              onChange={(event) => {
-                setHandle(event.target.value);
-                setError('');
-              }}
-            />
-            <span className="flabel">{t('signup.id')}</span>
-          </label>
-          <label className={name ? 'float filled' : 'float'} style={order(1)}>
-            <input
-              className="field"
-              id="suName"
-              maxLength={MAX_NAME_LENGTH}
-              autoComplete="nickname"
-              value={name}
-              autoCapitalize="none"
-              spellCheck="false"
-              placeholder={t('signup.handleExample')}
-              onChange={(event) => {
-                setName(event.target.value);
-                setError('');
-              }}
-            />
-            <span className="flabel">{t('signup.nickname')}</span>
-          </label>
-          <label className={floatClass(birthDate, true, isPickingDate)} style={order(2)}>
-            <button
-              type="button"
-              className={birthDate ? 'field datefield picked' : 'field datefield'}
-              id="suBirth"
-              onClick={pickBirthDate}
-            >
-              {birthDate ? birthDateLabel(birthDate) : ''}
-            </button>
-            <span className="flabel">{t('signup.birthday')}</span>
-          </label>
-          <label className={floatClass(country, true, isPickingCountry)} style={order(3)}>
-            <button
-              type="button"
-              className={country ? 'field datefield picked' : 'field datefield'}
-              id="suCountry"
-              onClick={pickCountry}
-            >
-              {country ? countryLabel(country) : ''}
-            </button>
-            <span className="flabel">{t('signup.country')}</span>
-          </label>
-        </>
-      )}
+      <h2>{t('signup.welcome')}</h2>
+      {/* 낮고 긴 칸 한 줄에 [칸 이름 | 입력한 글] (styles/start.css .float) */}
+      <label className={handle ? 'float filled' : 'float'} style={order(0)}>
+        <input
+          className="field"
+          id="suHandle"
+          maxLength={MAX_HANDLE_LENGTH}
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck="false"
+          placeholder={t('signup.handleExample')}
+          value={handle}
+          onChange={(event) => {
+            setHandle(event.target.value);
+            setError('');
+          }}
+        />
+        <span className="flabel">{t('signup.id')}</span>
+      </label>
+      <label className={name ? 'float filled' : 'float'} style={order(1)}>
+        <input
+          className="field"
+          id="suName"
+          maxLength={MAX_NAME_LENGTH}
+          autoComplete="nickname"
+          value={name}
+          autoCapitalize="none"
+          spellCheck="false"
+          placeholder={t('signup.handleExample')}
+          onChange={(event) => {
+            setName(event.target.value);
+            setError('');
+          }}
+        />
+        <span className="flabel">{t('signup.nickname')}</span>
+      </label>
+      <label className={floatClass(birthDate, true, isPickingDate)} style={order(2)}>
+        <button
+          type="button"
+          className={birthDate ? 'field datefield picked' : 'field datefield'}
+          id="suBirth"
+          onClick={pickBirthDate}
+        >
+          {birthDate ? birthDateLabel(birthDate) : ''}
+        </button>
+        <span className="flabel">{t('signup.birthday')}</span>
+      </label>
+      <label className={floatClass(country, true, isPickingCountry)} style={order(3)}>
+        <button
+          type="button"
+          className={country ? 'field datefield picked' : 'field datefield'}
+          id="suCountry"
+          onClick={pickCountry}
+        >
+          {country ? countryLabel(country) : ''}
+        </button>
+        <span className="flabel">{t('signup.country')}</span>
+      </label>
       <div className="err" id="suErr">
         {error}
       </div>

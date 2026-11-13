@@ -1,5 +1,5 @@
 /* =========================================================
-   [UI·Controller] MeActions.js — "나" 탭 행동 (프로필 사진 / 설정 토글)
+   [UI·Controller] MeActions.js — "나" 탭 행동 (프로필 사진 / 설정 토글 / 화면 밝기)
    ---------------------------------------------------------
    화면은 입력만 넘기고, 여기서 Store를 바꾸고 서버에 알려요. (MVC의 Controller)
    결과 글(배너)이 화면마다 달라서, 실패는 Result로 돌려주고 화면이 배너를 띄워요.
@@ -80,6 +80,17 @@ export class MeActions {
 
   toggleSound() {
     this.afterToggle(this.ctx.sounds.notification.toggle());
+  }
+
+  // 화면 위 밝기 버튼 → 어두운 화면인지 (styles/base.css의 [data-theme] 색으로 바뀌어요)
+  toggleTheme() {
+    const { theme, sounds } = this.ctx;
+    const next = theme.toggle();
+    if (typeof document !== 'undefined') {
+      document.documentElement.dataset.theme = next;
+    }
+    sounds.toggle.play(theme.isDark);
+    return theme.isDark;
   }
 
   // 토글을 누를 때마다 "톡" (켤 때 위로, 끌 때 아래로)

@@ -102,8 +102,8 @@ export class RealServer extends ChatServer {
     this.rememberEmail();
     try {
       const { updateDoc } = this.sdk.firestore;
-      const [publicDoc, privateDoc, moderationDoc, photoEditsDoc] = await this.readMyStartDocs().catch(
-        async (error) => {
+      const [publicDoc, privateDoc, moderationDoc, photoEditsDoc] =
+        await this.readMyStartDocs().catch(async (error) => {
           if (error.code !== 'permission-denied') {
             throw error;
           }
@@ -111,8 +111,7 @@ export class RealServer extends ChatServer {
             setTimeout(resolve, AUTH_SETTLE_MS);
           });
           return this.readMyStartDocs();
-        },
-      );
+        });
       // 경고·이용 제한은 서버 기록이 정답 (탈퇴했다 다시 가입해도 남아 있어요)
       this.moderation.applyServer(moderationDoc.exists() ? moderationDoc.data() : {});
       if (!publicDoc.exists()) {
@@ -390,9 +389,7 @@ export class RealServer extends ChatServer {
         return;
       }
       if (change.type === 'added') {
-        this.fetchUser(from).then(
-          (user) => user && this.likes.receive(from, at),
-        );
+        this.fetchUser(from).then((user) => user && this.likes.receive(from, at));
       }
     });
 

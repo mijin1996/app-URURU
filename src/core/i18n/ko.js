@@ -9,12 +9,12 @@
 export default {
   /* ---------- 앱 이름 · 탭 ---------- */
   'app.name': '우르르',
-  'app.tagline': '너와 나 함께',
   'app.home': '홈',
   'app.chat': '채팅',
   'app.swipe': '스와이프',
   'app.friends': '친구',
   'app.me': '나',
+  'app.theme': '화면 밝기',
 
   /* ---------- 가입 화면 ---------- */
   'signup.welcome': '처음 오셨네요!',
@@ -259,6 +259,12 @@ export default {
   'me.noneYet': '아직 없어요.',
   'me.unblock': '차단 풀기',
   'me.policies': '정책',
+  'me.credits': '출처',
+  'credits.appFont': '앱 글꼴',
+  'credits.fallbackFont': '보조 글꼴',
+  'credits.screen': '화면',
+  'credits.server': '서버 · 로그인',
+  'credits.map': '지도',
   'me.terms': '이용약관',
   'me.privacy': '개인정보처리방침',
   'me.signOut': '로그아웃',

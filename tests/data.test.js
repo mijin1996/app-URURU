@@ -19,6 +19,8 @@ import { SUSPEND_MS } from '../src/data/sanctionRules.js';
 import { checkMessage } from '../src/data/MessageFilter.js';
 import { ModerationStore } from '../src/data/ModerationStore.js';
 import { ProfileRepository } from '../src/data/ProfileRepository.js';
+import { THEME, ThemeStore } from '../src/data/ThemeStore.js';
+import { CREDITS, creditsFor } from '../src/core/credits.js';
 import { AccountService } from '../src/data/AccountService.js';
 import { otherOf, pairId } from '../src/data/server/firebase/paths.js';
 import {
@@ -833,5 +835,43 @@ describe('ModerationStore (위반 1회 경고 → 2회 7일 정지 → 3회 이�
 
     // Then
     expect(moderation.isBanned()).toBe(true);
+  });
+});
+
+describe('ThemeStore — 화면 밝기', () => {
+  it('저장된 값이 없으면 폰 설정을 따라요', () => {
+    expect(new ThemeStore(memoryProfiles(), () => false).current).toBe(THEME.light);
+    expect(new ThemeStore(memoryProfiles(), () => true).isDark).toBe(true);
+  });
+
+  it('바꾸면 저장하고, 다음에 켤 때 폰 설정보다 저장한 값이 먼저예요', () => {
+    const saved = memoryProfiles();
+    const theme = new ThemeStore(saved, () => false);
+    expect(theme.toggle()).toBe(THEME.dark);
+    expect(saved.saved).toBe(THEME.dark);
+    expect(new ThemeStore(saved, () => false).current).toBe(THEME.dark);
+    expect(theme.toggle()).toBe(THEME.light);
+    expect(new ThemeStore(saved, () => true).current).toBe(THEME.light);
+  });
+
+  it('저장된 값이 이상하면 폰 설정으로', () => {
+    const saved = memoryProfiles();
+    saved.save('purple');
+    expect(new ThemeStore(saved, () => true).current).toBe(THEME.dark);
+  });
+});
+
+describe('credits — 출처 표', () => {
+  it('모든 출처에 이름 · 만든 곳 · 라이선스 · https 주소 · 쓰는 곳이 있어요', () => {
+    for (const credit of CREDITS) {
+      expect(credit.name && credit.by && credit.license && credit.role).toBeTruthy();
+      expect(credit.url.startsWith('https://')).toBe(true);
+    }
+  });
+
+  it('꺼진 기능의 출처(지도)는 그 빌드에서 빠져요', () => {
+    const ids = (features) => creditsFor(features).map((credit) => credit.id);
+    expect(ids({ canShareLocation: false })).not.toContain('kakao-map');
+    expect(ids({ canShareLocation: true })).toContain('kakao-map');
   });
 });

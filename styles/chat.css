@@ -71,6 +71,9 @@
   z-index: 20;
   animation: slide 0.22s ease;
 }
+#chat {
+  background: var(--chat-bg);
+}
 @keyframes slide {
   from {
     transform: translateX(30px);
@@ -170,7 +173,7 @@
 }
 .m.them .bub {
   font-size: var(--fs-small);
-  background: var(--surface);
+  background: var(--bubble-them);
   border-bottom-left-radius: 6px;
 }
 .bub.saved {
@@ -299,7 +302,7 @@
   height: 44px;
   border-radius: 999px;
   border: 0;
-  background: var(--surface);
+  background: var(--bubble-them);
   padding: 0 16px;
   font: inherit;
   font-size: var(--fs);

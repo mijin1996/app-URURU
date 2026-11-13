@@ -22,6 +22,8 @@
 
 ## 추후 구현 목록
 
+- [ ] 2026-11-13 디자인 변경(레벨업 글꼴 · 아이콘만 탭 · 밝기 버튼 · PC 넓은 화면) 뒤 할 일: `npm run format` → `npm test` → `npm run build:single`(dist/ururu.html) → `npm run store:images`(스토어 스크린샷 다시)
+
 - [ ] Blaze(서버 함수 모드)로 바꾸면 Storage 버킷 CORS 설정 (저장소 주소 사진을 편집기 캔버스에서 다시 읽으려면 필요)
 
 - [ ] **지도 다시 켜기 검토** (지금 꺼 둠): 켜려면 `features.js` `canShareLocation: true` + 위치 동의 창 + 위치기반서비스사업 신고(방송통신위원회) + 카카오 SDK 도메인에 `https://app-ururu.pages.dev` + 개인정보처리방침 · 플레이 데이터 보안의 위치 줄 다시 확인

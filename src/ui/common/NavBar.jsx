@@ -1,7 +1,8 @@
 /* =========================================================
-   [UI] NavBar.jsx — 하단 탭바 (같은 너비) + 빨간 숫자
+   [UI] NavBar.jsx — 하단 탭바 (같은 너비, 아이콘만) + 빨간 숫자
    ---------------------------------------------------------
    어떤 탭이 있는지는 tabs.js 표가 정해요. 탭을 추가해도 이 파일은 그대로예요. (OCP)
+   탭 이름 글자는 화면에 쓰지 않고 aria-label로만 (화면 읽기 프로그램용)
    ========================================================= */
 
 import { useCtx } from '../app/AppContext.jsx';
@@ -28,7 +29,6 @@ export function NavBar({ tabs, currentTab }) {
           <Icon name={tab.icon} />
           {badge ? <span className="badge">{badge}</span> : null}
         </span>
-        {tab.label}
         <span className="dot"></span>
       </button>
     );

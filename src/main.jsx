@@ -41,6 +41,7 @@ import {
   SAMPLE_UNREAD,
 } from './data/sampleData.js';
 import { SwipeLimit } from './data/SwipeLimit.js';
+import { ThemeStore } from './data/ThemeStore.js';
 import { UserStore } from './data/UserStore.js';
 import { FakeServer } from './data/server/FakeServer.js';
 import { RealServer } from './data/server/RealServer.js';
@@ -67,7 +68,8 @@ import { ToastStore } from './ui/common/ToastStore.js';
 const PROFILE_STORAGE_KEY = 'ururu.profile';
 const MODERATION_STORAGE_KEY = 'ururu.moderation'; // 경고 횟수·이용 제한 (탈퇴해도 지우지 않아요)
 const PASSED_STORAGE_KEY = 'ururu.swipePassed'; // 스와이프에서 X 한 사람 (다시 안 보이게)
-const DEVICE_STORAGE_KEY = 'ururu.signedUpHere'; // 이 기기에서 가입한 적 있는지 (가입 화면을 구글 버튼만)
+const DEVICE_STORAGE_KEY = 'ururu.signedUpHere'; // 이 기기에서 가입한 적 있는지 (AccountService.hasSignedUpHere)
+const THEME_STORAGE_KEY = 'ururu.theme'; // 화면 밝기 (light | dark, 위 밝기 버튼)
 const oldKeyOf = (key) => key.replace('ururu.', 'moyeo.'); // 2026-11-04 전 이름
 
 function createContext() {
@@ -111,6 +113,10 @@ function createContext() {
   const ping = new PingService(server);
   const swipeLimit = new SwipeLimit(SWIPE_LIMIT, SWIPE_WINDOW_MS);
   const friendSearch = new FriendSearch(server, users);
+  const theme = new ThemeStore(
+    new ProfileRepository(THEME_STORAGE_KEY),
+    () => window.matchMedia?.('(prefers-color-scheme: dark)').matches === true,
+  );
 
   // 2. 소리 (Core) — 원본 그대로
   const engine = new AudioEngine();
@@ -139,6 +145,7 @@ function createContext() {
     sounds,
     swipeLimit,
     friendSearch,
+    theme, // 화면 밝기 (위 밝기 버튼)
     features,
     changes,
     overlays,
@@ -158,7 +165,7 @@ function createContext() {
     friendActions: null, // 아래에서 넣어줌 (좋아요 / 수락 / 소리 울리기)
     chatActions: null, // 아래에서 넣어줌 (보내기 / 저장) — Controller
     safetyActions: null, // 아래에서 넣어줌 (신고 / 차단 / 차단 풀기) — Controller
-    meActions: null, // 아래에서 넣어줌 (프로필 사진 / 설정 토글) — Controller
+    meActions: null, // 아래에서 넣어줌 (프로필 사진 / 설정 토글 / 화면 밝기) — Controller
   };
   ctx.nav = createNav(ctx);
   ctx.friendActions = new FriendActions(ctx);
@@ -167,9 +174,8 @@ function createContext() {
   ctx.meActions = new MeActions(ctx);
 
   // 빌드별 화면 규칙 (src/platform/features.js)
-  if (features.lightThemeOnly) {
-    document.documentElement.dataset.theme = 'light'; // styles/base.css: 다크 모드 색을 쓰지 않아요
-  }
+  // 화면 밝기: 저장한 값(없으면 폰 설정)으로 칠해요. lightThemeOnly 빌드는 늘 밝게 + 밝기 버튼 없음
+  document.documentElement.dataset.theme = features.lightThemeOnly ? 'light' : ctx.theme.current;
 
   // 브라우저는 첫 터치 뒤에만 소리를 허락해서, 첫 터치 때 소리 장치를 준비
   document.addEventListener('pointerdown', () => engine.unlock(), { once: true });

@@ -1,5 +1,5 @@
 /* =========================================================
-   [UI] SettingsPanel.jsx — "나" 탭: 설정, 신고한 사용자, 차단한 사용자(풀기), 정책, 로그아웃, 회원탈퇴
+   [UI] SettingsPanel.jsx — "나" 탭: 설정, 신고한 사용자, 차단한 사용자(풀기), 정책 · 출처, 로그아웃, 회원탈퇴
    ---------------------------------------------------------
    - 줄마다 제목과 토글만 (설명 글은 없어요)
    - 맨 위 "언어" 줄: [KR | EN] (LanguageSwitch)
@@ -97,6 +97,9 @@ export function SettingsPanel() {
             </button>
           ),
         )}
+        <button className="setrow linkrow" id="openCredits" onClick={() => nav.openCredits()}>
+          <b>{t('me.credits')}</b>
+        </button>
       </div>
       <button className="withdraw" id="signOut" onClick={() => nav.signOut()}>
         {t('me.signOut')}

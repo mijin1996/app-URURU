@@ -8,12 +8,12 @@
 export default {
   /* ---------- 앱 이름 · 탭 ---------- */
   'app.name': 'Ururu',
-  'app.tagline': 'You and me, together',
   'app.home': 'Home',
   'app.chat': 'Chat',
   'app.swipe': 'Swipe',
   'app.friends': 'Friends',
   'app.me': 'Me',
+  'app.theme': 'Screen brightness',
 
   /* ---------- 가입 화면 ---------- */
   'signup.welcome': 'Welcome!',
@@ -259,13 +259,18 @@ export default {
   'me.noneYet': 'None yet.',
   'me.unblock': 'Unblock',
   'me.policies': 'Policies',
+  'me.credits': 'Credits',
+  'credits.appFont': 'App font',
+  'credits.fallbackFont': 'Fallback font',
+  'credits.screen': 'UI',
+  'credits.server': 'Server · sign-in',
+  'credits.map': 'Map',
   'me.terms': 'Terms of Service',
   'me.privacy': 'Privacy Policy',
   'me.signOut': 'Log out',
   'me.withdraw': 'Delete account',
   'me.withdrawConfirm': 'Delete your account?',
-  'me.withdrawNotice':
-    "Your ID, photos and friends will be deleted. This can't be undone.",
+  'me.withdrawNotice': "Your ID, photos and friends will be deleted. This can't be undone.",
   'me.withdrawButton': 'Delete',
 
   /* ---------- 시연용 가짜 친구 대답 (가짜 서버) ---------- */
